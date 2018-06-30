@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CinemaClub</string>
+    <string name="title_home">Home</string>
+    <string name="title_movies">Movies</string>
+    <string name="title_post_status">Post Status</string>
+    <string name="title_favourites">Favourites</string>
+    <string name="title_profile">Profile</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello Home fragment</string>
+</resources>

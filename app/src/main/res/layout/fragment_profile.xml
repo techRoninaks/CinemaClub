@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileFragment">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/RelLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#fff">
+
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profile_image"
+            android:layout_width="114dp"
+            android:layout_height="114dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="22dp"
+            android:src="@drawable/profile_default"
+            app:civ_border_color="@color/colorPrimary"
+            app:civ_border_width="3dp" />
+
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profile_image"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/nunito_bold"
+            android:text="Alice Wayne"
+            android:textColor="#000000"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/profile_watch_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profile_name"
+            android:layout_marginEnd="8dp"
+            android:layout_toStartOf="@+id/text_followers"
+            android:text="3455" />
+
+        <TextView
+            android:id="@+id/watched"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profile_name"
+            android:layout_centerHorizontal="true"
+            android:text="Movies Watched" />
+
+        <TextView
+            android:id="@+id/profile_review_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="81dp"
+            android:layout_marginTop="202dp"
+            android:text="45"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/profile_review_count"
+            android:layout_marginStart="63dp"
+            android:text="Reviews" />
+
+        <TextView
+            android:id="@+id/profile_followers_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/profile_review_count"
+            android:layout_centerHorizontal="true"
+            android:text="899"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_followers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profile_review_count"
+            android:layout_centerHorizontal="true"
+            android:text="Followers" />
+
+        <TextView
+            android:id="@+id/profile_following_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/profile_review_count"
+            android:layout_toEndOf="@+id/profile_name"
+            android:text="346"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/text_following"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/profile_review_count"
+            android:layout_marginEnd="60dp"
+            android:text="Following" />
+
+        <TextView
+            android:id="@+id/text_watchlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/text_review"
+            android:text="My Watchlist"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/text_watchlist"
+            android:orientation="horizontal">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+        <Button
+            android:id="@+id/btn_profile_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignEnd="@+id/watched"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="35dp"
+            android:background="@drawable/edit_buton" />
+
+        <Button
+            android:id="@+id/btn_click"
+            android:layout_width="26dp"
+            android:layout_height="28dp"
+            android:layout_alignBottom="@+id/text_watchlist"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+    </ScrollView>
+
+
+</FrameLayout>
