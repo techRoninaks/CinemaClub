@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -31,7 +32,7 @@ public class MoviesFragment extends Fragment {
     private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mImage = new ArrayList<>();
     private ArrayList<String> mRating = new ArrayList<>();
-    private Boolean bClick = true;
+    private Boolean bClick = false;
     private Context context;
     View rootview;
 
@@ -39,8 +40,24 @@ public class MoviesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootview = inflater.inflate(R.layout.fragment_profile, container, false);
-        addData();
+
+        context =getActivity();
+        rootview = inflater.inflate(R.layout.fragment_movies, container, false);
+        Button btnClick = rootview.findViewById(R.id.bclick_movies_new);
+        btnClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bClick = !bClick;
+                initRecyclerView();
+            }
+        });
+        addData();                                  //adding data into new releases
+
+
+
+
+
+
         return rootview;
 
     }
@@ -73,20 +90,20 @@ public class MoviesFragment extends Fragment {
     }
 
     private void initRecyclerView(){
-        if(bClick) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.mainActivity, LinearLayoutManager.HORIZONTAL, false);
+        if(!bClick) {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
             Log.d(TAG, "succes1");
             RecyclerView recyclerView = (RecyclerView) rootview.findViewById(R.id.recyclerView2);
             Log.d(TAG, "initRecyclerView: ");
             recyclerView.setLayoutManager(layoutManager);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainActivity.mainActivity, mNames, mImage, mRating);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, mNames, mImage, mRating);
             recyclerView.setAdapter(adapter);
         }
         else{
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.mainActivity, 3);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
             RecyclerView recyclerView = rootview.findViewById((R.id.recyclerView2));
             recyclerView.setLayoutManager(gridLayoutManager);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainActivity.mainActivity,mNames,mImage,mRating);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context,mNames,mImage,mRating);
             recyclerView.setAdapter(adapter);
         }
 

@@ -31,21 +31,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.mImage = mImage;
         this.mRating = mRating;
         this.mTextRating = mTextRating;
-        //this.context = context;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_watchlist,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_watchlist,parent,false);
 
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Glide.with(MainActivity.mainActivity)
+        Glide.with(context)
                 .asBitmap()
                 .load(mImage.get(position))
                 .into(holder.movie_img);

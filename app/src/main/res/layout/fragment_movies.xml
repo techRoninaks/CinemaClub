@@ -28,12 +28,39 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView2"
             android:layout_width="match_parent"
-            android:layout_height="158dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/text_new_releases" />
+
+        <Button
+            android:id="@+id/bclick_movies_new"
+            android:layout_width="30dp"
+            android:layout_height="27dp"
+            android:layout_alignBottom="@+id/text_new_releases"
+            android:layout_alignParentEnd="true" />
+
+
+        <TextView
+            android:id="@+id/text_upcoming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/recyclerView2"
+            android:text="Upcoming" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_below="@+id/text_upcoming" />
+
+        <Button
+            android:id="@+id/bclick_movies_upcoming"
+            android:layout_width="30dp"
+            android:layout_height="27dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true" />
     </RelativeLayout>
 
     <!-- TODO: Update blank fragment layout -->
-
-
 </FrameLayout>

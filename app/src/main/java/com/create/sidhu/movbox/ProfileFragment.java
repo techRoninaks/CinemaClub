@@ -42,7 +42,7 @@ public class ProfileFragment extends Fragment {
 
         //inflate the layout for this fragment
 
-        Log.d(TAG, "fragment created");
+        context = getActivity();
 
         Log.d(TAG, "data added");
         rootview = inflater.inflate(R.layout.fragment_profile, container, false);
@@ -53,7 +53,7 @@ public class ProfileFragment extends Fragment {
         button_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.mainActivity,ProfileImage.class);
+                Intent intent = new Intent(context,ProfileImage.class);
                 startActivity(intent);
             }
         });
@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment {
         text_reviews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.mainActivity,ProfileReviews.class);
+                Intent intent = new Intent(context,ProfileReviews.class);
                 startActivity(intent);
             }
         });
@@ -71,7 +71,7 @@ public class ProfileFragment extends Fragment {
         text_followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.mainActivity,ProfileFollowers.class);
+                Intent intent = new Intent(context,ProfileFollowers.class);
                 startActivity(intent);
             }
         });
@@ -118,19 +118,19 @@ public class ProfileFragment extends Fragment {
 
     private void initRecyclerView(){
         if(bClick) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.mainActivity, LinearLayoutManager.HORIZONTAL, false);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
             Log.d(TAG, "succes1");
-            RecyclerView recyclerView = (RecyclerView) rootview.findViewById(R.id.recyclerView);
+            RecyclerView recyclerView = rootview.findViewById(R.id.recyclerView);
             Log.d(TAG, "initRecyclerView: ");
             recyclerView.setLayoutManager(layoutManager);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainActivity.mainActivity, mNames, mImage, mRating);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, mNames, mImage, mRating);
             recyclerView.setAdapter(adapter);
         }
         else{
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(MainActivity.mainActivity, 3);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
             RecyclerView recyclerView = rootview.findViewById((R.id.recyclerView));
             recyclerView.setLayoutManager(gridLayoutManager);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainActivity.mainActivity,mNames,mImage,mRating);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context,mNames,mImage,mRating);
             recyclerView.setAdapter(adapter);
         }
 
