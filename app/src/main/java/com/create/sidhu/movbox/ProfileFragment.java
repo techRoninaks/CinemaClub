@@ -137,4 +137,11 @@ public class ProfileFragment extends Fragment {
 
     }
 
+
+    private void hideAll(){
+
+        rootview.findViewById(R.id.relative1);
+        rootview.setVisibility(View.GONE);
+    }
+
 }

@@ -4,177 +4,229 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="?attr/actionBarSize"
     tools:context=".ProfileFragment">
 
 
     <RelativeLayout
         android:id="@+id/RelLayout1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#fff">
 
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_image"
-            android:layout_width="129dp"
-            android:layout_height="130dp"
-            android:layout_above="@+id/profile_name"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/profile_default"
-            app:civ_border_color="@color/colorPrimary"
-            app:civ_border_width="3dp" />
 
-        <TextView
-            android:id="@+id/profile_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/profile_watch_count"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="@font/nunito_bold"
-            android:text="Alice Wayne"
-            android:textColor="@color/colorTextPrimary"
-            android:textSize="22sp" />
-
-        <TextView
-            android:id="@+id/profile_watch_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/watched"
-            android:layout_marginRight="3dp"
-            android:layout_toStartOf="@+id/watched"
-            android:padding="2dp"
-            android:text="3455"
-            android:textColor="@color/colorTextSecondary" />
-
-        <TextView
-            android:id="@+id/watched"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/profile_image"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="172dp"
-            android:padding="2dp"
-            android:text="Movies Watched"
-            android:textColor="@color/colorTextSecondary" />
-
-        <TextView
-            android:id="@+id/profile_review_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/watched"
-            android:layout_marginStart="81dp"
-            android:padding="2dp"
-            android:text="45"
-            android:textColor="@color/colorTextPrimary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/text_review"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/profile_review_count"
-            android:layout_marginStart="70dp"
-            android:text="Reviews"
-            android:textColor="@color/colorTextSecondary" />
-
-        <TextView
-            android:id="@+id/profile_followers_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_watch_count"
-            android:layout_centerHorizontal="true"
-            android:padding="2dp"
-            android:text="899"
-            android:textColor="@color/colorTextPrimary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/text_followers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_review_count"
-            android:layout_centerHorizontal="true"
-            android:text="Followers"
-            android:textColor="@color/colorTextSecondary" />
-
-        <TextView
-            android:id="@+id/profile_following_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/profile_watch_count"
-            android:layout_toEndOf="@+id/profile_image"
-            android:padding="2dp"
-            android:text="346"
-            android:textColor="@color/colorTextPrimary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/text_following"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/profile_review_count"
-            android:layout_marginEnd="79dp"
-            android:text="Following"
-            android:textColor="@color/colorTextSecondary" />
-
-        <TextView
-            android:id="@+id/text_watchlist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/text_review"
-            android:layout_margin="5dp"
-            android:padding="2dp"
-            android:text="My Watchlist"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/text_watchlist"
-            android:layout_margin="5dp"
-            android:orientation="horizontal">
+            android:id="@+id/RelLayouts1">
 
-        </android.support.v7.widget.RecyclerView>
-
-
-        <Button
-            android:id="@+id/btn_profile_image"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignEnd="@+id/profile_image"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="22dp"
-            android:background="@drawable/edit_buton" />
-
-        <Button
-            android:id="@+id/btn_click"
-            android:layout_width="26dp"
-            android:layout_height="28dp"
-            android:layout_alignBottom="@+id/text_watchlist"
-            android:layout_alignParentEnd="true" />
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/profile_image"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:src="@drawable/profile_default"
+                app:civ_border_color="@color/colorPrimary"
+                app:civ_border_width="3dp" />
 
 
-        <Button
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignEnd="@+id/profile_image"
+                android:layout_alignTop="@+id/profile_image"
+                android:layout_margin="5dp"
+                android:background="@drawable/edit_buton"
+                android:id="@+id/btn_profile_image"/>
+
+
+
+            <TextView
+                android:id="@+id/profile_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/nunito_bold"
+                android:text="Alice Wayne"
+                android:layout_below="@+id/profile_image"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/profile_name"
+                android:id="@+id/linear1">
+
+                <TextView
+                    android:id="@+id/profile_watch_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:text="3k"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/watched"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Movies Watched"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="10sp" />
+
+             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear1"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="5dp"
+                android:weightSum="3">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1"
+                    android:layout_below="@+id/linear1">
+
+                    <TextView
+                        android:id="@+id/profile_review_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="45"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_review"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Reviews"
+                        android:textColor="@color/colorTextSecondary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/profile_followers_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="899"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_followers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Followers"
+                        android:textColor="@color/colorTextSecondary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+
+
+                    <TextView
+                        android:id="@+id/profile_following_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="346"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/text_following"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="Following"
+                        android:textColor="@color/colorTextSecondary" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/recyclerView"
-            android:id="@+id/btn_settings"/>
+            android:layout_below="@+id/RelLayouts1"
+            android:id="@+id/RelLayouts2">
 
-        <Button
+            <TextView
+                android:id="@+id/text_watchlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="My Watchlist"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_watchlist"
+                android:layout_margin="5dp"
+                android:orientation="horizontal">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <Button
+                android:id="@+id/btn_click"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignRight="@+id/text_watchlist"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="5dp"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btn_settings" />
+            android:orientation="vertical"
+            android:layout_below="@+id/RelLayouts2">
+
+            <Button
+                android:id="@+id/btn_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_bg"
+                android:text="Settings" />
+
+            <Button
+                android:id="@+id/btn_signout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_settings"
+                android:background="@drawable/button_bg"
+                android:text="Sign out" />
+        </LinearLayout>
 
 
     </RelativeLayout>
