@@ -1,13 +1,21 @@
 package com.create.sidhu.movbox;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -26,7 +34,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private Context context;
 
 
-    public RecyclerViewAdapter( Context context,ArrayList<String> mNames, ArrayList<String> mImage, ArrayList<String> mRating) {
+    public RecyclerViewAdapter(Context context, ArrayList<String> mNames, ArrayList<String> mImage, ArrayList<String> mRating) {
         this.mNames = mNames;
         this.mImage = mImage;
         this.mRating = mRating;
@@ -44,7 +52,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position)  {
         Glide.with(context)
                 .asBitmap()
                 .load(mImage.get(position))
@@ -54,8 +62,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.movie_name.setText(mNames.get(position));
         holder.movie_rating.setText(mRating.get(position));
 
-        //define OnClick if required
+        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Activity activity = (Activity) v.getContext();
+//                ProfileFragment myFragment = new ProfileFragment();
+//                activity.getSupportFragmentManager().beginTransaction().replace(R.id.relativeMain, myFragment).addToBackStack(null).commit();
+            }
+        });
+
     }
+
 
     @Override
     public int getItemCount() {
@@ -66,6 +83,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         ImageView movie_img;
         TextView movie_name;
         TextView movie_rating;
+        RelativeLayout parentLayout;
+
         //TextView rating_text;
 
         public ViewHolder(View itemView) {
@@ -73,7 +92,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             movie_img = itemView.findViewById(R.id.movie_poster);
             movie_name = itemView.findViewById(R.id.movie_name);
             movie_rating = itemView.findViewById(R.id.movie_rating);
-            //rating_text = itemView.findViewById(R.id.text_rating);
+            parentLayout = itemView.findViewById(R.id.relativeMain);
         }
+
+
     }
 }

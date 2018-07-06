@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -41,15 +43,14 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         //inflate the layout for this fragment
-
         context = getActivity();
 
         Log.d(TAG, "data added");
         rootview = inflater.inflate(R.layout.fragment_profile, container, false);
         addData();
 
-        Button button_img = rootview.findViewById(R.id.btn_profile_image);
 
+        Button button_img = rootview.findViewById(R.id.btn_profile_image);                          // onClickListener for Profile Image
         button_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +59,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        TextView text_reviews = rootview.findViewById(R.id.profile_review_count);
+        TextView text_reviews = rootview.findViewById(R.id.profile_review_count);                   // onClickListener for Review count
         text_reviews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +68,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        TextView text_followers = rootview.findViewById(R.id.profile_followers_count);
+        TextView text_followers = rootview.findViewById(R.id.profile_followers_count);              // onClickListener for Followers
         text_followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,11 +77,34 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        TextView text_following = rootview.findViewById(R.id.profile_following_count);              // onClickListener for Followers
+        text_following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent(context,ProfileFollowing.class);                       //TODO : Add the layout for Intent (try by setting visibility)
+//                startActivity(intent);
+            }
+        });
+
+        Button settings = rootview.findViewById(R.id.btn_settings);                                 // Hide layout on condition.
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RelativeLayout relativeLayout = rootview.findViewById(R.id.RelLayout1);
+                relativeLayout.setVisibility(View.INVISIBLE);
+
+            }
+        });
+
+
+
+
+
         final Button btn_click = rootview.findViewById(R.id.btn_click);
         btn_click.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bClick = !bClick;
+                bClick = !bClick;       //achieves the toggle functionality
                 initRecyclerView();
             }
         });
@@ -118,10 +142,8 @@ public class ProfileFragment extends Fragment {
 
     private void initRecyclerView(){
         if(bClick) {
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-            Log.d(TAG, "succes1");
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);            // Calling the RecyclerView Adapter with a layout
             RecyclerView recyclerView = rootview.findViewById(R.id.recyclerView);
-            Log.d(TAG, "initRecyclerView: ");
             recyclerView.setLayoutManager(layoutManager);
             RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, mNames, mImage, mRating);
             recyclerView.setAdapter(adapter);

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="?attr/actionBarSize"
-    tools:context=".ProfileFragment">
+    tools:context=".ProfileFragment"
+    android:id="@+id/parentView">
 
 
     <RelativeLayout
