@@ -46,10 +46,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_post_status:
                     //post status fragment
 
-                    PostStatusFragment fragment3 = new PostStatusFragment();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction3.replace(R.id.content,fragment3,"FragmentName");
-                    fragmentTransaction3.commit();
+                    PostStatusFragment bottomSheet=new PostStatusFragment();
+                    bottomSheet.show(getSupportFragmentManager(),"exampleBottomSheet" );
 
 
                     return true;
