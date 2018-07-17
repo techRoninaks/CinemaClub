@@ -27,6 +27,8 @@ public class MoviesFragment extends Fragment {
     public MoviesFragment() {
         // Required empty public constructor
     }
+
+
     private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mImage = new ArrayList<>();
     private ArrayList<String> mRating = new ArrayList<>();
@@ -39,18 +41,23 @@ public class MoviesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        context = getActivity();
+        context =getActivity();
         rootview = inflater.inflate(R.layout.fragment_movies, container, false);
         Button btnClick = rootview.findViewById(R.id.bclick_movies_new);
         btnClick.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //bClick is used for switching between layout types
                 bClick = !bClick;
-                initRecyclerView();                 //Expands recyclerView on click
+                initRecyclerView();
             }
         });
         addData();                                  //adding data into new releases
+
+
+
+
+
+
         return rootview;
 
     }
@@ -60,6 +67,7 @@ public class MoviesFragment extends Fragment {
         mImage.add("https://www.topmovierankings.com/images/albums/photos/comrade-in-america-malayalam-movie-stills-poster-4503.jpg");             // Add Data here
         mNames.add("C.I.A");
         mRating.add("7");
+
 
         mImage.add("https://upload.wikimedia.org/wikipedia/ml/thumb/3/30/Parava_movie_poster.jpeg/220px-Parava_movie_poster.jpeg");
         mNames.add("Parava");
@@ -76,13 +84,17 @@ public class MoviesFragment extends Fragment {
         mImage.add("https://madaboutmoviez.files.wordpress.com/2015/12/charlie-poster-3.jpg");
         mNames.add("Charlie");
         mRating.add("9");
+
+        Log.d(TAG, "Data initiated");
         initRecyclerView();
     }
 
     private void initRecyclerView(){
         if(!bClick) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+            Log.d(TAG, "succes1");
             RecyclerView recyclerView = rootview.findViewById(R.id.recyclerView2);
+            Log.d(TAG, "initRecyclerView: ");
             recyclerView.setLayoutManager(layoutManager);
             RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, mNames, mImage, mRating,rootview);
             recyclerView.setAdapter(adapter);

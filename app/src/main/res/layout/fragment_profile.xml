@@ -173,6 +173,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/RelLayouts1"
+            android:background="@color/colorTextDisabled"
             android:id="@+id/RelLayouts2">
 
             <TextView

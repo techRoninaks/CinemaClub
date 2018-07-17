@@ -11,22 +11,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/postLinearLayout1"
-        android:layout_margin="5dp">
+        android:layout_margin="10dp">
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_margin="10dp"
             app:srcCompat="@mipmap/ic_launcher_round" />
 
-        <EditText
+        <SearchView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:layout_margin="10dp"
-            android:hint="Post status..."
-            android:background="@drawable/text_background">
-        </EditText>
+            android:layout_gravity="center_vertical">
+
+        </SearchView>
     </LinearLayout>
 
     <LinearLayout
@@ -86,7 +85,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Watching"
+                android:text="Movie"
                 android:layout_gravity="center"/>
         </LinearLayout>
 
@@ -109,5 +108,81 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <!--<Button-->
+        <!--android:id="@+id/button3"-->
+        <!--android:layout_width="39dp"-->
+        <!--android:layout_height="31dp"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignTop="@+id/button"-->
+        <!--android:layout_marginEnd="123dp"-->
+        <!--android:layout_marginTop="2dp"-->
+        <!--android:background="@drawable/films_inactive" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/button4"-->
+        <!--android:layout_width="49dp"-->
+        <!--android:layout_height="36dp"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignTop="@+id/button"-->
+        <!--android:layout_marginEnd="22dp"/>-->
+    <!--&lt;!&ndash;android:background="@drawable/location"&ndash;&gt;-->
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/phototv"-->
+        <!--android:layout_width="76dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignStart="@+id/imageView"-->
+        <!--android:layout_marginTop="236dp"-->
+        <!--android:text="Photo"-->
+        <!--android:textSize="15sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/videotv"-->
+        <!--android:layout_width="75dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignStart="@+id/button2"-->
+        <!--android:textSize="15sp"-->
+        <!--android:layout_alignTop="@+id/phototv"-->
+        <!--android:text="Video" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/watchingtv"-->
+        <!--android:layout_width="76dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignStart="@+id/button3"-->
+        <!--android:textSize="15sp"-->
+        <!--android:layout_alignTop="@+id/phototv"-->
+        <!--android:text="Watching" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/locationtv"-->
+        <!--android:layout_width="76dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignStart="@+id/button4"-->
+        <!--android:textSize="15sp"-->
+        <!--android:layout_alignTop="@+id/phototv"-->
+        <!--android:text="Location" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/editText"-->
+        <!--android:layout_width="245dp"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:layout_alignStart="@+id/button2"-->
+        <!--android:layout_alignTop="@+id/imageView"-->
+        <!--android:ems="10"-->
+        <!--android:hint="Post a status..."-->
+        <!--android:inputType="textMultiLine"-->
+        <!--android:padding="5dp"-->
+        <!--android:singleLine="true" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/button5"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="25dp"-->
+        <!--android:layout_alignBottom="@+id/editText"-->
+        <!--android:layout_alignEnd="@+id/button4" />-->
 
 </RelativeLayout>
