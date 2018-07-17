@@ -43,14 +43,12 @@ public class ProfileFragment extends Fragment {
     private Boolean bClick = true;
     private Context context;
     View rootview;
-//    public static ProfileFragment profileFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         context = getActivity();
-//        profileFragment = this;
         rootview = inflater.inflate(R.layout.fragment_profile, container, false);
         addData();
 
