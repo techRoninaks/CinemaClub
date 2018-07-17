@@ -52,7 +52,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(context).inflate(R.layout.item_watchlist,parent,false);
         return new ViewHolder(view);
     }
@@ -63,41 +62,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 .asBitmap()
                 .load(mImage.get(position))
                 .into(holder.movie_img);
-
-
         holder.movie_name.setText(mNames.get(position));
         holder.movie_rating.setText(mRating.get(position));
-
-
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ProfileFragment myFragment = new ProfileFragment();
-                //ProfileFragment.profileFragment.getFragmentManager().beginTransaction().replace(R.id.RelLayout1, ProfileFragment.profileFragment).addToBackStack(null).commit();
-//                ProfileFragment.profileFragment.getFragmentManager().beginTransaction().replace(R.id.RelLayout1, ProfileFragment.profileFragment).addToBackStack(null).commit();
-                //ProfileFragment.profileFragment.getSupportFragmentManager().
-
-                //ProfileFragment.profileFragment.getView();
-
-//                RelativeLayout relativeLayout = new RelativeLayout(context);
-//                relativeLayout = (RelativeLayout)rootview.findViewById(R.id.RelLayout1);
-//                relativeLayout.findViewById(R.id.profile_image).setVisibility(View.INVISIBLE);
-
-//                Fragment newFragment = new Fragment();
-//                FragmentManager manager = ((Activity)context).getFragmentManager();
-//                FragmentTransaction transaction = manager.beginTransaction();
-//                transaction.add(R.id.RelLayout1, newFragment);
-//                transaction.addToBackStack("First Fragment");
-//                transaction.commit();
-//                manager.ge
-//                rootview.findViewById(R.id.profile_image).setVisibility(View.INVISIBLE);
                 ProfileFragment fragment = new ProfileFragment();
                 fragment.OnClick(position,context,rootview);
-
-
-
-// Commit the transaction
-
             }
         });
 
@@ -115,8 +86,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         TextView movie_rating;
         RelativeLayout parentLayout;
 
-        //TextView rating_text;
-
         public ViewHolder(View itemView) {
             super(itemView);
             movie_img = itemView.findViewById(R.id.movie_poster);
@@ -124,7 +93,5 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             movie_rating = itemView.findViewById(R.id.movie_rating);
             parentLayout = itemView.findViewById(R.id.relativeMain);
         }
-
-
     }
 }

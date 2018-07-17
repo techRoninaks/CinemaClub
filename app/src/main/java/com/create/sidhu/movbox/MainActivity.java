@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
+                //fragments are selected based on the item clicked
                 case R.id.navigation_home:
                     //home fragment
                     HomeFragment fragment1 = new HomeFragment();
@@ -77,16 +78,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //mainActivity = this;
         BottomNavigationViewEx navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        // Navigation Bar properties
+        // Navigation Bar Customization
         navigation.enableAnimation(false);
         navigation.enableShiftingMode(false);
         navigation.enableItemShiftingMode(false);
         navigation.setTextVisibility(false);
-
 
         // Load Home fragment on start
         HomeFragment fragment1 = new HomeFragment();
