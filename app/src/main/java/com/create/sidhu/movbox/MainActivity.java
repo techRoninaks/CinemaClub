@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
                     //post status fragment
 
                     PostStatusFragment bottomSheet=new PostStatusFragment();
-                    bottomSheet.show(getSupportFragmentManager(),"exampleBottomSheet" );
+                    bottomSheet.show(getSupportFragmentManager(),"BottomSheet" );
 
 
                     return true;
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //mainActivity = this;
-        BottomNavigationViewEx navigation = (BottomNavigationViewEx) findViewById(R.id.navigation);
+        BottomNavigationViewEx navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // Navigation Bar properties
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         android.support.v4.app.FragmentTransaction fragmentTransaction1 = getSupportFragmentManager().beginTransaction();
         fragmentTransaction1.replace(android.R.id.content,fragment1,"FragmentName");
         fragmentTransaction1.commit();
+
 
     }
 

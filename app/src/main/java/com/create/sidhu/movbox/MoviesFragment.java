@@ -93,17 +93,17 @@ public class MoviesFragment extends Fragment {
         if(!bClick) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
             Log.d(TAG, "succes1");
-            RecyclerView recyclerView = (RecyclerView) rootview.findViewById(R.id.recyclerView2);
+            RecyclerView recyclerView = rootview.findViewById(R.id.recyclerView2);
             Log.d(TAG, "initRecyclerView: ");
             recyclerView.setLayoutManager(layoutManager);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, mNames, mImage, mRating);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, mNames, mImage, mRating,rootview);
             recyclerView.setAdapter(adapter);
         }
         else{
             GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
             RecyclerView recyclerView = rootview.findViewById((R.id.recyclerView2));
             recyclerView.setLayoutManager(gridLayoutManager);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context,mNames,mImage,mRating);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context,mNames,mImage,mRating,rootview);
             recyclerView.setAdapter(adapter);
         }
 

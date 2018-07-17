@@ -1,11 +1,14 @@
 package com.create.sidhu.movbox;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,8 +21,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 import static android.support.constraint.Constraints.TAG;
+import static android.view.View.inflate;
 
 
 /**
@@ -38,23 +43,22 @@ public class ProfileFragment extends Fragment {
     private Boolean bClick = true;
     private Context context;
     View rootview;
+    public static ProfileFragment profileFragment;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //inflate the layout for this fragment
         context = getActivity();
-
-        Log.d(TAG, "data added");
+        profileFragment = this;
         rootview = inflater.inflate(R.layout.fragment_profile, container, false);
         addData();
-
 
         Button button_img = rootview.findViewById(R.id.btn_profile_image);                          // onClickListener for Profile Image
         button_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,ProfileImage.class);
+                Intent intent = new Intent(context, ProfileImage.class);
                 startActivity(intent);
             }
         });
@@ -63,7 +67,7 @@ public class ProfileFragment extends Fragment {
         text_reviews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,ProfileReviews.class);
+                Intent intent = new Intent(context, ProfileReviews.class);
                 startActivity(intent);
             }
         });
@@ -72,8 +76,9 @@ public class ProfileFragment extends Fragment {
         text_followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,ProfileFollowers.class);
+                Intent intent = new Intent(context, ProfileFollowers.class);
                 startActivity(intent);
+
             }
         });
 
@@ -97,9 +102,6 @@ public class ProfileFragment extends Fragment {
         });
 
 
-
-
-
         final Button btn_click = rootview.findViewById(R.id.btn_click);
         btn_click.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +116,7 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private void addData(){
+    private void addData() {
         mImage.add("https://www.topmovierankings.com/images/albums/photos/comrade-in-america-malayalam-movie-stills-poster-4503.jpg");             // Add Data here
         mNames.add("C.I.A");
         mRating.add("7");
@@ -140,30 +142,33 @@ public class ProfileFragment extends Fragment {
         initRecyclerView();
     }
 
-    private void initRecyclerView(){
-        if(bClick) {
+    private void initRecyclerView() {
+        if (bClick) {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);            // Calling the RecyclerView Adapter with a layout
             RecyclerView recyclerView = rootview.findViewById(R.id.recyclerView);
             recyclerView.setLayoutManager(layoutManager);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, mNames, mImage, mRating);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, mNames, mImage, mRating, rootview);
             recyclerView.setAdapter(adapter);
-        }
-        else{
+        } else {
             GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
             RecyclerView recyclerView = rootview.findViewById((R.id.recyclerView));
             recyclerView.setLayoutManager(gridLayoutManager);
-            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context,mNames,mImage,mRating);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, mNames, mImage, mRating, rootview);
             recyclerView.setAdapter(adapter);
         }
 
 
     }
 
+    protected void OnClick(int position, Context context,View rootview) {
+        //Custom code
+        this.context = context;
+        android.app.Fragment fragment2 = new android.app.Fragment();
+        android.app.FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
+        android.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.RelLayout1, fragment2, "fragmentdetails");
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
 
-    private void hideAll(){
-
-        rootview.findViewById(R.id.relative1);
-        rootview.setVisibility(View.GONE);
     }
-
 }

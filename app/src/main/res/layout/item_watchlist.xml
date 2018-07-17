@@ -8,16 +8,14 @@
 
 
         <RelativeLayout
-            android:layout_width="100dp"
-            android:layout_height="140dp"
-            android:layout_margin="5dp"
+            android:layout_width="130dp"
+            android:layout_height="170dp"
             android:id="@+id/relative1">
-
                  <ImageView
                     android:id="@+id/movie_poster"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
+                    android:layout_margin="10dp"
                     android:src="@drawable/parava" />
         </RelativeLayout>
 

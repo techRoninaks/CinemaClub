@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,8 +21,12 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.media.CamcorderProfile.get;
+import static android.support.constraint.Constraints.TAG;
+import static android.view.View.inflate;
+import android.app.FragmentManager;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
@@ -32,22 +37,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> mRating = new ArrayList<>();
     private ArrayList<String> mTextRating = new ArrayList<>();
     private Context context;
+    private View rootview;
 
 
-    public RecyclerViewAdapter(Context context, ArrayList<String> mNames, ArrayList<String> mImage, ArrayList<String> mRating) {
+    public RecyclerViewAdapter(Context context, ArrayList<String> mNames, ArrayList<String> mImage, ArrayList<String> mRating,View rootview) {
         this.mNames = mNames;
         this.mImage = mImage;
         this.mRating = mRating;
-        this.mTextRating = mTextRating;
         this.context = context;
+        this.rootview = rootview;
     }
+
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(context).inflate(R.layout.item_watchlist,parent,false);
-
         return new ViewHolder(view);
     }
 
@@ -62,12 +68,36 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.movie_name.setText(mNames.get(position));
         holder.movie_rating.setText(mRating.get(position));
 
+
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Activity activity = (Activity) v.getContext();
 //                ProfileFragment myFragment = new ProfileFragment();
-//                activity.getSupportFragmentManager().beginTransaction().replace(R.id.relativeMain, myFragment).addToBackStack(null).commit();
+                //ProfileFragment.profileFragment.getFragmentManager().beginTransaction().replace(R.id.RelLayout1, ProfileFragment.profileFragment).addToBackStack(null).commit();
+//                ProfileFragment.profileFragment.getFragmentManager().beginTransaction().replace(R.id.RelLayout1, ProfileFragment.profileFragment).addToBackStack(null).commit();
+                //ProfileFragment.profileFragment.getSupportFragmentManager().
+
+                //ProfileFragment.profileFragment.getView();
+
+//                RelativeLayout relativeLayout = new RelativeLayout(context);
+//                relativeLayout = (RelativeLayout)rootview.findViewById(R.id.RelLayout1);
+//                relativeLayout.findViewById(R.id.profile_image).setVisibility(View.INVISIBLE);
+
+//                Fragment newFragment = new Fragment();
+//                FragmentManager manager = ((Activity)context).getFragmentManager();
+//                FragmentTransaction transaction = manager.beginTransaction();
+//                transaction.add(R.id.RelLayout1, newFragment);
+//                transaction.addToBackStack("First Fragment");
+//                transaction.commit();
+//                manager.ge
+//                rootview.findViewById(R.id.profile_image).setVisibility(View.INVISIBLE);
+                ProfileFragment fragment = new ProfileFragment();
+                fragment.OnClick(position,context,rootview);
+
+
+
+// Commit the transaction
+
             }
         });
 

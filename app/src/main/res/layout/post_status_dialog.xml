@@ -3,111 +3,186 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingBottom="80dp">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="71dp"
-        android:layout_height="55dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/button"
-        android:layout_marginTop="56dp"
-        app:srcCompat="@mipmap/ic_launcher_round" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="52dp"
-        android:layout_heiaght="33dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="191dp"/>
-    <!--android:background="@drawable/camera" -->
-
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="51dp"
-        android:layout_height="33dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/button"
-        android:layout_marginStart="116dp"/>
-    <!--android:background="@drawable/video" -->
-
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="51dp"
-        android:layout_height="33dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/button"
-        android:layout_marginEnd="111dp"
-        android:background="@drawable/films_inactive" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="49dp"
-        android:layout_height="36dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/button"
-        android:layout_marginEnd="22dp"/>
-    <!--android:background="@drawable/location"-->
-
-
-    <TextView
-        android:id="@+id/phototv"
-        android:layout_width="76dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/imageView"
-        android:layout_marginTop="236dp"
-        android:text="Photo"
-        android:textSize="15sp" />
+        android:id="@+id/postLinearLayout1"
+        android:layout_margin="10dp">
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            app:srcCompat="@mipmap/ic_launcher_round" />
 
-    <TextView
-        android:id="@+id/videotv"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/button2"
-        android:textSize="15sp"
-        android:layout_alignTop="@+id/phototv"
-        android:text="Video" />
+        <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/watchingtv"
-        android:layout_width="76dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/button3"
-        android:textSize="15sp"
-        android:layout_alignTop="@+id/phototv"
-        android:text="Watching" />
+        </SearchView>
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/locationtv"
-        android:layout_width="76dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/button4"
-        android:textSize="15sp"
-        android:layout_alignTop="@+id/phototv"
-        android:text="Location" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="245dp"
-        android:layout_height="35dp"
-        android:layout_alignStart="@+id/button2"
-        android:layout_alignTop="@+id/imageView"
-        android:ems="10"
-        android:hint="Post a status..."
-        android:inputType="textMultiLine"
-        android:padding="5dp"
-        android:singleLine="true" />
-
-    <Button
-        android:id="@+id/button5"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_alignBottom="@+id/editText"
-        android:layout_alignEnd="@+id/button4" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postLinearLayout1"
+        android:layout_margin="10dp"
+        android:weightSum="4">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Camera"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Video"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Movie"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:layout_gravity="center"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--<Button-->
+        <!--android:id="@+id/button3"-->
+        <!--android:layout_width="39dp"-->
+        <!--android:layout_height="31dp"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignTop="@+id/button"-->
+        <!--android:layout_marginEnd="123dp"-->
+        <!--android:layout_marginTop="2dp"-->
+        <!--android:background="@drawable/films_inactive" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/button4"-->
+        <!--android:layout_width="49dp"-->
+        <!--android:layout_height="36dp"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignTop="@+id/button"-->
+        <!--android:layout_marginEnd="22dp"/>-->
+    <!--&lt;!&ndash;android:background="@drawable/location"&ndash;&gt;-->
+
+
+    <!--<TextView-->
+        <!--android:id="@+id/phototv"-->
+        <!--android:layout_width="76dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_alignStart="@+id/imageView"-->
+        <!--android:layout_marginTop="236dp"-->
+        <!--android:text="Photo"-->
+        <!--android:textSize="15sp" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/videotv"-->
+        <!--android:layout_width="75dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignStart="@+id/button2"-->
+        <!--android:textSize="15sp"-->
+        <!--android:layout_alignTop="@+id/phototv"-->
+        <!--android:text="Video" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/watchingtv"-->
+        <!--android:layout_width="76dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignStart="@+id/button3"-->
+        <!--android:textSize="15sp"-->
+        <!--android:layout_alignTop="@+id/phototv"-->
+        <!--android:text="Watching" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/locationtv"-->
+        <!--android:layout_width="76dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignStart="@+id/button4"-->
+        <!--android:textSize="15sp"-->
+        <!--android:layout_alignTop="@+id/phototv"-->
+        <!--android:text="Location" />-->
+
+    <!--<EditText-->
+        <!--android:id="@+id/editText"-->
+        <!--android:layout_width="245dp"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:layout_alignStart="@+id/button2"-->
+        <!--android:layout_alignTop="@+id/imageView"-->
+        <!--android:ems="10"-->
+        <!--android:hint="Post a status..."-->
+        <!--android:inputType="textMultiLine"-->
+        <!--android:padding="5dp"-->
+        <!--android:singleLine="true" />-->
+
+    <!--<Button-->
+        <!--android:id="@+id/button5"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="25dp"-->
+        <!--android:layout_alignBottom="@+id/editText"-->
+        <!--android:layout_alignEnd="@+id/button4" />-->
 
 </RelativeLayout>
