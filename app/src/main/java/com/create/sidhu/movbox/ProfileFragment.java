@@ -43,14 +43,14 @@ public class ProfileFragment extends Fragment {
     private Boolean bClick = true;
     private Context context;
     View rootview;
-    public static ProfileFragment profileFragment;
+//    public static ProfileFragment profileFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         context = getActivity();
-        profileFragment = this;
+//        profileFragment = this;
         rootview = inflater.inflate(R.layout.fragment_profile, container, false);
         addData();
 
@@ -58,7 +58,7 @@ public class ProfileFragment extends Fragment {
         button_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ProfileImage.class);
+                Intent intent = new Intent(context,ProfileImage.class);
                 startActivity(intent);
             }
         });
@@ -67,7 +67,7 @@ public class ProfileFragment extends Fragment {
         text_reviews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ProfileReviews.class);
+                Intent intent = new Intent(context,ProfileReviews.class);
                 startActivity(intent);
             }
         });
@@ -76,7 +76,7 @@ public class ProfileFragment extends Fragment {
         text_followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ProfileFollowers.class);
+                Intent intent = new Intent(context,ProfileFollowers.class);
                 startActivity(intent);
 
             }
@@ -86,7 +86,7 @@ public class ProfileFragment extends Fragment {
         text_following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(context,ProfileFollowing.class);                       //TODO : Add the layout for Intent (try by setting visibility)
+//                Intent intent = new Intent(context,ProfileFollowing.class);                       //TODO : Add the layout by setting visibility)
 //                startActivity(intent);
             }
         });
@@ -96,11 +96,10 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 RelativeLayout relativeLayout = rootview.findViewById(R.id.RelLayout1);
-                relativeLayout.setVisibility(View.INVISIBLE);
+//                relativeLayout.setVisibility(View.INVISIBLE);
 
             }
         });
-
 
         final Button btn_click = rootview.findViewById(R.id.btn_click);
         btn_click.setOnClickListener(new View.OnClickListener() {
@@ -110,17 +109,13 @@ public class ProfileFragment extends Fragment {
                 initRecyclerView();
             }
         });
-
-
         return rootview;
-
     }
 
     private void addData() {
         mImage.add("https://www.topmovierankings.com/images/albums/photos/comrade-in-america-malayalam-movie-stills-poster-4503.jpg");             // Add Data here
         mNames.add("C.I.A");
         mRating.add("7");
-
 
         mImage.add("https://upload.wikimedia.org/wikipedia/ml/thumb/3/30/Parava_movie_poster.jpeg/220px-Parava_movie_poster.jpeg");
         mNames.add("Parava");
