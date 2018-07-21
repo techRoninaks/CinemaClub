@@ -1,4 +1,4 @@
-package com.create.sidhu.movbox;
+package com.create.sidhu.movbox.fragments;
 
 
 import android.content.Context;
@@ -7,15 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import java.util.ArrayList;
+import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.adapters.RecyclerViewAdapter;
 
-import static android.support.constraint.Constraints.TAG;
+import java.util.ArrayList;
 
 
 /**

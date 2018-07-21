@@ -1,32 +1,22 @@
-package com.create.sidhu.movbox;
+package com.create.sidhu.movbox.adapters;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.fragments.ProfileFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static android.media.CamcorderProfile.get;
-import static android.support.constraint.Constraints.TAG;
-import static android.view.View.inflate;
-import android.app.FragmentManager;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 

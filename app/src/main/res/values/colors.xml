@@ -4,9 +4,11 @@
     <color name="colorPrimaryDark">#ffeb3b</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorTextPrimary">#D9000000</color>
+    <color name="colorTextPrimary">#d9000000</color>
     <color name="colorTextSecondary">#8C000000</color>
     <color name="colorTextHint">#66000000</color>
     <color name="colorTextDisabled">#1A000000</color>
+
+
 
 </resources>
