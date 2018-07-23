@@ -1,14 +1,11 @@
-package com.create.sidhu.movbox;
+package com.create.sidhu.movbox.fragments;
 
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,11 +17,15 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.create.sidhu.movbox.ProfileFollowers;
+import com.create.sidhu.movbox.ProfileImage;
+import com.create.sidhu.movbox.ProfileReviews;
+import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.adapters.RecyclerViewAdapter;
+
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 import static android.support.constraint.Constraints.TAG;
-import static android.view.View.inflate;
 
 
 /**
@@ -153,7 +154,7 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    protected void OnClick(int position, Context context,View rootview) {
+    public void OnClick(int position, Context context,View rootview) {
         //Custom code
         this.context = context;
         android.app.Fragment fragment2 = new android.app.Fragment();

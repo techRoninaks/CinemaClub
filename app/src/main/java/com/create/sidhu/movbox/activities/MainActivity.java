@@ -1,17 +1,17 @@
-package com.create.sidhu.movbox;
+package com.create.sidhu.movbox.activities;
 
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
-import android.service.notification.ConditionProviderService;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import android.view.View;
-import android.widget.TextView;
-
+import com.create.sidhu.movbox.fragments.FavouritesFragment;
+import com.create.sidhu.movbox.fragments.HomeFragment;
+import com.create.sidhu.movbox.fragments.MoviesFragment;
+import com.create.sidhu.movbox.fragments.PostStatusFragment;
+import com.create.sidhu.movbox.fragments.ProfileFragment;
+import com.create.sidhu.movbox.R;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 public class MainActivity extends AppCompatActivity {
