@@ -3,22 +3,22 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:id="@+id/relativeMain"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="1dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
         <RelativeLayout
             android:layout_width="100dp"
             android:layout_height="140dp"
-            android:layout_margin="5dp"
+            android:layout_margin="2dp"
             android:id="@+id/relative1">
 
                  <ImageView
                     android:id="@+id/movie_poster"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:src="@drawable/parava" />
+                    android:layout_margin="2dp"
+                    android:src="@drawable/parava"
+                     android:contentDescription="@string/movie_poster"/>
         </RelativeLayout>
 
 
@@ -55,8 +55,6 @@
                     android:id="@+id/text_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true"
                     android:text="/10"
                     android:textSize="10sp" />
 

@@ -8,16 +8,19 @@ android:layout_height="match_parent">
 <FrameLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignParentStart="true"
-    android:layout_alignParentTop="true">
+    android:layout_centerHorizontal="true"
+    android:layout_below="@+id/btn_exit"
+    android:layout_marginTop="@dimen/layout_top_margin"
+    android:id="@+id/containerImage">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="350dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        app:srcCompat="@drawable/profile_default" />
+        app:srcCompat="@drawable/profile_default"
+        android:padding="4dp"/>
 
 </FrameLayout>
 
@@ -27,10 +30,10 @@ android:layout_height="match_parent">
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
-    android:layout_marginBottom="110dp"
-    android:text="Change Profile Picture"
+    android:text="@string/change_profile_image"
     android:textColor="@android:color/black"
-    android:textStyle="bold" />
+    android:textStyle="bold"
+    android:layout_below="@+id/containerImage"/>
 
     <Button
         android:id="@+id/button"
@@ -40,7 +43,7 @@ android:layout_height="match_parent">
         android:layout_alignParentStart="true"
         android:layout_marginBottom="33dp"
         android:layout_marginStart="76dp"
-        android:text="Camera"
+        android:text="@string/camera"
         android:textAllCaps="false" />
 
 <Button
@@ -50,7 +53,7 @@ android:layout_height="match_parent">
     android:layout_alignParentEnd="true"
     android:layout_alignTop="@+id/button"
     android:layout_marginEnd="79dp"
-    android:text="Gallery"
+    android:text="@string/gallery"
     android:textAllCaps="false" />
 
 <Button

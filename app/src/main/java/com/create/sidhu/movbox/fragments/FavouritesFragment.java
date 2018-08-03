@@ -3,7 +3,7 @@ package com.create.sidhu.movbox.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,9 +23,9 @@ import java.util.ArrayList;
  */
 public class FavouritesFragment extends Fragment {
 
-RecyclerView recyclerView;
-Context context;
-ArrayList<FavouritesModel> favouritesList;
+    RecyclerView recyclerView;
+    Context context;
+    ArrayList<FavouritesModel> favouritesList;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -50,6 +50,7 @@ ArrayList<FavouritesModel> favouritesList;
             FavouritesModel favouritesModel = new FavouritesModel();
             favouritesModel.setTitle("Testing title" + i);
             favouritesModel.setSubtitle("Testing subtitle" + i);
+            favouritesModel.setType("favourites");
             if(i<2)
                 favouritesModel.setDate("22/07/2018");
             else if(i<6)

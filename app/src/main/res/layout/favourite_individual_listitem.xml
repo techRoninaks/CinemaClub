@@ -12,9 +12,10 @@
         android:visibility="gone">
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:text="Today"
-            android:id="@+id/textView_SuperText"/>
+            android:id="@+id/textView_SuperText"
+            android:textSize="@dimen/list_supertext"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -32,8 +33,8 @@
             android:orientation="vertical">
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/list_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="@dimen/list_image"
+                android:layout_height="@dimen/list_image"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="10dp"
                 android:src="@drawable/profile_default"
@@ -49,13 +50,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="4dp"
+                android:padding="@dimen/list_padding"
                 android:orientation="vertical"
                 android:gravity="center">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/list_titletext"
                     android:text="Testing Title Text"
                     android:textColor="@color/colorTextPrimary"
                     android:id="@+id/textView_TitleText"
@@ -63,7 +64,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="@dimen/list_subtext"
                     android:text="Testing Sub Text"
                     android:textColor="@color/colorTextSecondary"
                     android:id="@+id/textView_SubText"
@@ -75,7 +76,7 @@
             android:layout_height="match_parent"
             android:id="@+id/containerOtherInfo"
             android:orientation="vertical"
-            android:padding="4dp"
+            android:padding="@dimen/list_padding"
             android:layout_weight="2">
             <TextView
                 android:layout_width="match_parent"
@@ -85,7 +86,7 @@
                 android:gravity="end|center"
                 android:layout_weight="1"
                 android:layout_gravity="top"
-                android:textSize="11sp"/>
+                android:textSize="@dimen/list_othertext"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,7 +95,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="bottom"
                 android:gravity="end|center"
-                android:textSize="11sp"/>
+                android:textSize="@dimen/list_othertext"/>
 
         </LinearLayout>
     </LinearLayout>

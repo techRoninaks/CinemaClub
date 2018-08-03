@@ -3,7 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment">
+    tools:context=".fragments.HomeFragment"
+    android:layout_marginBottom="?attr/actionBarSize"
+    android:layout_marginTop="@dimen/layout_top_margin"
+    android:layout_marginLeft="@dimen/layout_side_margin"
+    android:layout_marginRight="@dimen/layout_side_margin">
 
 
 
