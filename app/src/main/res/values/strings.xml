@@ -9,7 +9,22 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello Home fragment</string>
 
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+
+    <!-- Other Resource Strings -->
+
     <string name="date_today">Today</string>
     <string name="date_yesterday">Yesterday</string>
     <string name="date_earlier">Earlier</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="new_releases">New Releases</string>
+    <string name="upcoming_movies">Upcoming</string>
+    <string name="change_profile_image">Change Profile Picture</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="reviews">Reviews</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="watchlist">My Watchlist</string>
 </resources>

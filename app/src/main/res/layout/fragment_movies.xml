@@ -3,11 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.MoviesFragment">
+    tools:context=".fragments.MoviesFragment"
+    android:id="@+id/RelLayout1">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/layout_top_margin"
+        android:layout_marginBottom="?attr/actionBarSize">
 
 
         <TextView
@@ -17,7 +20,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="43dp"
-            android:text="New Releases" />
+            android:text="@string/new_releases" />
 
         <SearchView
             android:layout_width="match_parent"
@@ -45,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/recyclerView2"
-            android:text="Upcoming" />
+            android:text="@string/upcoming_movies" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView3"

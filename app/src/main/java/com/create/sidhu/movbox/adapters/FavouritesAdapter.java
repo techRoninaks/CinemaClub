@@ -5,6 +5,7 @@ package com.create.sidhu.movbox.adapters;
  */
 
 import android.content.Context;
+import android.graphics.Color;
 import android.icu.util.DateInterval;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -41,7 +42,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
     private View rootview;
     private Date today;
     private Date currentDate;
-    private Date previousDate;
+    String dateStatus;
 
     public FavouritesAdapter(Context context, ArrayList<FavouritesModel> favouritesList, View rootview) {
         this.favouritesList = favouritesList;
@@ -55,6 +56,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
             e.printStackTrace();
         }
         currentDate = today;
+        dateStatus = new String();
     }
 
 
@@ -67,24 +69,68 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position)  {
+        LinearLayout llSuperTitle = (LinearLayout) holder.masterLayout.findViewById(R.id.containerSuperHeading);
         try {
-            currentDate = new SimpleDateFormat("dd/MM/yyyy").parse(favouritesList.get(position).getDate());
-            int decision = today.compareTo(currentDate);
-            if(decision == 0)
-                holder.superTitle.setText(R.string.date_today);
-            else{
-                if(currentDate.equals(yesterday()))
-                    holder.superTitle.setText(R.string.date_yesterday);
-                else
-                    holder.superTitle.setText(R.string.date_earlier);
+            //TODO: Setting proper values
+            switch (favouritesList.get(position).getType()) {
+                case "favourites":
+                    currentDate = new SimpleDateFormat("dd/MM/yyyy").parse(favouritesList.get(position).getDate());
+                    int decision = today.compareTo(currentDate);
+                    if (decision == 0) {
+                        String day = context.getString(R.string.date_today);
+                        holder.superTitle.setText(day);
+                        if (!dateStatus.equals(day)) {
+                            llSuperTitle.setVisibility(View.VISIBLE);
+                            dateStatus = day;
+                        }
+                    } else {
+                        if (currentDate.equals(yesterday())) {
+                            String day = context.getString(R.string.date_yesterday);
+                            holder.superTitle.setText(day);
+                            if (!dateStatus.equals(day)) {
+                                llSuperTitle.setVisibility(View.VISIBLE);
+                                dateStatus = day;
+                            }
+                        } else {
+                            String day = context.getString(R.string.date_earlier);
+                            holder.superTitle.setText(day);
+                            if (!dateStatus.equals(day)) {
+                                llSuperTitle.setVisibility(View.VISIBLE);
+                                dateStatus = day;
+                            }
+                        }
+                    }
+                    holder.masterLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FavouritesFragment fragment = new FavouritesFragment();
+                            fragment.OnClick(position, context, rootview, favouritesList);
+                        }
+                    });
+                    return;
+                case "review":
+                    holder.title.setText(favouritesList.get(position).getTitle());
+                    holder.subtitle.setText(favouritesList.get(position).getSubtitle());
+                    holder.date.setText(favouritesList.get(position).getDate());
+                    holder.date.setTextColor(Color.GREEN);
+                    holder.time.setText(favouritesList.get(position).getTime());
+                    holder.time.setTextColor(Color.RED);
+                    return;
+                case "followers":
+                    holder.title.setText(favouritesList.get(position).getTitle());
+                    holder.subtitle.setText(favouritesList.get(position).getSubtitle());
+                    holder.date.setText(favouritesList.get(position).getDate());
+                    holder.time.setText(favouritesList.get(position).getTime());
+                    return;
+                case "following":
+                    holder.title.setText(favouritesList.get(position).getTitle());
+                    holder.subtitle.setText(favouritesList.get(position).getSubtitle());
+                    holder.date.setText(favouritesList.get(position).getDate());
+                    holder.time.setText(favouritesList.get(position).getTime());
+                    return;
             }
         } catch (ParseException e) {
             e.printStackTrace();
-        }
-        if(position == 0 || !previousDate.equals(currentDate)){
-            LinearLayout llSuperTitle = (LinearLayout) holder.masterLayout.findViewById(R.id.containerSuperHeading);
-            llSuperTitle.setVisibility(View.VISIBLE);
-            previousDate = currentDate;
         }
 
 //        Glide.with(context)
@@ -96,13 +142,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
 //        holder.subtitle.setText(favouritesList.get(position).getSubtitle());
 //        holder.date.setText(favouritesList.get(position).getDate());
 //        holder.time.setText(favouritesList.get(position).getTime());
-        holder.masterLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FavouritesFragment fragment = new FavouritesFragment();
-                fragment.OnClick(position,context,rootview,favouritesList);
-            }
-        });
+
 
     }
 

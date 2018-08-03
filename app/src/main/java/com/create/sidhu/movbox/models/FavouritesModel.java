@@ -6,12 +6,12 @@ package com.create.sidhu.movbox.models;
  */
 
 public class FavouritesModel {
-    String Title;
-    String Type;
-    String Subtitle;
-    String Date;
-    String Time;
-    String ImageLocation;
+    private String Title;
+    private String Type;
+    private String Subtitle;
+    private String Date;
+    private String Time;
+    private String ImageLocation;
 
     //Setters
     public void setTitle(String title) {

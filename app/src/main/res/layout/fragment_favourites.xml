@@ -5,7 +5,10 @@
     android:layout_height="match_parent"
     tools:context=".fragments.FavouritesFragment"
     android:orientation="vertical"
-    android:paddingBottom="40dp">
+    android:layout_marginBottom="?attr/actionBarSize"
+    android:layout_marginTop="@dimen/layout_top_margin"
+    android:layout_marginLeft="@dimen/layout_side_margin"
+    android:layout_marginRight="@dimen/layout_side_margin">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_Favourites"
