@@ -2,7 +2,7 @@ package com.create.sidhu.movbox.models;
 
 /**
  * Holds the data for Favourites List.
- * Created by nihalpradeep on 22/07/18.
+ *
  */
 
 public class FavouritesModel {
@@ -12,6 +12,8 @@ public class FavouritesModel {
     private String Date;
     private String Time;
     private String ImageLocation;
+    private String UserId;
+    private String MovieId;
 
     //Setters
     public void setTitle(String title) {
@@ -38,6 +40,13 @@ public class FavouritesModel {
         ImageLocation = imageLocation;
     }
 
+    public void setUserId(String userId) {
+        UserId = userId;
+    }
+
+    public void setMovieId(String movieId) {
+        MovieId = movieId;
+    }
 
     //Getters
     public String getTitle() {
@@ -62,5 +71,13 @@ public class FavouritesModel {
 
     public String getImageLocation() {
         return ImageLocation;
+    }
+
+    public String getUserId() {
+        return UserId;
+    }
+
+    public String getMovieId() {
+        return MovieId;
     }
 }

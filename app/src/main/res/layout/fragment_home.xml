@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.HomeFragment"
     android:layout_marginBottom="?attr/actionBarSize"
-    android:layout_marginTop="@dimen/layout_top_margin"
-    android:layout_marginLeft="@dimen/layout_side_margin"
-    android:layout_marginRight="@dimen/layout_side_margin">
-
-
-
-    <!-- TODO: Update blank fragment layout -->
-
-
-</FrameLayout>
+    android:background="@color/colorTextDisabled">
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerView">
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>

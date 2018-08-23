@@ -10,4 +10,7 @@
     <dimen name="list_padding">4dp</dimen>
     <dimen name="layout_top_margin">20dp</dimen>
     <dimen name="layout_side_margin">10dp</dimen>
+    <dimen name="home_description_padding_top">8dp</dimen>
+    <dimen name="home_description_padding_side">12dp</dimen>
+    <dimen name="login_side_margin">60dp</dimen>
 </resources>

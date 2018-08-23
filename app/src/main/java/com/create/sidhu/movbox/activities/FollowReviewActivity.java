@@ -15,18 +15,25 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.adapters.FavouritesAdapter;
 import com.create.sidhu.movbox.adapters.RecyclerViewAdapter;
+import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.models.FavouritesModel;
 import com.create.sidhu.movbox.models.MovieModel;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import static android.support.constraint.Constraints.TAG;
 
 //TODO: Fetch proper data
-public class FollowReviewActivity extends AppCompatActivity {
+public class FollowReviewActivity extends AppCompatActivity implements SqlDelegate{
 
     private FavouritesAdapter favouritesAdapter;
     private ArrayList<FavouritesModel> favouritesList;
@@ -48,39 +55,62 @@ public class FollowReviewActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     private void setLayout(String type){
+        SqlHelper sqlHelper = new SqlHelper(FollowReviewActivity.this, FollowReviewActivity.this);
+        ArrayList<NameValuePair> params = new ArrayList<>();
         switch(type){
             case "review":
-                for(int i=0;i<=8;i++){
-                    FavouritesModel favouritesModel = new FavouritesModel();
-                    favouritesModel.setTitle("Review: " + i);
-                    favouritesModel.setSubtitle("Review Subtitle: " + i);
-                    favouritesModel.setType("review");
-                    favouritesModel.setDate("+" + i + 1);
-                    favouritesModel.setTime("-" + i + 1);
-                    favouritesList.add(favouritesModel);
-                }
+//                for(int i=0;i<=8;i++){
+//                    FavouritesModel favouritesModel = new FavouritesModel();
+//                    favouritesModel.setTitle("Review: " + i);
+//                    favouritesModel.setSubtitle("Review Subtitle: " + i);
+//                    favouritesModel.setType("review");
+//                    favouritesModel.setDate("+" + i + 1);
+//                    favouritesModel.setTime("-" + i + 1);
+//                    favouritesList.add(favouritesModel);
+//                }
+                sqlHelper.setMethod("GET");
+                sqlHelper.setActionString("review");
+                sqlHelper.setExecutePath("get-review.php");
+                params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
+                params.add(new BasicNameValuePair("type", getString(R.string.profile_user)));
+                sqlHelper.setParams(params);
+                sqlHelper.executeUrl();
                 break;
             case "followers":
-                for(int i=0;i<=8;i++){
-                    FavouritesModel favouritesModel = new FavouritesModel();
-                    favouritesModel.setTitle("Followers: " + i);
-                    favouritesModel.setSubtitle("Followers Subtitle: " + i);
-                    favouritesModel.setType("followers");
-                    favouritesModel.setDate("Followers" + i + 1);
-                    favouritesModel.setTime("Following" + i + 1);
-                    favouritesList.add(favouritesModel);
-                }
+//                for(int i=0;i<=8;i++){
+//                    FavouritesModel favouritesModel = new FavouritesModel();
+//                    favouritesModel.setTitle("Followers: " + i);
+//                    favouritesModel.setSubtitle("Followers Subtitle: " + i);
+//                    favouritesModel.setType("followers");
+//                    favouritesModel.setDate("Followers" + i + 1);
+//                    favouritesModel.setTime("Following" + i + 1);
+//                    favouritesList.add(favouritesModel);
+//                }
+                sqlHelper.setMethod("GET");
+                sqlHelper.setActionString("followers");
+                sqlHelper.setExecutePath("follow.php");
+                params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
+                params.add(new BasicNameValuePair("type", getString(R.string.followers).toLowerCase()));
+                sqlHelper.setParams(params);
+                sqlHelper.executeUrl();
                 break;
             case "following":
-                for(int i=0;i<=8;i++){
-                    FavouritesModel favouritesModel = new FavouritesModel();
-                    favouritesModel.setTitle("Following: " + i);
-                    favouritesModel.setSubtitle("Following Subtitle: " + i);
-                    favouritesModel.setType("following");
-                    favouritesModel.setDate("Followers" + i + 1);
-                    favouritesModel.setTime("Following" + i + 1);
-                    favouritesList.add(favouritesModel);
-                }
+//                for(int i=0;i<=8;i++){
+//                    FavouritesModel favouritesModel = new FavouritesModel();
+//                    favouritesModel.setTitle("Following: " + i);
+//                    favouritesModel.setSubtitle("Following Subtitle: " + i);
+//                    favouritesModel.setType("following");
+//                    favouritesModel.setDate("Followers" + i + 1);
+//                    favouritesModel.setTime("Following" + i + 1);
+//                    favouritesList.add(favouritesModel);
+//                }
+                sqlHelper.setMethod("GET");
+                sqlHelper.setActionString("following");
+                sqlHelper.setExecutePath("follow.php");
+                params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
+                params.add(new BasicNameValuePair("type", getString(R.string.following).toLowerCase()));
+                sqlHelper.setParams(params);
+                sqlHelper.executeUrl();
                 break;
             case "watched":
                 addData();
@@ -90,10 +120,10 @@ public class FollowReviewActivity extends AppCompatActivity {
                 recyclerView.setAdapter(adapter);
                 return;
         }
-        favouritesAdapter = new FavouritesAdapter(this, favouritesList, recyclerView);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(favouritesAdapter);
+//        favouritesAdapter = new FavouritesAdapter(this, favouritesList, recyclerView);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+//        recyclerView.setLayoutManager(layoutManager);
+//        recyclerView.setAdapter(favouritesAdapter);
     }
 
     private void addData() {
@@ -204,7 +234,7 @@ public class FollowReviewActivity extends AppCompatActivity {
 
     public void OnClick(int position, Context context, View rootview, ArrayList<MovieModel> movieModel){
         bundle = new Bundle();
-        bundle.putString("type", "movie");
+        bundle.putString("type", getString(R.string.profile_movies));
         bundle.putBoolean("isIdentity", false);
         bundle.putString("image",movieModel.get(position).getImage());
         bundle.putString("name",movieModel.get(position).getName());
@@ -214,4 +244,72 @@ public class FollowReviewActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    @Override
+    public void onResponse(SqlHelper sqlHelper) {
+        try {
+            JSONArray jsonArray = sqlHelper.getJSONResponse().getJSONArray("country_data");
+            JSONObject jsonObject = jsonArray.getJSONObject(0);
+            String response = jsonObject.getString("response");
+            int length = jsonArray.length();
+            if(response.equals(getString(R.string.response_success))){
+                switch (sqlHelper.getActionString()){
+                    case "review":{
+                        for(int i=1 ; i<length; i++){
+                            jsonObject = jsonArray.getJSONObject(i);
+                            FavouritesModel favouritesModel = new FavouritesModel();
+                            favouritesModel.setUserId(jsonObject.getString("u_id"));
+                            favouritesModel.setMovieId(jsonObject.getString("m_id"));
+                            favouritesModel.setTitle(jsonObject.getString("m_name"));
+                            favouritesModel.setSubtitle(jsonObject.getString("r_text"));
+                            favouritesModel.setType("review");
+                            favouritesModel.setDate("+" + jsonObject.getString("upvotes"));
+                            favouritesModel.setTime("-" + jsonObject.getString("downvotes"));
+                            favouritesList.add(favouritesModel);
+                        }
+                    }
+                    break;
+                    case "following":{
+                        for(int i=1 ; i<length; i++){
+                            jsonObject = jsonArray.getJSONObject(i);
+                            FavouritesModel favouritesModel = new FavouritesModel();
+                            favouritesModel.setUserId(jsonObject.getString("u_id"));
+                            favouritesModel.setTitle(jsonObject.getString("name"));
+                            favouritesModel.setSubtitle(jsonObject.getString("movies_watched") + " movies watched");
+                            favouritesModel.setType("following");
+                            favouritesModel.setDate("Following: " + jsonObject.getString("following"));
+                            favouritesModel.setTime("Followers: " + jsonObject.getString("followers"));
+                            favouritesList.add(favouritesModel);
+                        }
+                    }
+                    break;
+                    case "followers":{
+                        for(int i=1 ; i<length; i++){
+                            jsonObject = jsonArray.getJSONObject(i);
+                            FavouritesModel favouritesModel = new FavouritesModel();
+                            favouritesModel.setUserId(jsonObject.getString("u_id"));
+                            favouritesModel.setTitle(jsonObject.getString("name"));
+                            favouritesModel.setSubtitle(jsonObject.getString("movies_watched") + " movies watched");
+                            favouritesModel.setType("followers");
+                            favouritesModel.setDate("Following: " + jsonObject.getString("following"));
+                            favouritesModel.setTime("Followers: " + jsonObject.getString("followers"));
+                            favouritesList.add(favouritesModel);
+                        }
+                    }
+                    break;
+                }
+                favouritesAdapter = new FavouritesAdapter(this, favouritesList, recyclerView);
+                LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+                recyclerView.setLayoutManager(layoutManager);
+                recyclerView.setAdapter(favouritesAdapter);
+            }else if(response.equals(getString(R.string.response_unsuccessful))){
+
+            }
+        }catch (Exception e){
+            Log.e("FollowReview:onResp", e.getMessage());
+            Intent intent = new Intent(FollowReviewActivity.this, MainActivity.class);
+            bundle.putString("return_path", "ProfileFragment");
+            intent.putExtra("bundle", bundle);
+            startActivity(intent);
+        }
+    }
 }
