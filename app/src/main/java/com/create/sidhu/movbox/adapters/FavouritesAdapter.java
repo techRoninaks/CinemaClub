@@ -1,7 +1,7 @@
 package com.create.sidhu.movbox.adapters;
 
 /**
- * Created by nihalpradeep on 22/07/18.
+ * Adapter for Favourites list
  */
 
 import android.content.Context;

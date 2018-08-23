@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.activities.MainActivity;
 import com.create.sidhu.movbox.adapters.RecyclerViewAdapter;
 import com.create.sidhu.movbox.models.MovieModel;
 
@@ -122,19 +123,21 @@ public class MoviesFragment extends Fragment {
     public void OnClick(int position, Context context,View rootview, ArrayList<MovieModel> movieModels) {
         //Custom code
         this.context = context;
+        MainActivity mainActivity = (MainActivity) context;
         Bundle bundle = new Bundle();
-        bundle.putString("type","movie");
+        bundle.putString("type",context.getString(R.string.profile_movies));
         bundle.putString("name", movieModels.get(position).getName());
         bundle.putString("image", movieModels.get(position).getImage());
         bundle.putBoolean("isIdentity", false);
         ProfileFragment fragment2 = new ProfileFragment();
-        fragment2.setArguments(bundle);
-        FragmentManager fragmentManager = ((Activity)context).getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.RelLayout1, fragment2, "fragmentdetails");
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-        fragmentTransaction.show(fragment2);
+//        fragment2.setArguments(bundle);
+//        FragmentManager fragmentManager = ((Activity)context).getFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.RelLayout1, fragment2, "fragmentdetails");
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+//        fragmentTransaction.show(fragment2);
+        mainActivity.initFragment(fragment2, bundle);
         Toast.makeText(context,"Inside Movies",Toast.LENGTH_SHORT).show();
 
     }

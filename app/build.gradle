@@ -19,6 +19,7 @@ android {
     }
     productFlavors {
     }
+    useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {

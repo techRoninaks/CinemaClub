@@ -25,6 +25,10 @@ import java.util.ArrayList;
 
 import static android.media.CamcorderProfile.get;
 
+/**
+ * Adapter for Movie Recycler View
+ */
+
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     //variables
@@ -68,13 +72,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(type.equalsIgnoreCase("profile")) {
+                if(type.equalsIgnoreCase(context.getString(R.string.profile))) {
                     ProfileFragment fragment = new ProfileFragment();
                     fragment.OnClick(position, context, rootview, movieModels);
-                }else if(type.equalsIgnoreCase("movie")){
+                }else if(type.equalsIgnoreCase(context.getString(R.string.profile_movies))){
                     MoviesFragment fragment = new MoviesFragment();
                     fragment.OnClick(position, context, rootview, movieModels);
-                }else if(type.equalsIgnoreCase("watched")){
+                }else if(type.equalsIgnoreCase(context.getString(R.string.watched))){
                     FollowReviewActivity followReviewActivity = (FollowReviewActivity) context;
                     followReviewActivity.OnClick(position, context, rootview, movieModels);
                 }

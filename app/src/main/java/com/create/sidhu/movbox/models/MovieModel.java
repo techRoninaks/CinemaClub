@@ -1,7 +1,7 @@
 package com.create.sidhu.movbox.models;
 
 /**
- * Created by nihalpradeep on 28/07/18.
+ * Holds the movie recycler view information
  */
 
 public class MovieModel {
@@ -9,6 +9,11 @@ public class MovieModel {
     private String Image;
     private String Rating;
     private String Id;
+    private String Genre;
+    private String DisplayDimension;
+    private int TotalReviews;
+    private int TotalRatings;
+    private int Duration;
 
     //Getters
     public String getId() {
@@ -27,6 +32,26 @@ public class MovieModel {
         return Name;
     }
 
+    public int getTotalReviews() {
+        return TotalReviews;
+    }
+
+    public int getTotalRatings() {
+        return TotalRatings;
+    }
+
+    public String getDisplayDimension() {
+        return DisplayDimension;
+    }
+
+    public int getDuration() {
+        return Duration;
+    }
+
+    public String getGenre() {
+        return Genre;
+    }
+
     //Setters
     public void setName(String name) {
         this.Name = name;
@@ -42,5 +67,25 @@ public class MovieModel {
 
     public void setId(String id) {
         this.Id = id;
+    }
+
+    public void setTotalReviews(int totalReviews) {
+        TotalReviews = totalReviews;
+    }
+
+    public void setTotalRatings(int totalRatings) {
+        TotalRatings = totalRatings;
+    }
+
+    public void setDisplayDimension(String displayDimension) {
+        DisplayDimension = displayDimension;
+    }
+
+    public void setDuration(int duration) {
+        Duration = duration;
+    }
+
+    public void setGenre(String genre) {
+        Genre = genre;
     }
 }

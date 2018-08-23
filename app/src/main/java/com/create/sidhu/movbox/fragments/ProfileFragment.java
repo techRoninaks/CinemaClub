@@ -64,42 +64,49 @@ public class ProfileFragment extends Fragment {
     private Boolean isIdentity;
     private String image;
     private String name;
+    private int totalWatched;
+    private int totalReviewed;
+    private int followers;
+    private int following;
 
     View rootview;
     LinearLayout llSettings, llLogout, llWatched;
-    TextView textViewName;
+    TextView textViewName, textViewWatched, textViewReviews, textViewFollowers, textViewFollowing;
     CircleImageView imgProfile;
     ScrollView parentView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        context = getActivity();
         movieModels = new ArrayList<>();
         final Bundle bundle = getArguments();
         type = bundle.getString("type");
-        isIdentity = bundle.getBoolean("isIdentity");
         image = bundle.getString("image");
-        name = bundle.getString("name");
+        if(type.equals(context.getString(R.string.profile_user))){
+            isIdentity = bundle.getBoolean("isIdentity");
+            name = bundle.getString("name");
+            totalWatched = bundle.getInt("movies_watched");
+            totalReviewed = bundle.getInt("movies_reviewed");
+            followers = bundle.getInt("followers");
+            following = bundle.getInt("following");
+        }
 
-        context = getActivity();
+
         rootview = inflater.inflate(R.layout.fragment_profile, container, false);
         parentView = (ScrollView) rootview.findViewById(R.id.parentView) ;
         llSettings = (LinearLayout) rootview.findViewById(R.id.containerSettings);
         llLogout = (LinearLayout) rootview.findViewById(R.id.containerLogout);
         llWatched = (LinearLayout) rootview.findViewById(R.id.containerWatched);
         textViewName = rootview.findViewById(R.id.profile_name);
+        textViewWatched = rootview.findViewById(R.id.profile_watch_count);
+        textViewReviews = rootview.findViewById(R.id.profile_review_count);
+        textViewFollowers = rootview.findViewById(R.id.profile_followers_count);
+        textViewFollowing = rootview.findViewById(R.id.profile_following_count);
         imgProfile = rootview.findViewById(R.id.profile_image);
-        TextView text_reviews = rootview.findViewById(R.id.profile_review_count);
-        TextView text_followers = rootview.findViewById(R.id.profile_followers_count);
-        TextView text_following = rootview.findViewById(R.id.profile_following_count);
 
         final Button btn_click = rootview.findViewById(R.id.btn_click);
         Button button_img = rootview.findViewById(R.id.btn_profile_image);
-
-        textViewName.setText(name);
-        Glide.with(context)
-                .asBitmap()
-                .load(image)
-                .into(imgProfile);
+        populateView();
         addData();
         llSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,7 +136,7 @@ public class ProfileFragment extends Fragment {
             }
         });
         // onClickListener for Review count
-        text_reviews.setOnClickListener(new View.OnClickListener() {
+        textViewReviews.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bundle.putString("return_path", "ProfileFragment");
@@ -142,7 +149,7 @@ public class ProfileFragment extends Fragment {
         });
 
         // onClickListener for Followers
-        text_followers.setOnClickListener(new View.OnClickListener() {
+        textViewFollowers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bundle.putString("return_path", "ProfileFragment");
@@ -155,7 +162,7 @@ public class ProfileFragment extends Fragment {
         });
 
          // onClickListener for Followers
-        text_following.setOnClickListener(new View.OnClickListener() {
+        textViewFollowing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bundle.putString("return_path", "ProfileFragment");
@@ -189,6 +196,31 @@ public class ProfileFragment extends Fragment {
         return rootview;
     }
 
+    private void populateView(){
+        textViewName.setText(name);
+        Glide.with(context)
+                .asBitmap()
+                .load(image)
+                .into(imgProfile).onLoadFailed(context.getDrawable(R.drawable.profile_default));
+        textViewWatched.setText(formatTextCount(totalWatched));
+        textViewReviews.setText(formatTextCount(totalReviewed));
+        textViewFollowers.setText(formatTextCount(followers));
+        textViewFollowing.setText(formatTextCount(following));
+    }
+    private String formatTextCount(int count){
+        String formattedCount = "";
+        if(count >= 10000){
+            if(count % 1000 == 0){
+                formattedCount = "" + count/1000 + "k";
+            }else {
+                double temp = ((double) count) / 1000.0;
+                formattedCount = "" + Math.round(temp * 100.0) / 100.0 + "k";
+            }
+        }
+        else
+            formattedCount = "" + count;
+        return formattedCount;
+    }
     private void addData() {
         MovieModel model = new MovieModel();
         model.setImage("https://www.topmovierankings.com/images/albums/photos/comrade-in-america-malayalam-movie-stills-poster-4503.jpg");
@@ -242,20 +274,21 @@ public class ProfileFragment extends Fragment {
     public void OnClick(int position, Context context,View rootview, ArrayList<MovieModel> movieModels) {
         //Custom code
         this.context = context;
-        parentView.removeAllViews();
+        MainActivity mainActivity = (MainActivity) context;
         Bundle bundle = new Bundle();
-        bundle.putString("type","movie");
+        bundle.putString("type",context.getString(R.string.profile_movies));
         bundle.putString("name", movieModels.get(position).getName());
         bundle.putString("image", movieModels.get(position).getImage());
         bundle.putBoolean("isIdentity", false);
         ProfileFragment fragment2 = new ProfileFragment();
-        fragment2.setArguments(bundle);
-        FragmentManager fragmentManager = ((Activity)context).getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.RelLayout1, fragment2, "fragmentdetails");
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-        fragmentTransaction.show(fragment2);
+//        fragment2.setArguments(bundle);
+//        FragmentManager fragmentManager = ((Activity)context).getFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.RelLayout1, fragment2, "fragmentdetails");
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+//        fragmentTransaction.show(fragment2);
+        mainActivity.initFragment(fragment2, bundle);
         Toast.makeText(context,"Inside Profile",Toast.LENGTH_SHORT).show();
 
     }
