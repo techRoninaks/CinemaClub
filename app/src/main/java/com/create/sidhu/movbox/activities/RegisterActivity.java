@@ -72,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
         params.add(new BasicNameValuePair("country", spinnerCountry.getSelectedItem().toString()));
         params.add(new BasicNameValuePair("phone", editTextPhone.getText().toString()));
         sqlHelper.setParams(params);
-        sqlHelper.executeUrl();
+        sqlHelper.executeUrl(true);
         Toast.makeText(RegisterActivity.this, "Attempting SignUp", Toast.LENGTH_SHORT).show();
     }
     private void populateCountry(){
@@ -81,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
         sqlHelper.setActionString("country");
         sqlHelper.setParams(new ArrayList<NameValuePair>());
         sqlHelper.setMethod(getString(R.string.method_get));
-        sqlHelper.executeUrl();
+        sqlHelper.executeUrl(true);
     }
     private boolean validateSignUp(){
         boolean signUp = true;
@@ -139,6 +139,7 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
                         Toast.makeText(RegisterActivity.this, getString(R.string.success_register) + ". " + getString(R.string.continue_login), Toast.LENGTH_SHORT).show();
                     }
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    finish();
                 }
                     break;
                 case "country": {
@@ -158,6 +159,7 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
                     }else if(response.equals(getString(R.string.response_unsuccessful))){
                         Toast.makeText(RegisterActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                        finish();
                     }
 
                 }

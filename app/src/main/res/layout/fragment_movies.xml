@@ -6,64 +6,16 @@
     tools:context=".fragments.MoviesFragment"
     android:id="@+id/RelLayout1">
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/layout_top_margin"
         android:layout_marginBottom="?attr/actionBarSize">
-
-
-        <TextView
-            android:id="@+id/text_new_releases"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="43dp"
-            android:text="@string/new_releases" />
-
-        <SearchView
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView2"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/text_new_releases" />
-
-        <Button
-            android:id="@+id/bclick_movies_new"
-            android:layout_width="30dp"
-            android:layout_height="27dp"
-            android:layout_alignBottom="@+id/text_new_releases"
-            android:layout_alignParentEnd="true" />
-
-
-        <TextView
-            android:id="@+id/text_upcoming"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/recyclerView2"
-            android:text="@string/upcoming_movies" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:layout_below="@+id/text_upcoming" />
-
-        <Button
-            android:id="@+id/bclick_movies_upcoming"
-            android:layout_width="30dp"
-            android:layout_height="27dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true" />
-    </RelativeLayout>
-
+            android:id="@+id/containerMaster"
+            android:orientation="vertical">
+        </LinearLayout>
+    </ScrollView>
     <!-- TODO: Update blank fragment layout -->
 </FrameLayout>

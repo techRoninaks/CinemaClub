@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CinemaClub</string>
+    <string name="app_name">Cinema Club</string>
     <string name="title_home">Home</string>
     <string name="title_movies">Movies</string>
     <string name="title_post_status">Post Status</string>
@@ -22,10 +22,21 @@
     <string name="phone">Phone No:</string>
     <string name="name">Name</string>
     <string name="continue_login">Please login to continue</string>
+    <string name="follow_button_edit">Edit Profile</string>
+    <string name="follow_button_follow">Follow</string>
+    <string name="follow_button_following">@string/following</string>
+    <string name="follow_button_watching">Add to Watching</string>
+    <string name="follow_button_watched">Watching</string>
+    <string name="follow_button_watchlist_add">Add to Watchlist</string>
+    <string name="follow_button_watchlist_remove">Remove from Watchlist</string>
+
+    <!-- Permission Resource Strings -->
+    <string name="permission_camera_denied">Please allow camera permission to take picture.</string>
 
     <!-- View Resource Strings -->
     <string name="profile_user">user</string>
     <string name="profile_movies">movie</string>
+    <string name="profile_cast">cast</string>
     <string name="bottom_dialog_post_status">post_status</string>
     <string name="profile">profile</string>
     <string name="watched">watched</string>
@@ -50,8 +61,23 @@
     <string name="db_server"></string>
     <string name="master_url">https://understandable-blin.000webhostapp.com/cinema-club/</string>
     <string name="profile_image_url">users/images/profile/</string>
+    <string name="movie_image_portrait_url">movies/images/portrait/</string>
+    <string name="cast_image_url">/cast/images/</string>
     <string name="method_get">GET</string>
     <string name="method_post">POST</string>
+
+    <!-- Favourites Title Strings -->
+    <string name="favourites_following">started following you.</string>
+    <string name="favourites_watching">is watching</string>
+    <string name="favourites_rating">has rated</string>
+    <string name="favourites_review">wrote a review on</string>
+    <string name="favourites_vote">has voted on your review for</string>
+
+    <!-- Home Title Strings -->
+    <string name="home_new_releases">New Release!</string>
+    <string name="home_recommendation">Recommended for you</string>
+    <string name="home_review_reminder">Have you reviewed this movie yet?</string>
+    <string name="home_watchlist_reminder">Have you watched this movie yet?</string>
 
     <!-- Other Resource Strings -->
 
@@ -72,4 +98,5 @@
     <string name="view_reviews">Tap to see all reviews</string>
     <string name="write_reviews">Write a review…</string>
     <string name="tab_watched">Watched</string>
+    <string name="placeholder_show_nothing">Nothing to show</string>
 </resources>

@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context="com.create.sidhu.movbox.activities.FollowReviewActivity"
     android:orientation="vertical">
+    <include layout="@layout/toolbar"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/containerPlaceholder"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_Placeholder"
+            android:text="@string/placeholder_show_nothing"
+            android:textColor="@color/colorTextSecondary"/>
+    </LinearLayout>
 <android.support.v7.widget.RecyclerView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

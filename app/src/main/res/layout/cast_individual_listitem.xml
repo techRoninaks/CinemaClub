@@ -6,20 +6,33 @@
     android:paddingLeft="@dimen/home_description_padding_side"
     android:id="@+id/containerIndvCastMaster">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/containerIndvDefinitionImage"
-        android:orientation="vertical">
-        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/indvDefinition_image"
-            android:layout_width="@dimen/list_image"
-            android:layout_height="@dimen/list_image"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/profile_default"
-            app:civ_border_color="@color/colorPrimary"
-            app:civ_border_width="1dp" />
-    </LinearLayout>
+        android:id="@+id/containerIndvDefinitionImage">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/containerDefinitionImage">
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/indvDefinition_image"
+                android:layout_width="@dimen/list_image"
+                android:layout_height="@dimen/list_image"
+                android:src="@drawable/profile_default"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/containerDefinitionImage"
+            android:layout_alignTop="@+id/containerDefinitionImage"
+            android:layout_marginStart="32dp">
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/indvDefinition_image_btn"
+                android:layout_width="@dimen/cast_image_identifier_size"
+                android:layout_height="@dimen/cast_image_identifier_size"
+                android:src="@drawable/ic_director"/>
+        </LinearLayout>
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,6 +43,6 @@
             android:id="@+id/textView_indvDefinitionName"
             android:text="Actor"
             android:textAlignment="center"
-            android:textSize="@dimen/list_subtext"/>
+            android:textSize="@dimen/list_subtext" />
     </LinearLayout>
 </LinearLayout>

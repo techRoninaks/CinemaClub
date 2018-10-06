@@ -1,16 +1,32 @@
 package com.create.sidhu.movbox.models;
 
+import android.content.Context;
+
+import com.create.sidhu.movbox.Interfaces.SqlDelegate;
+import com.create.sidhu.movbox.helpers.SqlHelper;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 /**
  * Holds data for actors
  */
 
-public class ActorModel {
+public class ActorModel{
+    private Context Context;
     private String Id;
     private String Name;
     private String Gender;
     private String Image;
-    private int Rating;
+    private float Rating;
+    private float AverageRating;
     private String Type;
+    private int TotalMovies;
 
     //Setters
 
@@ -30,12 +46,20 @@ public class ActorModel {
         Gender = gender;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         Rating = rating;
     }
 
     public void setType(String type) {
         Type = type;
+    }
+
+    public void setAverageRating(float averageRating) {
+        AverageRating = averageRating;
+    }
+
+    public void setTotalMovies(int totalMovies) {
+        TotalMovies = totalMovies;
     }
     //Getters
 
@@ -55,11 +79,19 @@ public class ActorModel {
         return Image;
     }
 
-    public int getRating() {
+    public float getRating() {
         return Rating;
     }
 
     public String getType() {
         return Type;
+    }
+
+    public float getAverageRating() {
+        return AverageRating;
+    }
+
+    public int getTotalMovies() {
+        return TotalMovies;
     }
 }

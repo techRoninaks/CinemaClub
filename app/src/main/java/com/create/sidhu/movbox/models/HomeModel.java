@@ -14,7 +14,7 @@ public class HomeModel {
     private String DisplayDimension;
     private String Type;
     private int Rating;
-    private ArrayList<ActorModel> ActorList;
+    private ArrayList<ActorModel> Cast;
     private String DefinitionImage;
     private String DefinitionTitle;
     private String DefinitionSubtitle;
@@ -22,9 +22,10 @@ public class HomeModel {
     private int TotalWatched;
     private UserModel UserInfo;
     private MovieModel MovieInfo;
+    private FavouritesModel Favourites;
 
     public HomeModel(){
-        ActorList = new ArrayList<>();
+        Cast = new ArrayList<>();
     }
 
     //Setters
@@ -57,8 +58,8 @@ public class HomeModel {
         Rating = rating;
     }
 
-    public void setActorList(ArrayList<ActorModel> actorList) {
-        ActorList = actorList;
+    public void setCast(ArrayList<ActorModel> actorList) {
+        Cast = actorList;
     }
 
     public void setDefinitionImage(String definitionImage) {
@@ -87,6 +88,10 @@ public class HomeModel {
 
     public void setMovieInfo(MovieModel movieInfo) {
         MovieInfo = movieInfo;
+    }
+
+    public void setFavourites(FavouritesModel favourites) {
+        Favourites = favourites;
     }
     //Getters
 
@@ -118,8 +123,8 @@ public class HomeModel {
         return Rating;
     }
 
-    public ArrayList<ActorModel> getActorList() {
-        return ActorList;
+    public ArrayList<ActorModel> getCast() {
+        return Cast;
     }
 
     public String getDefinitionImage() {
@@ -148,5 +153,9 @@ public class HomeModel {
 
     public MovieModel getMovieInfo() {
         return MovieInfo;
+    }
+
+    public FavouritesModel getFavourites() {
+        return Favourites;
     }
 }

@@ -1,16 +1,29 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="toolbar_title">24sp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="list_supertext">20sp</dimen>
-    <dimen name="list_titletext">18sp</dimen>
-    <dimen name="list_subtext">13sp</dimen>
+    <dimen name="standard_gap">8dp</dimen>
+    <dimen name="standard_touch_space">4dp</dimen>
+    <dimen name="list_supertext">17sp</dimen>
+    <dimen name="list_titletext">15sp</dimen>
+    <dimen name="list_subtext">12sp</dimen>
     <dimen name="list_othertext">11sp</dimen>
-    <dimen name="list_image">50dp</dimen>
-    <dimen name="list_padding">4dp</dimen>
+    <dimen name="list_image">40dp</dimen>
+    <dimen name="cast_image_identifier_size">14dp</dimen>
+    <dimen name="list_padding">@dimen/standard_touch_space</dimen>
+    <dimen name="list_interspace">2dp</dimen>
     <dimen name="layout_top_margin">20dp</dimen>
     <dimen name="layout_side_margin">10dp</dimen>
-    <dimen name="home_description_padding_top">8dp</dimen>
+    <dimen name="home_description_padding_top">@dimen/standard_gap</dimen>
     <dimen name="home_description_padding_side">12dp</dimen>
+    <dimen name="home_action_image_size">20dp</dimen>
+    <dimen name="home_poster_image_size">180dp</dimen>
     <dimen name="login_side_margin">60dp</dimen>
+    <dimen name="profile_image">96dp</dimen>
+    <dimen name="profile_image_padding">9dp</dimen>
+    <dimen name="profile_image_stroke">4dp</dimen>
+    <dimen name="profile_image_change_button">33dp</dimen>
+    <dimen name="grid_icon_size">15dp</dimen>
+    <dimen name="post_status_icon_size">25dp</dimen>
 </resources>

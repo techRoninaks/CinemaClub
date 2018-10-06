@@ -6,25 +6,21 @@ package com.create.sidhu.movbox.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.icu.util.DateInterval;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.fragments.FavouritesFragment;
-import com.create.sidhu.movbox.fragments.ProfileFragment;
 import com.create.sidhu.movbox.models.FavouritesModel;
+import com.create.sidhu.movbox.models.UserModel;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,12 +28,14 @@ import java.util.Calendar;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.ViewHolder> {
 
     //Global member variables
 
     private ArrayList<FavouritesModel> favouritesList = new ArrayList<>();
+    private ArrayList<UserModel> usersList = new ArrayList<>();
     private Context context;
     private View rootview;
     private Date today;
@@ -60,6 +58,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
     }
 
 
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -69,12 +68,12 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position)  {
-        LinearLayout llSuperTitle = (LinearLayout) holder.masterLayout.findViewById(R.id.containerSuperHeading);
+        LinearLayout llSuperTitle = (LinearLayout) holder.llmasterLayout.findViewById(R.id.containerSuperHeading);
         try {
             //TODO: Setting proper values
             switch (favouritesList.get(position).getType()) {
                 case "favourites":
-                    currentDate = new SimpleDateFormat("dd/MM/yyyy").parse(favouritesList.get(position).getDate());
+                    currentDate = new SimpleDateFormat("yyyy-MM-dd").parse(favouritesList.get(position).getDate());
                     int decision = today.compareTo(currentDate);
                     if (decision == 0) {
                         String day = context.getString(R.string.date_today);
@@ -100,11 +99,91 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                             }
                         }
                     }
-                    holder.masterLayout.setOnClickListener(new View.OnClickListener() {
+                    holder.llmasterLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             FavouritesFragment fragment = new FavouritesFragment();
-                            fragment.OnClick(position, context, rootview, favouritesList);
+                            fragment.OnClick(position, context, rootview, favouritesList, "general");
+                        }
+                    });
+                    holder.time.setText(favouritesList.get(position).getTime());
+                    holder.date.setText(favouritesList.get(position).getDate());
+                    switch (favouritesList.get(position).getSubType()){
+                        case "follow": {
+                            holder.title.setText(context.getString(R.string.favourites_following));
+                            holder.subject.setText(favouritesList.get(position).getUser().getName());
+                            holder.object.setVisibility(View.GONE);
+                            Glide.with(context)
+                                    .asBitmap()
+                                    .load(favouritesList.get(position).getUser().getImage())
+                                    .into(holder.list_img);
+                            holder.subtitle.setVisibility(View.GONE);
+                            break;
+                        }
+                        case "watching":{
+                            holder.title.setText(context.getString(R.string.favourites_watching));
+                            holder.subject.setText(favouritesList.get(position).getUser().getName());
+                            holder.object.setText(favouritesList.get(position).getMovie().getName());
+                            Glide.with(context)
+                                    .asBitmap()
+                                    .load(favouritesList.get(position).getUser().getImage())
+                                    .into(holder.list_img);
+                            holder.subtitle.setText(favouritesList.get(position).getSubtitle());
+                            break;
+                        }
+                        case "rating":{
+                            holder.title.setText(context.getString(R.string.favourites_rating));
+                            holder.subject.setText(favouritesList.get(position).getUser().getName());
+                            holder.object.setText(favouritesList.get(position).getMovie().getName());
+                            Glide.with(context)
+                                    .asBitmap()
+                                    .load(favouritesList.get(position).getUser().getImage())
+                                    .into(holder.list_img);
+                            holder.subtitle.setText(favouritesList.get(position).getSubtitle());
+                            break;
+                        }
+                        case "review":{
+                            holder.title.setText(context.getString(R.string.favourites_review));
+                            holder.subject.setText(favouritesList.get(position).getUser().getName());
+                            holder.object.setText(favouritesList.get(position).getMovie().getName());
+                            Glide.with(context)
+                                    .asBitmap()
+                                    .load(favouritesList.get(position).getUser().getImage())
+                                    .into(holder.list_img);
+                            holder.subtitle.setText(favouritesList.get(position).getSubtitle());
+                            break;
+                        }
+                        case "review_vote":{
+                            holder.title.setText(context.getString(R.string.favourites_vote));
+                            holder.subject.setText(favouritesList.get(position).getUser().getName());
+                            holder.object.setText(favouritesList.get(position).getMovie().getName());
+                            Glide.with(context)
+                                    .asBitmap()
+                                    .load(favouritesList.get(position).getUser().getImage())
+                                    .into(holder.list_img);
+                            holder.subtitle.setText(favouritesList.get(position).getSubtitle());
+                            break;
+                        }
+                    }
+                    holder.subject.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FavouritesFragment fragment = new FavouritesFragment();
+                            fragment.OnClick(position, context, rootview, favouritesList, "subject");
+                        }
+                    });
+                    holder.object.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FavouritesFragment fragment = new FavouritesFragment();
+                            fragment.OnClick(position, context, rootview, favouritesList, "object");
+                        }
+                    });
+                    holder.list_img.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FavouritesFragment fragment = new FavouritesFragment();
+                            fragment.OnClick(position, context, rootview, favouritesList, "image");
                         }
                     });
                     return;
@@ -128,6 +207,14 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                     holder.date.setText(favouritesList.get(position).getDate());
                     holder.time.setText(favouritesList.get(position).getTime());
                     return;
+                case "user":
+                    holder.title.setText(favouritesList.get(position).getUser().getName());
+                    holder.subtitle.setText(favouritesList.get(position).getUser().getTotalWatched() + " Movies Watched");
+                    Glide.with(context).asBitmap()
+                            .load(favouritesList.get(position).getUser().getImage())
+                            .into(holder.list_img);
+                    holder.llDateTime.setVisibility(View.GONE);
+                    holder.llButton.setVisibility(View.VISIBLE);
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -155,21 +242,32 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder{
         CircleImageView list_img;
         TextView title;
+        TextView subject;
+        TextView object;
         TextView subtitle;
         TextView superTitle;
         TextView date;
         TextView time;
-        LinearLayout masterLayout;
-
+        LinearLayout llmasterLayout;
+        LinearLayout llDateTime;
+        LinearLayout llButton;
+        Typeface tfSemibold = Typeface.createFromAsset(context.getAssets(), "fonts/MyriadPro-Semibold.otf");
+        Typeface tfRegular = Typeface.createFromAsset(context.getAssets(), "fonts/myriadpro.otf");
         public ViewHolder(View itemView) {
             super(itemView);
             list_img = itemView.findViewById(R.id.list_image);
             title = itemView.findViewById(R.id.textView_TitleText);
+            subject = itemView.findViewById(R.id.textView_TitleSubject);
+            object = itemView.findViewById(R.id.textView_TitleObject);
             subtitle = itemView.findViewById(R.id.textView_SubText);
             superTitle = itemView.findViewById(R.id.textView_SuperText);
             date = itemView.findViewById(R.id.textView_Date);
             time = itemView.findViewById(R.id.textView_Time);
-            masterLayout = itemView.findViewById(R.id.containerMaster);
+            llmasterLayout = itemView.findViewById(R.id.containerMaster);
+            llDateTime = itemView.findViewById(R.id.containerDateTime);
+            llButton = itemView.findViewById(R.id.containerButton);
+            subject.setTypeface(tfSemibold);
+            object.setTypeface(tfSemibold);
         }
     }
 

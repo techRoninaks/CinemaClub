@@ -1,5 +1,12 @@
 package com.create.sidhu.movbox.models;
 
+import android.util.Log;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
 /**
  * Holds the movie recycler view information
  */
@@ -11,9 +18,17 @@ public class MovieModel {
     private String Id;
     private String Genre;
     private String DisplayDimension;
+    private String CensorRating;
+    private String Story;
+    private Date Release;
     private int TotalReviews;
     private int TotalRatings;
     private int Duration;
+    private int TotalWatched;
+    private String Cast;
+    private boolean IsWatched;
+    private boolean IsAddedToWatchlist;
+    private boolean IsRated;
 
     //Getters
     public String getId() {
@@ -52,6 +67,38 @@ public class MovieModel {
         return Genre;
     }
 
+    public int getTotalWatched() {
+        return TotalWatched;
+    }
+
+    public String getCensorRating() {
+        return CensorRating;
+    }
+
+    public Date getRelease() {
+        return Release;
+    }
+
+    public String getStory() {
+        return Story;
+    }
+
+    public String getCast() {
+        return Cast;
+    }
+
+    public boolean getIsWatched(){
+        return IsWatched;
+    }
+
+    public boolean getIsAddedToWatchlist(){
+        return  IsAddedToWatchlist;
+    }
+
+    public boolean getIsRated() {
+        return IsRated;
+    }
+
     //Setters
     public void setName(String name) {
         this.Name = name;
@@ -87,5 +134,42 @@ public class MovieModel {
 
     public void setGenre(String genre) {
         Genre = genre;
+    }
+
+    public void setTotalWatched(int totalWatched) {
+        TotalWatched = totalWatched;
+    }
+
+    public void setCensorRating(String censorRating) {
+        CensorRating = censorRating;
+    }
+
+    public void setRelease(String release) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            Release = simpleDateFormat.parse(release);
+        } catch (ParseException e) {
+            Log.e("MovieModel", e.getMessage());
+        }
+    }
+
+    public void setStory(String story) {
+        Story = story;
+    }
+
+    public void setCast(String cast) {
+        this.Cast = cast;
+    }
+
+    public void setWatched(boolean watched) {
+        IsWatched = watched;
+    }
+
+    public void setAddedToWatchlist(boolean addedToWatchlist) {
+        IsAddedToWatchlist = addedToWatchlist;
+    }
+
+    public void setRated(boolean rated) {
+        IsRated = rated;
     }
 }

@@ -14,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
@@ -39,6 +41,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
     private ArrayList<FavouritesModel> favouritesList;
     private ArrayList<MovieModel> movieModels;
     RecyclerView recyclerView;
+    LinearLayout llPlaceholder;
     Bundle bundle;
 
     @Override
@@ -52,6 +55,8 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
         movieModels = new ArrayList<>();
         recyclerView = findViewById(R.id.recyclerView);
         setLayout(type);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     private void setLayout(String type){
@@ -74,7 +79,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                 params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
                 params.add(new BasicNameValuePair("type", getString(R.string.profile_user)));
                 sqlHelper.setParams(params);
-                sqlHelper.executeUrl();
+                sqlHelper.executeUrl(true);
                 break;
             case "followers":
 //                for(int i=0;i<=8;i++){
@@ -92,7 +97,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                 params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
                 params.add(new BasicNameValuePair("type", getString(R.string.followers).toLowerCase()));
                 sqlHelper.setParams(params);
-                sqlHelper.executeUrl();
+                sqlHelper.executeUrl(true);
                 break;
             case "following":
 //                for(int i=0;i<=8;i++){
@@ -110,7 +115,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                 params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
                 params.add(new BasicNameValuePair("type", getString(R.string.following).toLowerCase()));
                 sqlHelper.setParams(params);
-                sqlHelper.executeUrl();
+                sqlHelper.executeUrl(true);
                 break;
             case "watched":
                 addData();
@@ -224,9 +229,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
-                Intent intent = new Intent(FollowReviewActivity.this, MainActivity.class);
-                intent.putExtra("bundle",bundle);
-                startActivity(intent);
+                onBackPressed();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -242,12 +245,13 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra("bundle", bundle);
         startActivity(intent);
+        finish();
     }
 
     @Override
     public void onResponse(SqlHelper sqlHelper) {
         try {
-            JSONArray jsonArray = sqlHelper.getJSONResponse().getJSONArray("country_data");
+            JSONArray jsonArray = sqlHelper.getJSONResponse().getJSONArray("user_data");
             JSONObject jsonObject = jsonArray.getJSONObject(0);
             String response = jsonObject.getString("response");
             int length = jsonArray.length();

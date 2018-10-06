@@ -19,13 +19,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+            android:background="@color/colorTextDisabled"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/containerMain">
+        android:id="@+id/containerMain"
+        android:background="?attr/selectableItemBackground">
+        <!-- Image -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -41,6 +43,7 @@
                 app:civ_border_color="@color/colorPrimary"
                 app:civ_border_width="1dp" />
         </LinearLayout>
+        <!-- Title and Subtitle -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -53,14 +56,41 @@
                 android:padding="@dimen/list_padding"
                 android:orientation="vertical"
                 android:gravity="center">
-                <TextView
+                <!-- Title -->
+                <com.nex3z.flowlayout.FlowLayout
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/list_titletext"
-                    android:text="Testing Title Text"
-                    android:textColor="@color/colorTextPrimary"
-                    android:id="@+id/textView_TitleText"
-                    />
+                    app:flChildSpacing="@dimen/list_interspace"
+                    app:flChildSpacingForLastRow="@dimen/list_interspace"
+                    app:flRowSpacing="@dimen/list_interspace">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/list_titletext"
+                        android:text="Subject"
+                        android:textColor="@color/colorTextPrimary"
+                        android:id="@+id/textView_TitleSubject"
+                        android:layout_marginRight="@dimen/list_interspace"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/list_titletext"
+                        android:text="text"
+                        android:textColor="@color/colorTextPrimary"
+                        android:id="@+id/textView_TitleText"
+                        android:layout_marginRight="@dimen/list_interspace"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/list_titletext"
+                        android:text="Object"
+                        android:textColor="@color/colorTextPrimary"
+                        android:id="@+id/textView_TitleObject"
+                        android:textStyle="bold"/>
+                </com.nex3z.flowlayout.FlowLayout>
+                <!-- Subtitle -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -68,35 +98,62 @@
                     android:text="Testing Sub Text"
                     android:textColor="@color/colorTextSecondary"
                     android:id="@+id/textView_SubText"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     />
             </LinearLayout>
         </LinearLayout>
+        <!-- Date, Time-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/containerOtherInfo"
             android:orientation="vertical"
-            android:padding="@dimen/list_padding"
+            android:padding="@dimen/standard_gap"
             android:layout_weight="2">
-            <TextView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/containerDateTime"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView_Date"
+                    android:text="01/01/18"
+                    android:gravity="end|center"
+                    android:layout_weight="1"
+                    android:layout_gravity="top"
+                    android:textSize="@dimen/list_othertext"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView_Time"
+                    android:text="12:00 AM"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"
+                    android:gravity="end|center"
+                    android:textSize="@dimen/list_othertext"
+                    android:layout_marginTop="@dimen/list_interspace"/>
+            </LinearLayout>
+        </LinearLayout>
+        <!-- Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1.5"
+            android:padding="@dimen/standard_touch_space"
+            android:gravity="center_horizontal"
+            android:id="@+id/containerButton"
+            android:visibility="gone">
+            <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_Date"
-                android:text="01/01/18"
-                android:gravity="end|center"
-                android:layout_weight="1"
-                android:layout_gravity="top"
-                android:textSize="@dimen/list_othertext"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView_Time"
-                android:text="12:00 AM"
-                android:layout_weight="1"
-                android:layout_gravity="bottom"
-                android:gravity="end|center"
-                android:textSize="@dimen/list_othertext"/>
-
+                android:text="@string/follow_button_follow"
+                android:textSize="@dimen/list_subtext"
+                android:background="@drawable/custom_button_yellow"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
