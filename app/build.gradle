@@ -49,4 +49,7 @@ dependencies {
     implementation 'com.android.support:support-fragment:27.1.1'
     //image loader
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    //font
+    implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
+    implementation 'com.nex3z:flow-layout:1.2.2'
 }

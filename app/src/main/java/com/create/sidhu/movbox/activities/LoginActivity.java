@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.models.UserModel;
 
@@ -119,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
         params.add(new BasicNameValuePair("password", editTextPassword.getText().toString()));
         sqlHelper.setParams(params);
         sqlHelper.setMethod(getString(R.string.method_get));
-        sqlHelper.executeUrl();
+        sqlHelper.executeUrl(true);
     }
     @Override
     public void onResponse(SqlHelper sqlHelper) {
@@ -127,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
             JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("user_data");
             String response = jsonObject.getString("response");
             if(response.equals(getString(R.string.response_success))){
-                UserModel currentUserModel = MainActivity.populateUserModel(jsonObject);
+                UserModel currentUserModel = new ModelHelper(LoginActivity.this).buildUserModel(jsonObject);
                 MainActivity.currentUserModel = currentUserModel;
                 SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
                 sharedPreferences.edit().putString("username", currentUserModel.getEmail()).commit();

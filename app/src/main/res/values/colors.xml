@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#ffeb3b</color>
-    <color name="colorPrimaryDark">#ffeb3b</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#ffeb0b</color>
 
-    <color name="colorTextPrimary">#d9000000</color>
-    <color name="colorTextSecondary">#8C000000</color>
-    <color name="colorTextHint">#66000000</color>
-    <color name="colorTextDisabled">#1A000000</color>
+    <color name="colorTextPrimary">#000000</color>
+    <color name="colorTextSecondary">#3c000000</color>
+    <color name="colorTextHint">#26000000</color>
+    <color name="colorTextDisabled">#0C000000</color>
 
+    <color name="colorTextWhitePrimary">#ffffffff</color>
 
-
+    <color name="colorBlackTransparent">#CC000000</color>
 </resources>

@@ -54,12 +54,13 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ViewHolder>{
                 .asBitmap()
                 .load(actorModels.get(position).getImage())
                 .into(holder.imgDefinitionImage);
+        //holder.imgDefinitionImageType.setImageResource(actorModels.get(position).getType() == null || actorModels.get(position).getType().equalsIgnoreCase("director")? R.drawable.ic_director: R.drawable.ic_actor);
         holder.textViewDefinitionName.setText(actorModels.get(position).getName());
         holder.llCastMaster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 HomeFragment homeFragment = new HomeFragment();
-                homeFragment.OnClick(position, context, rootview, actorModels, "cast");
+                homeFragment.OnClick(position, context, rootview, actorModels, view, "cast");
             }
         });
 
@@ -73,12 +74,14 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ViewHolder>{
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         CircleImageView imgDefinitionImage;
+        CircleImageView imgDefinitionImageType;
         TextView textViewDefinitionName;
         LinearLayout llCastMaster;
 
         public ViewHolder(View itemView) {
             super(itemView);
             imgDefinitionImage = itemView.findViewById(R.id.indvDefinition_image);
+            //imgDefinitionImageType = itemView.findViewById(R.id.indvDefinition_image_btn);
             textViewDefinitionName = itemView.findViewById(R.id.textView_indvDefinitionName);
             llCastMaster = itemView.findViewById(R.id.containerIndvCastMaster);
         }
