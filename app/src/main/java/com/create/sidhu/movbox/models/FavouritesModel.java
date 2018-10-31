@@ -13,6 +13,7 @@ public class FavouritesModel {
     private String Subtitle;
     private String Date;
     private String Time;
+    private String DateTime;
     private String ImageLocation;
     private String UserId;
     private String MovieId;
@@ -73,6 +74,10 @@ public class FavouritesModel {
         Id = id;
     }
 
+    public void setDateTime(String dateTime) {
+        DateTime = dateTime;
+    }
+
     //Getters
     public String getTitle() {
         return Title;
@@ -124,5 +129,9 @@ public class FavouritesModel {
 
     public String getId() {
         return Id;
+    }
+
+    public String getDateTime() {
+        return DateTime;
     }
 }

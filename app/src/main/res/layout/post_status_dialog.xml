@@ -5,187 +5,197 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/containerPostStatus">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/postLinearLayout1"
-            android:layout_margin="5dp">
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                app:srcCompat="@mipmap/ic_launcher_round" />
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:padding="5dp"
-                android:layout_margin="10dp"
-                android:hint=" Post status..."
-                android:background="@drawable/text_drawawble">
-            </EditText>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/postLinearLayout1"
-            android:layout_margin="10dp"
-            android:weightSum="4"
-            android:padding="@dimen/list_padding"
-            android:gravity="center_horizontal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:gravity="center_horizontal">
-
-                <Button
-                    android:layout_width="@dimen/post_status_icon_size"
-                    android:layout_height="@dimen/post_status_icon_size"
-                    android:background="@drawable/ic_camera"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Camera"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:gravity="center_horizontal">
-
-                <Button
-                    android:layout_width="@dimen/post_status_icon_size"
-                    android:layout_height="@dimen/post_status_icon_size"
-                    android:background="@drawable/ic_video"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Video"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:gravity="center_horizontal">
-
-                <Button
-                    android:layout_width="@dimen/post_status_icon_size"
-                    android:layout_height="@dimen/post_status_icon_size"
-                    android:background="@drawable/ic_reel"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Watching"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:gravity="center_horizontal">
-
-                <Button
-                    android:layout_width="@dimen/post_status_icon_size"
-                    android:layout_height="@dimen/post_status_icon_size"
-                    android:background="@drawable/ic_location"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Location"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
-
-        </LinearLayout>
-    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/containerPostStatus"
+        android:paddingTop="25dp"
+        android:paddingBottom="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:weightSum="3"
+            android:padding="@dimen/list_padding"
+            android:gravity="center_horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:id="@+id/containerWatching">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/post_status_icon_small"
+                    android:background="@drawable/post_status_icon_background"
+                    android:id="@+id/containerWatchingImage">
+                    <Button
+                        android:layout_width="@dimen/post_status_icon_size"
+                        android:layout_height="@dimen/post_status_icon_size"
+                        android:background="@drawable/ic_eye"
+                        android:id="@+id/btn_Watched"
+                        />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/post_status_watching"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/text_medium"
+                    android:textColor="@color/colorTextPrimary"
+                    android:layout_marginTop="@dimen/standard_touch_space"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:id="@+id/containerReview">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/post_status_icon_small"
+                    android:background="@drawable/post_status_icon_background"
+                    android:id="@+id/containerReviewImage">
+                    <Button
+                        android:layout_width="@dimen/post_status_icon_size"
+                        android:layout_height="@dimen/post_status_icon_size"
+                        android:background="@drawable/ic_comment"
+                        android:id="@+id/btn_Review"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/post_status_review"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/text_medium"
+                    android:textColor="@color/colorTextPrimary"
+                    android:layout_marginTop="@dimen/standard_touch_space"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:id="@+id/containerRating">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/post_status_icon_small"
+                    android:background="@drawable/post_status_icon_background"
+                    android:id="@+id/containerRatingImage">
+                    <Button
+                        android:layout_width="@dimen/post_status_icon_size"
+                        android:layout_height="@dimen/post_status_icon_size"
+                        android:background="@drawable/ic_star"
+                        android:id="@+id/btn_Rating"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/post_status_rating"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/text_medium"
+                    android:textColor="@color/colorTextPrimary"
+                    android:layout_marginTop="@dimen/standard_touch_space"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/containerReviews"
         android:orientation="vertical"
         android:visibility="gone">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/containerTabMaster"
-            android:orientation="horizontal"
-            android:weightSum="2">
+            android:layout_weight="1"
+            android:id="@+id/containerResults"
+            android:orientation="vertical"
+            android:padding="@dimen/standard_gap_large">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/text_medium"
+                android:text="@string/post_status_new_releases"
+                android:id="@+id/textView_SearchTitle"
+                android:layout_marginTop="@dimen/standard_touch_space"
+                android:paddingStart="@dimen/standard_touch_space"
+                android:paddingBottom="@dimen/standard_gap_large"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/containerTabWatched"
-                android:padding="@dimen/list_padding"
-                android:background="@drawable/custom_tabview">
+                android:id="@+id/containerPlaceholder"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:visibility="gone">
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tab_watched"
-                    android:textSize="@dimen/list_titletext"
-                    android:textAlignment="center"
-                    android:id="@+id/textView_TabWatched"/>
+                    android:textSize="@dimen/text_large"
+                    android:text="@string/placeholder_show_nothing"
+                    android:textColor="@color/colorTextSecondary"/>
             </LinearLayout>
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/containerTabReviews"
-                android:padding="@dimen/list_padding"
-                android:background="@drawable/custom_tabview">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/reviews"
-                    android:textSize="@dimen/list_titletext"
-                    android:textAlignment="center"
-                    android:id="@+id/textView_TabReviews"/>
-            </LinearLayout>
+                android:id="@+id/recyclerView">
+            </android.support.v7.widget.RecyclerView>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/home_description_padding_top"
-            android:id="@+id/containerTabContent"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="match_parent"
+            android:id="@+id/containerSearch"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/standard_gap_large"
+            android:layout_marginBottom="@dimen/standard_gap_extra_large">
+            <ImageView
+                android:id="@+id/img_SearchImage"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                app:srcCompat="@mipmap/ic_launcher_round" />
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_Placeholder"
-                android:paddingBottom="80dp"/>
+                android:layout_weight="1"
+                android:background="@drawable/custom_textview"
+                android:paddingTop="@dimen/standard_gap_large"
+                android:paddingBottom="@dimen/standard_gap_large"
+                android:paddingStart="@dimen/standard_gap_large"
+                android:layout_marginEnd="@dimen/standard_gap_large"
+                android:layout_marginStart="@dimen/standard_gap"
+                android:id="@+id/containerEditText">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/standard_touch_space"
+                    android:layout_marginStart="@dimen/standard_touch_space"
+                    android:hint="@string/post_status_search"
+                    android:background="@android:color/transparent"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textSize="@dimen/text_medium"
+                    android:id="@+id/editText_Search"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
-        android:id="@+id/navigation"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginStart="0dp"
-        android:padding="5dp"
-        android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation"
-        app:itemBackground="@android:color/transparent"/>
+        android:gravity="center_horizontal">
+        <ImageView
+            android:layout_width="@dimen/review_close_button_size"
+            android:layout_height="@dimen/review_close_button_size"
+            android:src="@drawable/ic_cross_filled_black"
+            android:id="@+id/img_Close"
+            android:layout_marginBottom="30dp"/>
+    </LinearLayout>
 </LinearLayout>

@@ -1,67 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="100dp"
     android:layout_height="wrap_content"
     android:id="@+id/relativeMain"
     android:background="?attr/selectableItemBackground"
+    android:layout_marginBottom="@dimen/standard_gap_large"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
         <RelativeLayout
-            android:layout_width="100dp"
-            android:layout_height="140dp"
-            android:layout_margin="2dp"
-            android:id="@+id/relative1">
-
-                 <ImageView
-                    android:id="@+id/movie_poster"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="2dp"
-                    android:src="@drawable/parava"
-                     android:contentDescription="@string/movie_poster"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/relative1"
+            android:layout_centerHorizontal="true">
+             <ImageView
+                android:id="@+id/movie_poster"
+                android:layout_width="100dp"
+                android:layout_height="140dp"
+                 android:maxHeight="140dp"
+                 android:maxWidth="100dp"
+                android:src="@drawable/parava"
+                 android:contentDescription="@string/movie_poster"
+                 android:layout_centerHorizontal="true"/>
         </RelativeLayout>
-
-
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/relative1"
-            android:layout_centerHorizontal="true">
-
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/standard_touch_space">
             <TextView
                 android:id="@+id/movie_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/nunito_bold"
-                android:text="Parava"
-                android:textSize="12sp" />
-
+                android:text="Testing long text movie name"
+                android:textSize="12sp"
+                android:textColor="@color/colorTextPrimary"
+                android:textAlignment="center"/>
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/movie_name"
-                android:layout_centerHorizontal="true">
-
-            <TextView
-                android:id="@+id/movie_rating"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:text=" 9 "
-                android:textSize="10sp" />
-
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/ic_star_gray"/>
+                <TextView
+                    android:id="@+id/movie_rating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 9 "
+                    android:textSize="10sp"
+                    android:textColor="@color/colorTextPrimary"
+                    android:layout_marginLeft="@dimen/standard_touch_space_small"/>
                 <TextView
                     android:id="@+id/text_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="/10"
-                    android:textSize="10sp" />
-
-
+                    android:textSize="10sp"
+                    android:textColor="@color/colorTextPrimary"/>
             </LinearLayout>
-
         </RelativeLayout>
-
 </RelativeLayout>

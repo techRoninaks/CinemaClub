@@ -1,7 +1,9 @@
 package com.create.sidhu.movbox.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,9 +20,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.FollowReviewActivity;
+import com.create.sidhu.movbox.activities.MainActivity;
+import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.fragments.HomeFragment;
 import com.create.sidhu.movbox.fragments.MoviesFragment;
 import com.create.sidhu.movbox.fragments.ProfileFragment;
+import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.ActorModel;
 import com.create.sidhu.movbox.models.HomeModel;
@@ -42,11 +47,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
     private Context context;
     private View rootview;
     private String type;
+    private HomeFragment fragment;
 
-    public HomeAdapter(Context context, ArrayList<HomeModel> homeModels, View rootview) {
+    public HomeAdapter(Context context, ArrayList<HomeModel> homeModels, View rootview, HomeFragment homeFragment) {
         this.context = context;
         this.homeModels = homeModels;
         this.rootview = rootview;
+        this.fragment = homeFragment;
     }
 
 
@@ -62,16 +69,44 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HomeFragment fragment = new HomeFragment();
+                int id = view.getId();
+                if(id == R.id.img_Review || id == R.id.containerReviews){
+                    Bundle bundle = new ModelHelper(context).buildReviewModelBundle(homeModels.get(position), "HomeFragment");
+                    Intent intent = new Intent(context, ReviewsActivity.class);
+                    intent.putExtra("bundle", bundle);
+                    context.startActivity(intent);
+                }
+                if(id == R.id.containerMaster){
+                    switch (homeModels.get(position).getFavourites().getSubType()){
+                        case "new_releases":
+                        case "recommendations":
+                        case "watching":
+                        case "watchlist_reminder":
+                        case "watching_now":{
+                            Bundle bundle = new ModelHelper(context).buildMovieModelBundle(homeModels.get(position).getFavourites().getMovie(), "ProfileFragment");
+                            ProfileFragment profileFragment = new ProfileFragment();
+                            ((MainActivity) context).initFragment(profileFragment, bundle);
+                            break;
+                        }
+                        case "review_reminder":
+                        case "review":{
+                            Bundle bundle = new ModelHelper(context).buildReviewModelBundle(homeModels.get(position), "HomeFragment");
+                            Intent intent = new Intent(context, ReviewsActivity.class);
+                            intent.putExtra("bundle", bundle);
+                            context.startActivity(intent);
+                        }
+                        case "rating":{
+
+                        }
+                    }
+                }
+                //HomeFragment fragment = new HomeFragment();
                 fragment.OnClick(position, context, rootview, homeModels, view, "home");
             }
         };
         switch (homeModels.get(position).getFavourites().getSubType()){
             case "new_releases":{
-                Glide.with(context)
-                        .asBitmap()
-                        .load(context.getDrawable(R.drawable.ic_reel_filled))
-                        .into(holder.imgDefinition);
+                holder.imgDefinition.setImageDrawable(context.getDrawable(R.drawable.ic_reel_filled_black));
                 holder.textViewDefinitionTitleSubject.setText(context.getString(R.string.home_new_releases));
                 holder.textViewDefinitionTitle.setVisibility(View.GONE);
                 holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
@@ -79,13 +114,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                         .asBitmap()
                         .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait","landscape"))
                         .into(holder.imgMasterPoster);
-                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName());
+                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName() + " (" +
+                        StringHelper.toTitleCase(homeModels.get(position).getFavourites().getMovie().getLanguage()) + ")");
                 holder.textViewSubTextGenre.setText(homeModels.get(position).getFavourites().getMovie().getGenre());
                 holder.textViewSubTextDuration.setText(""+ homeModels.get(position).getFavourites().getMovie().getDuration() + "min");
                 holder.textViewSubTextDimension.setText(homeModels.get(position).getFavourites().getMovie().getDisplayDimension());
                 holder.textViewWatched.setText(StringHelper.formatTextCount(homeModels.get(position).getFavourites().getMovie().getTotalWatched()));
                 holder.textViewRating.setText("" + homeModels.get(position).getFavourites().getMovie().getRating() + "/10");
-                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + ")");
+                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + " votes)");
                 holder.textViewReviews.setText("" + homeModels.get(position).getFavourites().getMovie().getTotalReviews());
                 holder.imgWatched.setImageDrawable(homeModels.get(position).getFavourites().getMovie().getIsWatched() ?
                         context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
@@ -95,7 +131,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                 break;
             }
             case "recommendations":{
-                holder.llDefinitionImage.setVisibility(View.GONE);
+                holder.imgDefinition.setImageDrawable(context.getDrawable(R.drawable.ic_reel_filled_black));
                 holder.textViewDefinitionTitleSubject.setText(context.getString(R.string.home_recommendation));
                 holder.textViewDefinitionTitle.setVisibility(View.GONE);
                 holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
@@ -103,13 +139,14 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                         .asBitmap()
                         .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait","landscape"))
                         .into(holder.imgMasterPoster);
-                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName());
+                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName() + " (" +
+                        StringHelper.toTitleCase(homeModels.get(position).getFavourites().getMovie().getLanguage()) + ")");
                 holder.textViewSubTextGenre.setText(homeModels.get(position).getFavourites().getMovie().getGenre());
                 holder.textViewSubTextDuration.setText(""+ homeModels.get(position).getFavourites().getMovie().getDuration() + "min");
                 holder.textViewSubTextDimension.setText(homeModels.get(position).getFavourites().getMovie().getDisplayDimension());
                 holder.textViewWatched.setText(StringHelper.formatTextCount(homeModels.get(position).getFavourites().getMovie().getTotalWatched()));
                 holder.textViewRating.setText("" + homeModels.get(position).getFavourites().getMovie().getRating() + "/10");
-                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + ")");
+                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + " votes)");
                 holder.textViewReviews.setText("" + homeModels.get(position).getFavourites().getMovie().getTotalReviews());
                 holder.imgWatched.setImageDrawable(homeModels.get(position).getFavourites().getMovie().getIsWatched() ?
                         context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
@@ -129,17 +166,19 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                 holder.textViewDefinitionTitleSubject.setText(homeModels.get(position).getFavourites().getUser().getName());
                 holder.textViewDefinitionTitle.setText(context.getString(R.string.favourites_watching));
                 holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
+                holder.textViewDefinitionTitle.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .asBitmap()
                         .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait","landscape"))
                         .into(holder.imgMasterPoster);
-                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName());
+                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName() + " (" +
+                        StringHelper.toTitleCase(homeModels.get(position).getFavourites().getMovie().getLanguage()) + ")");
                 holder.textViewSubTextGenre.setText(homeModels.get(position).getFavourites().getMovie().getGenre());
                 holder.textViewSubTextDuration.setText(""+ homeModels.get(position).getFavourites().getMovie().getDuration() + "min");
                 holder.textViewSubTextDimension.setText(homeModels.get(position).getFavourites().getMovie().getDisplayDimension());
                 holder.textViewWatched.setText(StringHelper.formatTextCount(homeModels.get(position).getFavourites().getMovie().getTotalWatched()));
                 holder.textViewRating.setText("" + homeModels.get(position).getFavourites().getMovie().getRating() + "/10");
-                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + ")");
+                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + " votes)");
                 holder.textViewReviews.setText("" + homeModels.get(position).getFavourites().getMovie().getTotalReviews());
                 holder.imgWatched.setImageDrawable(homeModels.get(position).getFavourites().getMovie().getIsWatched() ?
                         context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
@@ -156,17 +195,19 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                 holder.textViewDefinitionTitleSubject.setText(homeModels.get(position).getFavourites().getUser().getName());
                 holder.textViewDefinitionTitle.setText(context.getString(R.string.favourites_review));
                 holder.textViewDefinitionSubtitle.setText(homeModels.get(position).getFavourites().getSubtitle());
+                holder.textViewDefinitionTitle.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .asBitmap()
                         .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait","landscape"))
                         .into(holder.imgMasterPoster);
-                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName());
+                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName() + " (" +
+                        StringHelper.toTitleCase(homeModels.get(position).getFavourites().getMovie().getLanguage()) + ")");
                 holder.textViewSubTextGenre.setText(homeModels.get(position).getFavourites().getMovie().getGenre());
                 holder.textViewSubTextDuration.setText(""+ homeModels.get(position).getFavourites().getMovie().getDuration() + "min");
                 holder.textViewSubTextDimension.setText(homeModels.get(position).getFavourites().getMovie().getDisplayDimension());
                 holder.textViewWatched.setText(StringHelper.formatTextCount(homeModels.get(position).getFavourites().getMovie().getTotalWatched()));
                 holder.textViewRating.setText("" + homeModels.get(position).getFavourites().getMovie().getRating() + "/10");
-                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + ")");
+                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + " votes)");
                 holder.textViewReviews.setText("" + homeModels.get(position).getFavourites().getMovie().getTotalReviews());
                 holder.imgWatched.setImageDrawable(homeModels.get(position).getFavourites().getMovie().getIsWatched() ?
                         context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
@@ -181,19 +222,21 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                         .load(homeModels.get(position).getFavourites().getUser().getImage())
                         .into(holder.imgDefinition);
                 holder.textViewDefinitionTitleSubject.setText(homeModels.get(position).getFavourites().getUser().getName());
-                holder.textViewDefinitionTitle.setText(context.getString(R.string.favourites_review));
+                holder.textViewDefinitionTitle.setText(context.getString(R.string.favourites_rating));
                 holder.textViewDefinitionSubtitle.setText(homeModels.get(position).getFavourites().getSubtitle());
+                holder.textViewDefinitionTitle.setVisibility(View.VISIBLE);
                 Glide.with(context)
                         .asBitmap()
                         .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait","landscape"))
                         .into(holder.imgMasterPoster);
-                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName());
+                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName() + " (" +
+                        StringHelper.toTitleCase(homeModels.get(position).getFavourites().getMovie().getLanguage()) + ")");
                 holder.textViewSubTextGenre.setText(homeModels.get(position).getFavourites().getMovie().getGenre());
                 holder.textViewSubTextDuration.setText(""+ homeModels.get(position).getFavourites().getMovie().getDuration() + "min");
                 holder.textViewSubTextDimension.setText(homeModels.get(position).getFavourites().getMovie().getDisplayDimension());
                 holder.textViewWatched.setText(StringHelper.formatTextCount(homeModels.get(position).getFavourites().getMovie().getTotalWatched()));
                 holder.textViewRating.setText("" + homeModels.get(position).getFavourites().getMovie().getRating() + "/10");
-                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + ")");
+                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + " votes)");
                 holder.textViewReviews.setText("" + homeModels.get(position).getFavourites().getMovie().getTotalReviews());
                 holder.imgWatched.setImageDrawable(homeModels.get(position).getFavourites().getMovie().getIsWatched() ?
                                 context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
@@ -203,7 +246,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                 break;
             }
             case "watchlist_reminder":{
-                holder.imgDefinition.setImageDrawable(context.getDrawable(R.drawable.ic_eye_filled));
+                holder.imgDefinition.setImageDrawable(context.getDrawable(R.drawable.ic_reel_filled_black));
+                //holder.imgDefinition.setVisibility(View.GONE);
                 holder.textViewDefinitionTitleSubject.setText(context.getString(R.string.home_watchlist_reminder));
                 holder.textViewDefinitionTitle.setVisibility(View.GONE);
                 holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
@@ -211,7 +255,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                         .asBitmap()
                         .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait","landscape"))
                         .into(holder.imgMasterPoster);
-                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName());
+                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName() + " (" +
+                        StringHelper.toTitleCase(homeModels.get(position).getFavourites().getMovie().getLanguage()) + ")");
                 holder.textViewSubTextGenre.setText(homeModels.get(position).getFavourites().getMovie().getGenre());
                 holder.textViewSubTextDuration.setText(""+ homeModels.get(position).getFavourites().getMovie().getDuration() + "min");
                 holder.textViewSubTextDimension.setText(homeModels.get(position).getFavourites().getMovie().getDisplayDimension());
@@ -226,7 +271,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                 break;
             }
             case "review_reminder":{
-                holder.imgDefinition.setImageDrawable(context.getDrawable(R.drawable.ic_pencil_black));
+                holder.imgDefinition.setImageDrawable(context.getDrawable(R.drawable.ic_reel_filled_black));
+                //holder.imgDefinition.setVisibility(View.GONE);
                 holder.textViewDefinitionTitleSubject.setText(context.getString(R.string.home_review_reminder));
                 holder.textViewDefinitionTitle.setVisibility(View.GONE);
                 holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
@@ -234,7 +280,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                         .asBitmap()
                         .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait","landscape"))
                         .into(holder.imgMasterPoster);
-                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName());
+                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName() + " (" +
+                        StringHelper.toTitleCase(homeModels.get(position).getFavourites().getMovie().getLanguage()) + ")");
                 holder.textViewSubTextGenre.setText(homeModels.get(position).getFavourites().getMovie().getGenre());
                 holder.textViewSubTextDuration.setText(""+ homeModels.get(position).getFavourites().getMovie().getDuration() + "min");
                 holder.textViewSubTextDimension.setText(homeModels.get(position).getFavourites().getMovie().getDisplayDimension());
@@ -247,6 +294,34 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
                 holder.llContainerDetails.setVisibility(View.GONE);
                 holder.llContainerCast.setVisibility(View.GONE);
                 break;
+            }case "watching_now":{
+                Glide.with(context)
+                        .asBitmap()
+                        .load(homeModels.get(position).getFavourites().getUser().getImage())
+                        .into(holder.imgDefinition);
+                holder.textViewDefinitionTitleSubject.setText(homeModels.get(position).getFavourites().getUser().getName());
+                holder.textViewDefinitionTitle.setText(context.getString(R.string.favourites_watching_now));
+                holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
+                holder.textViewDefinitionTitle.setVisibility(View.VISIBLE);
+                Glide.with(context)
+                        .asBitmap()
+                        .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait","landscape"))
+                        .into(holder.imgMasterPoster);
+                holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName() + " (" +
+                        StringHelper.toTitleCase(homeModels.get(position).getFavourites().getMovie().getLanguage()) + ")");
+                holder.textViewSubTextGenre.setText(homeModels.get(position).getFavourites().getMovie().getGenre());
+                holder.textViewSubTextDuration.setText(""+ homeModels.get(position).getFavourites().getMovie().getDuration() + "min");
+                holder.textViewSubTextDimension.setText(homeModels.get(position).getFavourites().getMovie().getDisplayDimension());
+                holder.textViewWatched.setText(StringHelper.formatTextCount(homeModels.get(position).getFavourites().getMovie().getTotalWatched()));
+                holder.textViewRating.setText("" + homeModels.get(position).getFavourites().getMovie().getRating() + "/10");
+                holder.textViewTotalRating.setText("(" + homeModels.get(position).getFavourites().getMovie().getTotalRatings() + " votes)");
+                holder.textViewReviews.setText("" + homeModels.get(position).getFavourites().getMovie().getTotalReviews());
+                holder.imgWatched.setImageDrawable(homeModels.get(position).getFavourites().getMovie().getIsWatched() ?
+                        context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
+                holder.imgRating.setImageDrawable(homeModels.get(position).getFavourites().getMovie().getIsRated() ?
+                        context.getDrawable(R.drawable.ic_star_filled) : context.getDrawable(R.drawable.ic_star));
+                populateActorView(holder.recyclerViewActors, homeModels.get(position).getCast());
+                break;
             }
         }
         holder.textViewDefinitionTitleSubject.setOnClickListener(onClickListener);
@@ -256,10 +331,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
         holder.imgRating.setOnClickListener(onClickListener);
         holder.imgWatched.setOnClickListener(onClickListener);
         holder.imgReview.setOnClickListener(onClickListener);
-        holder.llContainerDefinition.setOnClickListener(onClickListener);
+        //holder.llContainerDefinition.setOnClickListener(onClickListener);
         holder.llContainerWatched.setOnClickListener(onClickListener);
         holder.llContainerReview.setOnClickListener(onClickListener);
         holder.llContainerRating.setOnClickListener(onClickListener);
+        holder.llContainerMaster.setOnClickListener(onClickListener);
     }
 
 
@@ -298,6 +374,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
         LinearLayout llContainerWatched;
         LinearLayout llContainerRating;
         LinearLayout llContainerReview;
+        LinearLayout llContainerMaster;
         Typeface tfSemibold = Typeface.createFromAsset(context.getAssets(), "fonts/MyriadPro-Semibold.otf");
         Typeface tfRegular = Typeface.createFromAsset(context.getAssets(), "fonts/myriadpro.otf");
         public ViewHolder(View itemView) {
@@ -330,11 +407,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder>{
             llContainerRating = itemView.findViewById(R.id.containerRating);
             llContainerReview = itemView.findViewById(R.id.containerReviews);
             llContainerWatched = itemView.findViewById(R.id.containerWatched);
+            llContainerMaster = itemView.findViewById(R.id.containerMaster);
             textViewDefinitionTitleSubject.setTypeface(tfSemibold);
             textViewTitleName.setTypeface(tfSemibold);
             textViewWatched.setTypeface(tfSemibold);
             textViewReviews.setTypeface(tfSemibold);
             textViewRating.setTypeface(tfSemibold);
+            textViewTitleRating.setTypeface(tfSemibold);
         }
     }
     private void populateActorView(RecyclerView rootview, ArrayList<ActorModel> actorModels){

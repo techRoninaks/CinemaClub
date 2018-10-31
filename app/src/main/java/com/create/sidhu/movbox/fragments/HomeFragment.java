@@ -21,15 +21,18 @@ import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.FollowReviewActivity;
 import com.create.sidhu.movbox.activities.MainActivity;
+import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.adapters.FavouritesAdapter;
 import com.create.sidhu.movbox.adapters.HomeAdapter;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
+import com.create.sidhu.movbox.helpers.TransparentProgressDialog;
 import com.create.sidhu.movbox.models.ActorModel;
 import com.create.sidhu.movbox.models.FavouritesModel;
 import com.create.sidhu.movbox.models.HomeModel;
 import com.create.sidhu.movbox.models.MovieModel;
+import com.create.sidhu.movbox.models.UpdatesModel;
 import com.create.sidhu.movbox.models.UserModel;
 
 import org.apache.http.NameValuePair;
@@ -41,7 +44,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+//TODO: Three dots.
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -51,9 +54,9 @@ public class HomeFragment extends Fragment implements SqlDelegate {
     RecyclerView recyclerView;
     LinearLayout llContainerPlaceholder;
     HomeAdapter homeAdapter;
-    ArrayList<HomeModel> homeModels;
+    public static ArrayList<HomeModel> homeModels;
     Context context;
-    ProgressDialog pDialog;
+    TransparentProgressDialog pDialog;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -68,9 +71,18 @@ public class HomeFragment extends Fragment implements SqlDelegate {
         recyclerView = rootView.findViewById(R.id.recyclerView);
         llContainerPlaceholder = rootView.findViewById(R.id.containerPlaceholder);
         Toolbar toolbar = ((MainActivity) context).findViewById(R.id.toolbar);
-        toolbar.setTitle(StringHelper.toTitleCase(context.getString(R.string.app_name)));
+        toolbar.setTitle("");
+        ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
+        imgTitle.setVisibility(View.VISIBLE);
         StringHelper.changeToolbarFont(toolbar, (MainActivity)context);
-        fetchUpdates();
+        if(homeModels==null)
+            fetchUpdates();
+        else{
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            homeAdapter = new HomeAdapter(context, homeModels, rootView, this);
+            recyclerView.setAdapter(homeAdapter);
+        }
         //initRecyclerView();
         return rootView;
     }
@@ -95,65 +107,75 @@ public class HomeFragment extends Fragment implements SqlDelegate {
         homeModels = new ArrayList<>();
         try{
             int length = Integer.parseInt(jsonObject.getJSONObject("0").getString("length"));
-            ModelHelper modelHelper = new ModelHelper(context);
-            for(int i = 1; i <= length ; i++){
-                if(!jsonObject.getJSONObject("" + i).getString("type").equals("follow") && !jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")) {
-                    HomeModel homeModel = new HomeModel();
-                    homeModel.setFavourites(modelHelper.buildFavouritesModel(jsonObject.getJSONObject("" + i), "favourites"));
-                    homeModels.add(homeModel);
+            if(length >= 0) {
+                ModelHelper modelHelper = new ModelHelper(context);
+                String castString = "";
+                for (int i = 1; i <= length; i++) {
+                    if (!jsonObject.getJSONObject("" + i).getString("type").equals("follow") && !jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")) {
+                        HomeModel homeModel = new HomeModel();
+                        homeModel.setFavourites(modelHelper.buildFavouritesModel(jsonObject.getJSONObject("" + i), "favourites"));
+                        if(i != 1){
+                            castString = castString.concat("!:");
+                        }
+                        castString = castString.concat(homeModel.getFavourites().getMovie().getId() + "!@" + (i - 1) + "!@" + homeModel.getFavourites().getMovie().getCast());
+                        homeModels.add(homeModel);
+                    }
                 }
+                pDialog = new TransparentProgressDialog(context);
+                pDialog.setCancelable(false);
+                pDialog.show();
+                fetchActors(castString, true);
             }
-            pDialog = new ProgressDialog(context);
-            pDialog.setMessage("Loading");
-            pDialog.setIndeterminate(false);
-            pDialog.setCancelable(false);
-            pDialog.show();
-            fetchActors(0);
-//            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-//            recyclerView.setLayoutManager(layoutManager);
-//            homeAdapter = new HomeAdapter(context, homeModels, recyclerView);
-//            recyclerView.setAdapter(homeAdapter);
+            else{
+                recyclerView.setVisibility(View.GONE);
+                llContainerPlaceholder.setVisibility(View.VISIBLE);
+            }
         }catch (Exception e){
             Log.e("Home:InitRecyler", e.getMessage());
         }
     }
 
-    private void fetchActors(int position){
-        if(position < homeModels.size()) {
+    private void fetchActors(String castString, boolean start){
+        if(start) {
             SqlHelper sqlHelper = new SqlHelper(context, HomeFragment.this);
             ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("cast", homeModels.get(position).getFavourites().getMovie().getCast()));
-            params.add(new BasicNameValuePair("m_id", homeModels.get(position).getFavourites().getMovie().getId()));
+            params.add(new BasicNameValuePair("cast", castString));
+            params.add(new BasicNameValuePair("m_id", ""));
             sqlHelper.setExecutePath("get-cast.php");
             sqlHelper.setParams(params);
-            sqlHelper.setActionString("cast:" + position);
+            sqlHelper.setActionString("cast");
             sqlHelper.setMethod("GET");
             sqlHelper.executeUrl(false);
         }else{
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            homeAdapter = new HomeAdapter(context, homeModels, rootView);
+            homeAdapter = new HomeAdapter(context, homeModels, rootView, HomeFragment.this);
             recyclerView.setAdapter(homeAdapter);
             pDialog.dismiss();
         }
     }
 
-    private void addCastData(JSONArray jsonArray, int position){
+    private void addCastData(JSONArray jsonArray){
         int length = jsonArray.length();
-        ArrayList<ActorModel> actorModels = new ArrayList<>();
         for(int i = 1; i < length; i++){
             ModelHelper modelHelper = new ModelHelper(context);
+            ArrayList<ActorModel> actorModels = new ArrayList<>();
             try {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                ActorModel actorModel = modelHelper.buildActorModel(jsonObject);
-                actorModels.add(actorModel);
+                int position = Integer.parseInt(jsonObject.getString("position"));
+                JSONArray jsonArray1 = jsonObject.getJSONArray("cast");
+                int lengthCast = jsonArray1.length();
+                for(int j = 0; j < lengthCast; j++) {
+                    ActorModel actorModel = modelHelper.buildActorModel(jsonArray1.getJSONObject(j));
+                    actorModels.add(actorModel);
+                }
+                homeModels.get(position).setCast(actorModels);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
-        homeModels.get(position).setCast(actorModels);
-        fetchActors(position + 1);
+        fetchActors("", false);
     }
 
     public void OnClick(int position, Context context, View rootView, ArrayList<?> model, View view, String mainType){
@@ -162,146 +184,167 @@ public class HomeFragment extends Fragment implements SqlDelegate {
         Bundle bundle;
         this.context = context;
         this.rootView = rootView;
-        if(mainType.equals("home")){
-            homeModels = (ArrayList<HomeModel>) model;
-            HomeModel homeModel = (HomeModel) model.get(position);
-           String subType = homeModel.getFavourites().getSubType();
-           switch (view.getId()){
-               case R.id.textView_TitleTypeSubject:
-               case R.id.definition_image:{
-                    switch (subType){
-                        case "new_releases":{
-                            bundle = new Bundle();
-                            bundle.putString("type", "new_releases");
-                            Intent intent = new Intent(context, FollowReviewActivity.class);
-                            intent.putExtra("bundle", bundle);
-                            startActivity(intent);
-                            break;
+        try {
+            if (mainType.equals("home")) {
+                homeModels = (ArrayList<HomeModel>) model;
+                HomeModel homeModel = (HomeModel) model.get(position);
+                String subType = homeModel.getFavourites().getSubType();
+                switch (view.getId()) {
+                    case R.id.textView_TitleTypeSubject:
+                    case R.id.definition_image: {
+                        switch (subType) {
+                            case "new_releases": {
+                                bundle = new Bundle();
+                                bundle.putString("type", "new_releases");
+                                Intent intent = new Intent(context, FollowReviewActivity.class);
+                                intent.putExtra("bundle", bundle);
+                                startActivity(intent);
+                                break;
+                            }
+                            case "recommendations": {
+                                bundle = new Bundle();
+                                bundle.putString("type", "recommendations");
+                                Intent intent = new Intent(context, FollowReviewActivity.class);
+                                intent.putExtra("bundle", bundle);
+                                startActivity(intent);
+                                break;
+                            }
+                            case "review_watched": {
+                                bundle = new Bundle();
+                                bundle.putString("type", "watching");
+                                Intent intent = new Intent(context, FollowReviewActivity.class);
+                                intent.putExtra("bundle", bundle);
+                                startActivity(intent);
+                                break;
+                            }
+                            case "watching_now":
+                            case "watching":
+                            case "review":
+                            case "rating": {
+                                bundle = new ModelHelper(context).buildUserModelBundle(homeModel.getFavourites().getUser(), "ProfileFragment");
+                                fragment = new ProfileFragment();
+                                mainActivity.initFragment(fragment, bundle);
+                                break;
+                            }
+                            case "watchlist_reminder": {
+                                bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                                fragment = new ProfileFragment();
+                                mainActivity.initFragment(fragment, bundle);
+                                break;
+                            }
+                            case "review_reminder": {
+                                break;
+                            }
                         }
-                        case "recommendations":{
-                            bundle = new Bundle();
-                            bundle.putString("type", "recommendations");
-                            Intent intent = new Intent(context, FollowReviewActivity.class);
-                            intent.putExtra("bundle", bundle);
-                            startActivity(intent);
-                            break;
-                        }
-                        case "review_watched":{
-                            bundle = new Bundle();
-                            bundle.putString("type", "watching");
-                            Intent intent = new Intent(context, FollowReviewActivity.class);
-                            intent.putExtra("bundle", bundle);
-                            startActivity(intent);
-                            break;
-                        }
-                        case "watching":
-                        case "review":
-                        case "rating":{
-                            bundle = new ModelHelper(context).buildUserModelBundle(homeModel.getFavourites().getUser(), "ProfileFragment");
-                            fragment = new ProfileFragment();
-                            mainActivity.initFragment(fragment, bundle);
-                            break;
-                        }
-                        case "watchlist_reminder":{
-                            bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
-                            fragment = new ProfileFragment();
-                            mainActivity.initFragment(fragment, bundle);
-                            break;
-                        }
-                        case "review_reminder":{
-                            break;
-                        }
+                        break;
                     }
-                    break;
-               }
-               case R.id.containerTypeDefinition:{
-                   switch (subType){
-                       case "new_releases":{
-                           bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
-                           fragment = new ProfileFragment();
-                           mainActivity.initFragment(fragment, bundle);
-                           break;
-                       }
-                       case "recommendations":{
-                           bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
-                           fragment = new ProfileFragment();
-                           mainActivity.initFragment(fragment, bundle);
-                           break;
-                       }
-                       case "review_watched":{
-                           bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
-                           fragment = new ProfileFragment();
-                           mainActivity.initFragment(fragment, bundle);
-                           break;
-                       }
-                       case "watching":{
-                           break;
-                       }
-                       case "review":{
-                           break;
-                       }
-                       case "rating":{
-                           break;
-                       }
-                       case "watchlist_reminder":{
-                           bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
-                           fragment = new ProfileFragment();
-                           mainActivity.initFragment(fragment, bundle);
-                           break;
-                       }
-                       case "review_reminder":{
-                           bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
-                           fragment = new ProfileFragment();
-                           mainActivity.initFragment(fragment, bundle);
-                           break;
-                       }
-                   }
-                   break;
-               }
-               case R.id.imageViewMasterPoster:
-                case R.id.textView_TitleText:{
-                    bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
-                    fragment = new ProfileFragment();
-                    mainActivity.initFragment(fragment, bundle);
-                    break;
+                    case R.id.containerTypeDefinition: {
+                        switch (subType) {
+                            case "new_releases": {
+                                bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                                fragment = new ProfileFragment();
+                                mainActivity.initFragment(fragment, bundle);
+                                break;
+                            }
+                            case "recommendations": {
+                                bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                                fragment = new ProfileFragment();
+                                mainActivity.initFragment(fragment, bundle);
+                                break;
+                            }
+                            case "review_watched": {
+                                bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                                fragment = new ProfileFragment();
+                                mainActivity.initFragment(fragment, bundle);
+                                break;
+                            }
+                            case "watching": {
+                                break;
+                            }
+                            case "review": {
+                                break;
+                            }
+                            case "rating": {
+                                break;
+                            }
+                            case "watchlist_reminder": {
+                                bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                                fragment = new ProfileFragment();
+                                mainActivity.initFragment(fragment, bundle);
+                                break;
+                            }
+                            case "review_reminder": {
+                                bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                                fragment = new ProfileFragment();
+                                mainActivity.initFragment(fragment, bundle);
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    case R.id.imageViewMasterPoster:
+                    case R.id.textView_TitleText: {
+                        bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                        fragment = new ProfileFragment();
+                        mainActivity.initFragment(fragment, bundle);
+                        break;
+                    }
+                    case R.id.img_Watched: {
+                        SqlHelper sqlHelper = new SqlHelper(context, HomeFragment.this);
+                        sqlHelper.setExecutePath("update-watching.php");
+                        sqlHelper.setActionString("watching:" + position);
+                        HashMap<String, String> extras = new HashMap<>();
+                        extras.put("view_id", "" + R.id.img_Watched);
+                        sqlHelper.setMethod("GET");
+                        ArrayList<NameValuePair> params = new ArrayList<>();
+                        params.add(new BasicNameValuePair("m_id", homeModel.getFavourites().getMovie().getId()));
+                        params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
+                        params.add(new BasicNameValuePair("is_watched", "" + homeModel.getFavourites().getMovie().getIsWatched()));
+                        sqlHelper.setParams(params);
+                        sqlHelper.setExtras(extras);
+                        sqlHelper.executeUrl(true);
+                        break;
+                    }
+                    case R.id.img_Rating: {
+                        bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                        bundle.putString("type", "cast");
+                        RatingsDialog ratingsDialog = new RatingsDialog();
+                        mainActivity.initFragment(ratingsDialog, bundle);
+                        break;
+                    }
+                    case R.id.img_Review: {
+                        bundle = new ModelHelper(context).buildReviewModelBundle(homeModel, "HomeFragment");
+                        Intent intent = new Intent(context, ReviewsActivity.class);
+                        intent.putExtra("bundle", bundle);
+                        startActivity(intent);
+                        break;
+                    }
+                    case R.id.containerWatched: {
+                        break;
+                    }
+                    case R.id.containerRating: {
+                        bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                        bundle.putString("type", "list");
+                        RatingsDialog ratingsDialog = new RatingsDialog();
+                        mainActivity.initFragment(ratingsDialog, bundle);
+                        break;
+                    }
+                    case R.id.containerReviews: {
+                        bundle = new ModelHelper(context).buildReviewModelBundle(homeModel, "HomeFragment");
+                        Intent intent = new Intent(context, ReviewsActivity.class);
+                        intent.putExtra("bundle", bundle);
+                        startActivity(intent);
+                        break;
+                    }
                 }
-                case R.id.img_Watched:{
-                    SqlHelper sqlHelper = new SqlHelper(context, HomeFragment.this);
-                    sqlHelper.setExecutePath("update-watching.php");
-                    sqlHelper.setActionString("watching:" + position);
-                    HashMap<String,String> extras = new HashMap<>();
-                    extras.put("view_id", "" + R.id.img_Watched);
-                    sqlHelper.setMethod("GET");
-                    ArrayList<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("m_id", homeModel.getFavourites().getMovie().getId()));
-                    params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-                    params.add(new BasicNameValuePair("is_watched", "" + homeModel.getFavourites().getMovie().getIsWatched()));
-                    sqlHelper.setParams(params);
-                    sqlHelper.setExtras(extras);
-                    sqlHelper.executeUrl(false);
-                    break;
-                }
-                case R.id.img_Rating:{
-                    break;
-                }
-                case R.id.img_Review:{
-                    break;
-                }
-                case R.id.containerWatched:{
-                    break;
-                }
-                case R.id.containerRating:{
-                    break;
-                }
-                case R.id.containerReviews:{
-                    break;
-                }
-           }
-        }else if(mainType.equals("cast")){
-            ActorModel actorModel = (ActorModel) model.get(position);
-            bundle = new ModelHelper(context).buildActorModelBundle(actorModel, "ProfileFragment");
-            fragment = new ProfileFragment();
-            mainActivity.initFragment(fragment, bundle);
+            } else if (mainType.equals("cast")) {
+                ActorModel actorModel = (ActorModel) model.get(position);
+                bundle = new ModelHelper(context).buildActorModelBundle(actorModel, "ProfileFragment");
+                fragment = new ProfileFragment();
+                mainActivity.initFragment(fragment, bundle);
+            }
+        }catch (Exception e){
+            Log.e("HomeFragment:Click", e.getMessage());
         }
 
     }
@@ -329,10 +372,17 @@ public class HomeFragment extends Fragment implements SqlDelegate {
                         homeModels.get(position).getFavourites().getMovie().setWatched(false);
                         ImageView imageView = (ImageView) recyclerView.findViewById(Integer.parseInt(sqlHelper.getExtras().get("view_id")));
                         imageView.setImageDrawable(context.getDrawable(R.drawable.ic_eye));
+                        int watching = MainActivity.currentUserModel.getTotalWatched();
+                        MainActivity.currentUserModel.setTotalWatched(watching - 1);
+                        Toast.makeText(context, "Movie has been marked as unwatched.", Toast.LENGTH_SHORT).show();
                     }else{
                         homeModels.get(position).getFavourites().getMovie().setWatched(true);
                         ImageView imageView = (ImageView) recyclerView.findViewById(Integer.parseInt(sqlHelper.getExtras().get("view_id")));
                         imageView.setImageDrawable(context.getDrawable(R.drawable.ic_eye_filled));
+                        new ModelHelper(context).addToUpdatesModel(homeModels.get(position).getFavourites().getMovie().getId(), "", "watching");
+                        int watching = MainActivity.currentUserModel.getTotalWatched();
+                        MainActivity.currentUserModel.setTotalWatched(watching + 1);
+                        Toast.makeText(context, "Movie has been marked as watched.", Toast.LENGTH_SHORT).show();
                     }
                 }else if(response.equals(context.getString(R.string.response_unsuccessful))){
                     if(homeModels.get(position).getFavourites().getMovie().getIsWatched())
@@ -347,7 +397,7 @@ public class HomeFragment extends Fragment implements SqlDelegate {
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                 String response = jsonObject.getString("response");
                 if(response.equals(context.getString(R.string.response_success))){
-                    addCastData(jsonArray,Integer.parseInt(sqlHelper.getActionString().split(":")[1]));
+                    addCastData(jsonArray);
                 }else if(response.equals(context.getString(R.string.response_unsuccessful))){
 
                 }else if(response.equals(context.getString(R.string.unexpected))){

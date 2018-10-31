@@ -5,30 +5,25 @@
     <string name="title_post_status">Post Status</string>
     <string name="title_favourites">Favourites</string>
     <string name="title_profile">Profile</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="google_client_id">520975052224-crffh33cqo04dnk9c42s015ghlp3vrtu.apps.googleusercontent.com</string>
+    <string name="google_web_client_id">520975052224-hu15ocrsie7s0dfsh4fjhrshjti6q0fa.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">2567368729944839</string>
+    <string name="fb_login_protocol_scheme">fb2567368729944839</string>
     <string name="hello_blank_fragment">Hello Home fragment</string>
 
     <!-- User Resource Strings -->
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
-    <string name="signin">Sign In</string>
-    <string name="signup">Sign Up</string>
-    <string name="username">Username</string>
-    <string name="password">Password</string>
-    <string name="password_confirm">Confirm Password</string>
-    <string name="email">Email</string>
-    <string name="country">Country</string>
-    <string name="phone">Phone No:</string>
-    <string name="name">Name</string>
     <string name="continue_login">Please login to continue</string>
     <string name="follow_button_edit">Edit Profile</string>
     <string name="follow_button_follow">Follow</string>
-    <string name="follow_button_following">@string/following</string>
+    <string name="follow_button_following">Unfollow</string>
     <string name="follow_button_watching">Add to Watching</string>
     <string name="follow_button_watched">Watching</string>
     <string name="follow_button_watchlist_add">Add to Watchlist</string>
     <string name="follow_button_watchlist_remove">Remove from Watchlist</string>
+    <string name="country">Country</string>
+    <string name="phone">Phone No:</string>
 
     <!-- Permission Resource Strings -->
     <string name="permission_camera_denied">Please allow camera permission to take picture.</string>
@@ -46,10 +41,16 @@
     <string name="required_field">This field is required</string>
     <string name="invalid_email">Please enter a valid email</string>
     <string name="invalid_password">Password should be atleast 6 characters long and have one uppercase character and one numeral</string>
-    <string name="invalid_cred">Please check your username/password</string>
+    <string name="invalid_cred">Please check your username/password.</string>
     <string name="password_mismatch">The passwords do not match</string>
     <string name="unexpected">Something went wrong. Please try again later</string>
     <string name="exception">exception</string>
+    <string name="invalid_phone">Please enter a valid phone number</string>
+    <string name="invalid_date">Please enter date as yyyy-MM-dd</string>
+    <string name="private_account_message">This users profile is private. Follow him to view him profile.</string>
+    <string name="private_account_title">Private Account</string>
+
+
 
     <!-- Success Resource Strings -->
     <string name="success_register">Registration Successful</string>
@@ -62,22 +63,108 @@
     <string name="master_url">https://understandable-blin.000webhostapp.com/cinema-club/</string>
     <string name="profile_image_url">users/images/profile/</string>
     <string name="movie_image_portrait_url">movies/images/portrait/</string>
-    <string name="cast_image_url">/cast/images/</string>
+    <string name="cast_image_url">cast/images/</string>
     <string name="method_get">GET</string>
     <string name="method_post">POST</string>
 
     <!-- Favourites Title Strings -->
-    <string name="favourites_following">started following you.</string>
-    <string name="favourites_watching">is watching</string>
+    <string name="favourites_following">started following you</string>
+    <string name="favourites_watching">has watched</string>
     <string name="favourites_rating">has rated</string>
     <string name="favourites_review">wrote a review on</string>
-    <string name="favourites_vote">has voted on your review for</string>
+    <string name="favourites_vote">has liked your review for</string>
+    <string name="favourites_watching_now">is now watching</string>
 
     <!-- Home Title Strings -->
     <string name="home_new_releases">New Release!</string>
     <string name="home_recommendation">Recommended for you</string>
     <string name="home_review_reminder">Have you reviewed this movie yet?</string>
     <string name="home_watchlist_reminder">Have you watched this movie yet?</string>
+
+    <!-- Login Title Strings -->
+    <string name="logo">Logo</string>
+    <string name="logo_text">Logo text</string>
+    <string name="signin_with">Sign in with</string>
+    <string name="signin">Sign In</string>
+    <string name="username">Email</string>
+    <string name="password">Password</string>
+    <string name="password_forgot">Forgot password?</string>
+    <string name="login_register">Not a member? Register</string>
+    <string name="default_signin">default</string>
+    <string name="google_signin">google</string>
+    <string name="fb_signin">facebook</string>
+    <string name="new_user">New user?</string>
+    <string name="new_user_prompt">If you are a new user, tap yes to register.</string>
+
+    <!-- Register Title Strings -->
+    <string name="signup_with">Register with</string>
+    <string name="signup">Register</string>
+    <string name="password_confirm">Confirm Password</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+
+    <!-- Review Title Strings -->
+    <string name="review_hint">Add a review…</string>
+    <string name="review_tab_top">top</string>
+    <string name="review_tab_following">following</string>
+    <string name="review_tab_all">all</string>
+    <string name="review_reply">Reply</string>
+    <string name="review_like">Like</string>
+    <string name="review_submit">Submit</string>
+    <string name="review_reply_view">View all !#! replies</string>
+    <string name="review_reply_hide">Hide replies</string>
+
+    <!-- Review Title Strings -->
+    <string name="ratings_submit">Submit</string>
+    <string name="ratings_cancel">Cancel</string>
+
+    <!-- Recovery Title Strings -->
+    <string name="recover_password_title">Enter your registered email</string>
+    <string name="recover_button">Recover</string>
+    <string name="recover_enter_otp">Enter OTP</string>
+    <string name="recover_button_otp">Verify</string>
+    <string name="new_password">Enter new password</string>
+    <string name="old_password">Enter old password</string>
+    <string name="recover_save_button">Save</string>
+    <string name="recover_confirm_button">Confirm</string>
+    <string name="recover_otp_send">An OTP has been sent to the given address</string>
+
+    <!-- Settings Title Strings -->
+    <string name="settings_edit_profile">Edit Profile</string>
+    <string name="settings_profile_image">Profile Image:</string>
+    <string name="settings_profile_image_change">Change profile image</string>
+    <string name="settings_profile_password">Password:</string>
+    <string name="settings_profile_password_change">Change password</string>
+    <string name="settings_profile_name">Name:</string>
+    <string name="settings_profile_email">Email:</string>
+    <string name="settings_profile_phone">Phone:</string>
+    <string name="settings_profile_dob">Date of Birth:</string>
+    <string name="settings_profile_country">Country:</string>
+    <string name="settings_profile_city">City:</string>
+    <string name="settings_privacy_settings">Privacy Settings</string>
+    <string name="settings_about">About</string>
+    <string name="settings_end_user_agreement">End User Agreement</string>
+    <string name="settings_privacy_reply">Allow commenting on your reviews</string>
+    <string name="settings_privacy_info">Allow public profile</string>
+    <string name="settings_profile_preference">Preferences</string>
+    <string name="settings_preference_language">Languages</string>
+    <string name="settings_preference_genre">Genres</string>
+
+    <!-- Movie Title Strings -->
+    <string name="movie_watched">Watched</string>
+    <string name="movie_ratings">Ratings</string>
+    <string name="movie_filters">Filters</string>
+    <string name="movie_filters_apply"><u>Apply</u></string>
+    <string name="movie_filters_remove"><u>Remove all</u></string>
+
+    <!-- Post Status Title Strings -->
+    <string name="post_status_review">Review</string>
+    <string name="post_status_rating">Rating</string>
+    <string name="post_status_watching">Watching</string>
+    <string name="post_status_search">Search</string>
+    <string name="post_status_type">post_status</string>
+    <string name="post_status_search_title">Search Results</string>
+    <string name="post_status_new_releases">New Releases</string>
 
     <!-- Other Resource Strings -->
 
@@ -99,4 +186,12 @@
     <string name="write_reviews">Write a review…</string>
     <string name="tab_watched">Watched</string>
     <string name="placeholder_show_nothing">Nothing to show</string>
+    <string name="privacy_order">reply,info</string>
+    <string name="confirmation">Are you sure?</string>
+    <string name="confirmation_yes">Yes</string>
+    <string name="confirmation_no">No</string>
+    <string name="button_close">Close</string>
+    <string name="no_internet">No internet! Please check your network internet and try again.</string>
+    <string name="retry">Retry</string>
+
 </resources>

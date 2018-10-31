@@ -14,9 +14,16 @@ import com.create.sidhu.movbox.activities.ProfileImage;
  */
 
 public class PermissionsHelper{
+    //System
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_WRITE_EXTERNAL_STORAGE = 2;
     public static final int REQUEST_READ_EXTERNAL_STORAGE = 3;
+    //Google
+    public static final int REQUEST_GOOGLE_AUTHENTICATION = 4;
+    //Facebook
+    public static final int REQUEST_FACEBOOK_AUTHENTICATION = 64206;
+    public static final String FACEBOOK_EMAIL = "email";
+    public static final String FACEBOOK_USERNAME = "public_profile";
 
     private Context context;
 

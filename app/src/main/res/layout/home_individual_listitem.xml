@@ -3,9 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/containerMaster"
-    android:layout_marginTop="@dimen/home_description_padding_top"
-    android:layout_marginBottom="@dimen/home_description_padding_top"
-    android:paddingBottom="@dimen/home_description_padding_top"
     android:paddingTop="@dimen/home_description_padding_top"
     android:background="@android:color/white">
     <!-- Definition Section -->
@@ -24,8 +21,9 @@
                 android:id="@+id/definition_image"
                 android:layout_width="@dimen/list_image"
                 android:layout_height="@dimen/list_image"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="@dimen/standard_gap_large"
+                android:layout_marginTop="@dimen/standard_gap_large"
+                android:layout_marginBottom="@dimen/standard_gap_large"
                 android:src="@drawable/profile_default" />
         </LinearLayout>
         <LinearLayout
@@ -37,13 +35,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/list_padding"
+                android:paddingStart="@dimen/standard_gap_large"
                 android:orientation="vertical"
                 android:gravity="center">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/standard_touch_space_small">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -51,7 +50,7 @@
                         android:text="Subject"
                         android:textColor="@color/colorTextPrimary"
                         android:id="@+id/textView_TitleTypeSubject"
-                        android:layout_marginRight="@dimen/list_interspace"/>
+                        android:layout_marginEnd="@dimen/list_interspace"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -85,234 +84,268 @@
     </LinearLayout>
     <!-- Other Section -->
     <LinearLayout
+        android:id="@+id/containerDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/containerDescription"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/home_description_padding_side"
-        android:paddingRight="@dimen/home_description_padding_side">
+        android:paddingLeft="@dimen/standard_gap_large"
+        android:paddingRight="@dimen/standard_gap_large">
         <!-- Title Section -->
         <LinearLayout
+            android:id="@+id/containerMainText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/containerMainText"
             android:orientation="horizontal"
-            android:weightSum="4"
-            android:paddingTop="@dimen/home_description_padding_top">
+            android:paddingTop="@dimen/standard_gap"
+            android:weightSum="4">
+
             <TextView
+                android:id="@+id/textView_TitleText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/list_titletext"
-                android:id="@+id/textView_TitleText"
-                android:text="Title Text Test"
                 android:layout_weight="1"
+                android:text="Title Text Test"
                 android:textAlignment="viewStart"
-                android:textColor="@color/colorTextPrimary"/>
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="@dimen/text_large" />
+
             <LinearLayout
+                android:id="@+id/containerCensorRating"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/containerCensorRating"
                 android:layout_weight="3"
                 android:gravity="end|center_vertical"
                 android:orientation="horizontal"
                 android:visibility="gone">
+
                 <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
                     android:id="@+id/imageView_RatingsSymbol"
+                    android:layout_width="@dimen/master_star_size"
+                    android:layout_height="@dimen/master_star_size"
                     android:src="@drawable/ic_star_filled"
-                    android:layout_weight="2"/>
+                    android:layout_marginEnd="@dimen/standard_touch_space"/>
+
                 <TextView
+                    android:id="@+id/textView_TitleRatings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/list_titletext"
-                    android:id="@+id/textView_TitleRatings"
                     android:text="9/10"
-                    android:textAlignment="viewStart"
+                    android:textAlignment="viewEnd"
                     android:textColor="@color/colorTextPrimary"
-                    android:layout_weight="1"/>
+                    android:textSize="@dimen/list_titletext"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
         <!-- Subtitle Section -->
         <LinearLayout
+            android:id="@+id/containerSubText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/containerSubText"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/home_description_padding_top">
+            android:paddingTop="@dimen/standard_touch_space">
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/list_subtext"
-                android:textAlignment="viewStart"
-                android:text="Subtitle Text Test"
                 android:id="@+id/textView_SubTextGenre"
-                android:textColor="@color/colorTextHint"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subtitle Text Test"
+                android:textAlignment="viewStart"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="@dimen/list_subtext" />
+
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/colorTextDisabled"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp" />
+                android:layout_marginLeft="@dimen/standard_gap"
+                android:layout_marginRight="@dimen/standard_gap"
+                android:background="@color/colorTextHint" />
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/list_subtext"
-                android:textAlignment="viewStart"
-                android:text="Subtitle Text Test"
                 android:id="@+id/textView_SubTextDuration"
-                android:textColor="@color/colorTextHint"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subtitle Text Test"
+                android:textAlignment="viewStart"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="@dimen/list_subtext" />
+
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/colorTextDisabled"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="4dp"/>
+                android:layout_marginLeft="@dimen/standard_gap"
+                android:layout_marginRight="@dimen/standard_gap"
+                android:background="@color/colorTextHint" />
+
             <TextView
+                android:id="@+id/textView_SubTextDimension"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/list_subtext"
-                android:textAlignment="viewStart"
                 android:text="Subtitle Text Test"
-                android:id="@+id/textView_SubTextDimension"
-                android:textColor="@color/colorTextHint"/>
+                android:textAlignment="viewStart"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="@dimen/list_subtext" />
         </LinearLayout>
         <!-- Cast Section -->
         <LinearLayout
+            android:id="@+id/containerCast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/containerCast"
-            android:paddingTop="@dimen/home_description_padding_top">
+            android:paddingTop="@dimen/standard_gap">
+
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView_Cast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/recyclerView_Cast"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/home_description_padding_top">
-            </android.support.v7.widget.RecyclerView>
+                android:paddingTop="@dimen/standard_gap"></android.support.v7.widget.RecyclerView>
         </LinearLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorTextDisabled"
-            android:layout_marginTop="@dimen/home_description_padding_top"/>
+            android:layout_marginTop="@dimen/standard_gap"
+            android:background="@color/colorTextDisabled" />
         <!-- Sub Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/home_description_padding_top">
+            android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_horizontal|center_vertical"
                 android:orientation="horizontal"
-                android:gravity="center_horizontal|center_vertical">
+                android:paddingTop="@dimen/standard_gap_large"
+                android:paddingBottom="@dimen/standard_gap_large">
+
                 <ImageView
+                    android:id="@+id/img_Watched"
                     android:layout_width="@dimen/home_action_image_size"
                     android:layout_height="@dimen/home_action_image_size"
-                    android:src="@drawable/ic_eye"
-                    android:layout_marginLeft="@dimen/standard_gap"
-                    android:layout_marginRight="@dimen/standard_gap"
-                    android:id="@+id/img_Watched"/>
+                    android:layout_marginEnd="@dimen/standard_gap"
+                    android:src="@drawable/ic_eye" />
+
                 <ImageView
+                    android:id="@+id/img_Review"
                     android:layout_width="@dimen/home_action_image_size"
                     android:layout_height="@dimen/home_action_image_size"
-                    android:src="@drawable/ic_star"
                     android:layout_marginLeft="@dimen/standard_gap"
                     android:layout_marginRight="@dimen/standard_gap"
-                    android:id="@+id/img_Rating"/>
+                    android:src="@drawable/ic_comment" />
+
                 <ImageView
+                    android:id="@+id/img_Rating"
                     android:layout_width="@dimen/home_action_image_size"
                     android:layout_height="@dimen/home_action_image_size"
-                    android:src="@drawable/ic_pencil_gray"
                     android:layout_marginLeft="@dimen/standard_gap"
                     android:layout_marginRight="@dimen/standard_gap"
-                    android:id="@+id/img_Review"/>
+                    android:src="@drawable/ic_star" />
             </LinearLayout>
+
             <LinearLayout
+                android:id="@+id/containerDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/standard_touch_space"
                 android:gravity="center_vertical|center_horizontal"
-                android:id="@+id/containerDetails">
+                android:orientation="horizontal">
+
                 <LinearLayout
+                    android:id="@+id/containerWatched"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/containerWatched">
+                    android:paddingBottom="@dimen/standard_gap_large">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/list_subtext"
-                        android:text="103k"
                         android:id="@+id/textView_TotalWatched"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="103k"
                         android:textColor="@color/colorTextPrimary"
-                        android:textStyle="bold"/>
+                        android:textSize="@dimen/list_subtext"
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
                         android:text="Watched"
                         android:textColor="@color/colorTextPrimary"
-                        android:textSize="@dimen/list_subtext"
-                        android:layout_marginStart="2dp"/>
+                        android:textSize="@dimen/list_subtext" />
                 </LinearLayout>
+
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@color/colorTextDisabled"
-                    android:layout_marginLeft="@dimen/standard_touch_space"
-                    android:layout_marginRight="@dimen/standard_touch_space"/>
+                    android:layout_marginLeft="@dimen/standard_gap"
+                    android:layout_marginRight="@dimen/standard_gap"
+                    android:layout_marginBottom="@dimen/standard_gap"
+                    android:background="@color/colorTextHint" />
+
                 <LinearLayout
+                    android:id="@+id/containerReviews"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/containerRating">
+                    android:paddingBottom="@dimen/standard_gap_large">
+
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/list_subtext"
-                        android:text="14k"
-                        android:id="@+id/textView_Ratings"
-                        android:textColor="@color/colorTextPrimary"
-                        android:textStyle="bold" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="(14000)"
-                        android:id="@+id/textView_TotalRatings"
-                        android:textColor="@color/colorTextPrimary"
-                        android:textSize="@dimen/list_subtext"
-                        android:layout_marginStart="2dp"/>
-                </LinearLayout>
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorTextDisabled"
-                    android:layout_marginLeft="@dimen/standard_touch_space"
-                    android:layout_marginRight="@dimen/standard_touch_space"/>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/containerReviews">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/list_subtext"
-                        android:text="60k"
                         android:id="@+id/textView_TotalReviewed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="60k"
                         android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/list_subtext"
                         android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
                         android:text="Reviews"
                         android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/list_subtext" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/standard_gap"
+                    android:layout_marginRight="@dimen/standard_gap"
+                    android:layout_marginBottom="@dimen/standard_gap"
+                    android:background="@color/colorTextHint" />
+
+                <LinearLayout
+                    android:id="@+id/containerRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/standard_gap_large">
+
+                    <TextView
+                        android:id="@+id/textView_Ratings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="14k"
+                        android:textColor="@color/colorTextPrimary"
                         android:textSize="@dimen/list_subtext"
-                        android:layout_marginStart="2dp"/>
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/textView_TotalRatings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:text="(14000)"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/list_subtext" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorTextDisabled"/>
 </LinearLayout>

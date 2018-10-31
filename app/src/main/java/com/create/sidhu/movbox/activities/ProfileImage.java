@@ -1,19 +1,16 @@
 package com.create.sidhu.movbox.activities;
 
-import android.Manifest;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
 import android.util.Log;
@@ -23,18 +20,26 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.create.sidhu.movbox.GlideApp;
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.PermissionsHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileImage extends Activity implements SqlDelegate{
 
@@ -42,11 +47,13 @@ public class ProfileImage extends Activity implements SqlDelegate{
     Button btnGallery, btnCamera, btnConfirm, btnDiscard;
     LinearLayout llMainButton, llConfirmButton;
     Uri imageUri;
-    String imagePath, image;
+    String imagePath, image, uploadUrl;
+    Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_image);
+        uploadUrl = ProfileImage.this.getString(R.string.master_url) + "upload.php";
         imageView = findViewById(R.id.imageView);
         btnCamera = findViewById(R.id.btn_Camera);
         btnGallery = findViewById(R.id.btn_Gallery);
@@ -58,17 +65,15 @@ public class ProfileImage extends Activity implements SqlDelegate{
         final Intent intent = getIntent();
         final Bundle bundle = intent.getBundleExtra("bundle");
         image = bundle.getString("image");
-        Glide.with(this)
+        GlideApp.with(this)
                 .asBitmap()
                 .load(image)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .into(imageView);
         buttonExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent1 = new Intent(ProfileImage.this, MainActivity.class);
-                bundle.putString("return_path", "ProfileFragment");
-                intent1.putExtra("bundle", bundle);
-                startActivity(intent1);
                 finish();
             }
         });
@@ -85,18 +90,47 @@ public class ProfileImage extends Activity implements SqlDelegate{
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-                                SqlHelper sqlHelper = new SqlHelper(ProfileImage.this, ProfileImage.this);
-                                sqlHelper.setActionString("upload_profile_image");
-                                sqlHelper.setExecutePath("upload.php");
-                                sqlHelper.setMethod("POST");
-                                sqlHelper.setUploadFilePath(imagePath);
-                                ArrayList<NameValuePair> params = new ArrayList<>();
-                                params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-                                sqlHelper.setParams(params);
-                                sqlHelper.uploadFile(true);
-                                break;
+                            case DialogInterface.BUTTON_POSITIVE: {
+//                                SqlHelper sqlHelper = new SqlHelper(ProfileImage.this, ProfileImage.this);
+//                                sqlHelper.setActionString("upload_profile_image");
+//                                sqlHelper.setExecutePath("upload.php");
+//                                sqlHelper.setMethod("POST");
+//                                sqlHelper.setUploadFilePath(imagePath);
+//                                ArrayList<NameValuePair> params = new ArrayList<>();
+//                                params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
+//                                sqlHelper.setParams(params);
+//                                sqlHelper.uploadFile(true);
+                                StringRequest stringRequest = new StringRequest(Request.Method.POST, uploadUrl, new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        Toast.makeText(ProfileImage.this, "Your profile image has been saved", Toast.LENGTH_SHORT).show();
+                                        Bundle bundle = new ModelHelper(ProfileImage.this).buildUserModelBundle(MainActivity.currentUserModel, "ProfileFragment");
+                                        bundle.putString("return_path", "ProfileFragment");
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                        intent.putExtra("bundle", bundle);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                    }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Toast.makeText(ProfileImage.this, ProfileImage.this.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+                                    }
+                                }){
+                                    @Override
+                                    protected Map<String, String> getParams() throws AuthFailureError {
+                                        String imageData = imageToString(bitmap);
+                                        Map<String, String> params = new HashMap<>();
+                                        params.put("image", imageData);
+                                        params.put("u_id", MainActivity.currentUserModel.getUserId());
+                                        return params;
+                                    }
+                                };
 
+                                RequestQueue requestQueue = Volley.newRequestQueue(ProfileImage.this);
+                                requestQueue.add(stringRequest);
+                                break;
+                            }
                             case DialogInterface.BUTTON_NEGATIVE:
                                 //No button clicked
                                 break;
@@ -176,35 +210,47 @@ public class ProfileImage extends Activity implements SqlDelegate{
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PermissionsHelper.REQUEST_IMAGE_CAPTURE) {
-            if(resultCode == RESULT_OK) {
-                //Bundle extras = data.getExtras();
-                Glide.with(this)
-                        .asBitmap()
-                        .load(getRealPathFromURI(imageUri))
-                        .into(imageView);
-                llMainButton.setVisibility(View.GONE);
-                llConfirmButton.setVisibility(View.VISIBLE);
-                imagePath = getRealPathFromURI(imageUri);
-                //String encodedImage = encodeImage(getRealPathFromURI(imageUri));
-            }else{
-                Toast.makeText(ProfileImage.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+        try {
+            if (requestCode == PermissionsHelper.REQUEST_IMAGE_CAPTURE) {
+                if (resultCode == RESULT_OK) {
+                    Glide.with(this)
+                            .asBitmap()
+                            .load(getRealPathFromURI(imageUri))
+                            .into(imageView);
+                    llMainButton.setVisibility(View.GONE);
+                    llConfirmButton.setVisibility(View.VISIBLE);
+                    InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                    bitmap = BitmapFactory.decodeStream(inputStream);
+                } else {
+                    Toast.makeText(ProfileImage.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+                }
+            } else if (requestCode == PermissionsHelper.REQUEST_READ_EXTERNAL_STORAGE || requestCode == PermissionsHelper.REQUEST_WRITE_EXTERNAL_STORAGE && resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
+                    Uri fullPhotoUri = data.getData();
+                    Glide.with(this)
+                            .asBitmap()
+                            .load(fullPhotoUri)
+                            .into(imageView);
+                    llMainButton.setVisibility(View.GONE);
+                    llConfirmButton.setVisibility(View.VISIBLE);
+                    InputStream inputStream = getContentResolver().openInputStream(fullPhotoUri);
+                    bitmap = BitmapFactory.decodeStream(inputStream);
+                } else {
+                    Toast.makeText(ProfileImage.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+                }
             }
-        }else if (requestCode == PermissionsHelper.REQUEST_READ_EXTERNAL_STORAGE || requestCode == PermissionsHelper.REQUEST_WRITE_EXTERNAL_STORAGE&& resultCode == RESULT_OK) {
-            if(resultCode == RESULT_OK) {
-                Uri fullPhotoUri = data.getData();
-                Glide.with(this)
-                        .asBitmap()
-                        .load(fullPhotoUri)
-                        .into(imageView);
-                llMainButton.setVisibility(View.GONE);
-                llConfirmButton.setVisibility(View.VISIBLE);
-                imagePath = getRealPathFromURI(fullPhotoUri);
-                String encodedImage = encodeImage(fullPhotoUri);
-            }else{
-                Toast.makeText(ProfileImage.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
-            }
+        }catch (Exception e){
+
         }
+    }
+
+    private String imageToString(Bitmap bitmap){
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
+        byte[] imageBytes = outputStream.toByteArray();
+
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return  encodedImage;
     }
 
     /***
@@ -263,20 +309,6 @@ public class ProfileImage extends Activity implements SqlDelegate{
         }catch (Exception e){
             Log.e("ProfileImage:dispatch", e.getMessage());
         }
-    }
-
-    private String encodeImage(Uri imageUri){
-        try {
-            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, baos);
-            byte[] imageBytes = baos.toByteArray();
-            String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-            return encodedImage;
-        } catch (Exception e) {
-            Log.e("encodeImage", e.getMessage());
-        }
-        return "";
     }
 
     public String getRealPathFromURI(Uri contentUri) {

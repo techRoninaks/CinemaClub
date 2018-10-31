@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -36,10 +37,11 @@ import java.util.ArrayList;
  */
 public class FavouritesFragment extends Fragment implements SqlDelegate {
 
+    public static ArrayList<FavouritesModel> favouritesList;
+
     RecyclerView recyclerView;
     LinearLayout llContainerPlaceholder;
     Context context;
-    ArrayList<FavouritesModel> favouritesList;
     String subTypes[] = {"follow", "watching", "review", "rating", "review_vote"};
 
     public FavouritesFragment() {
@@ -53,10 +55,19 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
         Toolbar toolbar = ((MainActivity) context).findViewById(R.id.toolbar);
         toolbar.setTitle(StringHelper.toTitleCase(context.getString(R.string.title_favourites)));
         StringHelper.changeToolbarFont(toolbar, (MainActivity)context);
+        ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
+        imgTitle.setVisibility(View.GONE);
         View rootview = inflater.inflate(R.layout.fragment_favourites, container, false);
         recyclerView = (RecyclerView) rootview.findViewById(R.id.recyclerView_Favourites);
         llContainerPlaceholder = rootview.findViewById(R.id.containerPlaceholder);
-        fetchUpdates();
+        if(favouritesList == null)
+            fetchUpdates();
+        else{
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            FavouritesAdapter favouritesAdapter = new FavouritesAdapter(context, favouritesList, recyclerView);
+            recyclerView.setAdapter(favouritesAdapter);
+        }
         return rootview;
     }
 
@@ -80,7 +91,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
         try{
             int length = Integer.parseInt(jsonObject.getJSONObject("0").getString("length"));
             ModelHelper modelHelper = new ModelHelper(context);
-            for(int i = 1; i <= length ; i++){
+            for(int i = 1; i < length ; i++){
                 FavouritesModel favouritesModel = modelHelper.buildFavouritesModel(jsonObject.getJSONObject("" + i), "favourites");
                 favouritesList.add(favouritesModel);
             }
@@ -117,7 +128,27 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                     break;
                 }
                 case "general":{
-                    Toast.makeText(context, "Clicked:" + position, Toast.LENGTH_SHORT).show();
+                    switch (favouritesList.get(position).getSubType()){
+                        case "follow":{
+                            Bundle bundle = new ModelHelper(context).buildUserModelBundle(favouritesList.get(position).getUser(), "ProfileFragment");
+                            ProfileFragment fragment = new ProfileFragment();
+                            ((MainActivity) context).initFragment(fragment, bundle);
+                            break;
+                        }
+                        case "watching":{
+                            Bundle bundle = new ModelHelper(context).buildMovieModelBundle(favouritesList.get(position).getMovie(), "ProfileFragment");
+                            ProfileFragment fragment = new ProfileFragment();
+                            ((MainActivity) context).initFragment(fragment, bundle);
+                            break;
+                        }
+                        case "review":
+                        case "review_vote":{
+                            break;
+                        }
+                        case "rating":{
+                            break;
+                        }
+                    }
                     break;
                 }
             }

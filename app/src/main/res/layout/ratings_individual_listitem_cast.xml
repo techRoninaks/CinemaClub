@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/containerMaster"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/standard_gap">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/containerRating"
+        android:padding="@dimen/standard_gap">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/containerImage">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/containerCastImage">
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/img_Cast"
+                    android:layout_width="@dimen/list_image"
+                    android:layout_height="@dimen/list_image"
+                    android:src="@drawable/profile_default"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/containerCastImage"
+                android:layout_alignTop="@+id/containerCastImage"
+                android:layout_marginStart="32dp">
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/img_CastType"
+                    android:layout_width="@dimen/cast_image_identifier_size"
+                    android:layout_height="@dimen/cast_image_identifier_size"
+                    android:src="@drawable/ic_director"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/standard_gap">
+            <!-- Review text -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextPrimary"
+                android:text="Midhun Manuel Thomas (8/10)"
+                android:textSize="@dimen/ratings_subtitle"
+                android:id="@+id/textView_CastTitle" />
+            <RatingBar
+                style="@style/CustomRatingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="10"
+                android:rating="4.5"
+                android:id="@+id/rb_CastRating"
+                android:layout_marginTop="@dimen/standard_gap"
+                android:padding="0dp"
+                android:stepSize="1"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/containerUserRatings"
+                android:gravity="center_vertical"
+                android:visibility="gone">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_star_filled"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/ratings_subtitle"
+                    android:textColor="@color/colorTextPrimary"
+                    android:text="6/10"
+                    android:textStyle="bold"
+                    android:id="@+id/textView_UserRating"
+                    android:layout_marginStart="@dimen/standard_gap"
+                    android:textAlignment="gravity"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

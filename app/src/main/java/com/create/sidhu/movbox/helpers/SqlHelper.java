@@ -2,6 +2,7 @@ package com.create.sidhu.movbox.helpers;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.LoginActivity;
+import com.create.sidhu.movbox.activities.NoInternetActivity;
 
 import org.apache.http.NameValuePair;
 import org.json.JSONArray;
@@ -36,6 +38,7 @@ import java.util.List;
 /**
  * Created by nihalpradeep on 10/08/18.
  */
+//TODO: No internet failure.
 
 public class SqlHelper {
     private String MasterUrl;
@@ -186,18 +189,23 @@ public class SqlHelper {
     //Async Tasks
 
     public class LoadResponse extends AsyncTask<Void, Void, Void>{
-        ProgressDialog pDialog;
+        TransparentProgressDialog pDialog;
         JSONParser jParser = new JSONParser();
+        Boolean canceled = false;
 
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                JSONObject jsonObject = null;
-                if(Method.equals("GET"))
-                    jsonObject = jParser.makeHttpRequest(MasterUrl + ExecutePath, "GET", params);
-                else if(Method.equals("POST"))
-                    jsonObject = jParser.makeHttpRequest(MasterUrl + ExecutePath, "POST", params);
-                JSONResponse = jsonObject;
+                if(!(isNetworkAvailable() && isOnline())){
+                    canceled = true;
+                }else {
+                    JSONObject jsonObject = null;
+                    if (Method.equals("GET"))
+                        jsonObject = jParser.makeHttpRequest(MasterUrl + ExecutePath, "GET", params);
+                    else if (Method.equals("POST"))
+                        jsonObject = jParser.makeHttpRequest(MasterUrl + ExecutePath, "POST", params);
+                    JSONResponse = jsonObject;
+                }
             }catch (Exception e){
                 Log.e("SqlHelper:Background", e.getMessage());
             }
@@ -208,9 +216,7 @@ public class SqlHelper {
         protected void onPreExecute() {
             super.onPreExecute();
             if(showLoading) {
-                pDialog = new ProgressDialog(context);
-                pDialog.setMessage("Loading");
-                pDialog.setIndeterminate(false);
+                pDialog = new TransparentProgressDialog(context);
                 pDialog.setCancelable(false);
                 pDialog.show();
             }
@@ -221,7 +227,11 @@ public class SqlHelper {
             super.onPostExecute(aVoid);
             if(showLoading)
                 pDialog.dismiss();
-            sqlDelegate.onResponse(SqlHelper.this);
+            if(canceled){
+                NoInternetActivity.sqlHelper = SqlHelper.this;
+                context.startActivity(new Intent(context, NoInternetActivity.class));
+            }else
+                sqlDelegate.onResponse(SqlHelper.this);
         }
 
     }
@@ -346,14 +356,24 @@ public class SqlHelper {
 
     }
 
-    private boolean isNetworkConnected() {
-        ConnectivityManager connectivitymanagar = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkinfo = connectivitymanagar.getActiveNetworkInfo();
-        if (networkinfo == null || !networkinfo.isConnectedOrConnecting()) {
-            return false;
-        } else {
-            return true;
+
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    public Boolean isOnline() {
+        try {
+            Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.com");
+            int returnVal = p1.waitFor();
+            boolean reachable = (returnVal==0);
+            return reachable;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return false;
     }
 
 }
