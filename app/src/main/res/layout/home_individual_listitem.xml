@@ -69,6 +69,19 @@
                     />
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingEnd="@dimen/standard_gap"
+            android:id="@+id/containerMoreButton">
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_more"
+                android:id="@+id/img_More"/>
+        </LinearLayout>
     </LinearLayout>
     <!-- Poster Section -->
     <LinearLayout
@@ -209,7 +222,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -217,7 +232,9 @@
                 android:gravity="center_horizontal|center_vertical"
                 android:orientation="horizontal"
                 android:paddingTop="@dimen/standard_gap_large"
-                android:paddingBottom="@dimen/standard_gap_large">
+                android:paddingBottom="@dimen/standard_gap_large"
+                android:clipChildren="false"
+                android:clipToPadding="false">
 
                 <ImageView
                     android:id="@+id/img_Watched"

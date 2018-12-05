@@ -38,7 +38,6 @@ import java.util.List;
 /**
  * Created by nihalpradeep on 10/08/18.
  */
-//TODO: No internet failure.
 
 public class SqlHelper {
     private String MasterUrl;
@@ -51,29 +50,34 @@ public class SqlHelper {
     private ArrayList<NameValuePair> params;
     private String Method;
     private boolean showLoading;
+    private boolean isService;
     private String UploadFilePath;
     private HashMap<String, String> Extras;
     //Constructors
     public SqlHelper(Context context){
         MasterUrl = context.getString(R.string.master_url);
         this.context = context;
+        isService = false;
     }
     public SqlHelper(Context context, SqlDelegate sqlDelegate){
         this.context = context;
         this.sqlDelegate = sqlDelegate;
         MasterUrl = context.getString(R.string.master_url);
+        isService = false;
     }
     public SqlHelper(Context context, SqlDelegate sqlDelegate, String executePath){
         this.MasterUrl = context.getString(R.string.master_url);;
         this.context = context;
         this.ExecutePath = executePath;
         this.sqlDelegate = sqlDelegate;
+        isService = false;
     }
     public SqlHelper(Context context, SqlDelegate sqlDelegate, String masterUrl, String executePath){
         this.context = context;
         this.sqlDelegate = sqlDelegate;
         this.MasterUrl = masterUrl;
         this.ExecutePath = executePath;
+        isService = false;
     }
     //Getters
 
@@ -126,6 +130,11 @@ public class SqlHelper {
     public HashMap<String, String> getExtras() {
         return Extras;
     }
+
+    public boolean isService() {
+        return isService;
+    }
+
     //Setters
 
 
@@ -171,6 +180,10 @@ public class SqlHelper {
 
     public void setExtras(HashMap<String, String> extras) {
         Extras = extras;
+    }
+
+    public void setService(boolean isService){
+        this.isService = isService;
     }
     //Public methods
 
@@ -227,11 +240,14 @@ public class SqlHelper {
             super.onPostExecute(aVoid);
             if(showLoading)
                 pDialog.dismiss();
-            if(canceled){
+            if(canceled && !isService){
                 NoInternetActivity.sqlHelper = SqlHelper.this;
                 context.startActivity(new Intent(context, NoInternetActivity.class));
-            }else
-                sqlDelegate.onResponse(SqlHelper.this);
+            }else {
+                if(sqlDelegate != null) {
+                    sqlDelegate.onResponse(SqlHelper.this);
+                }
+            }
         }
 
     }

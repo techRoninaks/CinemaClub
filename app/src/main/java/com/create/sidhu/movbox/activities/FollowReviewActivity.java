@@ -19,8 +19,10 @@ import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.adapters.FavouritesAdapter;
 import com.create.sidhu.movbox.adapters.RecyclerViewAdapter;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
+import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.FavouritesModel;
 import com.create.sidhu.movbox.models.MovieModel;
 import com.create.sidhu.movbox.models.UserModel;
@@ -44,122 +46,138 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_follow_review);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
-        imgTitle.setVisibility(View.GONE);
-        setSupportActionBar(toolbar);
-        Intent intent = getIntent();
-        bundle = intent.getBundleExtra("bundle");
-        String type = intent.getStringExtra("type");
-        if(type.equals("followers") || type.equals("following")){
-            profileType = intent.getStringExtra("profile_type");
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_follow_review);
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
+            imgTitle.setVisibility(View.GONE);
+            setSupportActionBar(toolbar);
+            Intent intent = getIntent();
+            bundle = intent.getBundleExtra("bundle");
+            String type = intent.getStringExtra("type");
+            if (type.equals("followers") || type.equals("following")) {
+                profileType = intent.getStringExtra("profile_type");
+            }
+            favouritesList = new ArrayList<>();
+            movieModels = new ArrayList<>();
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            llPlaceholder = (LinearLayout) findViewById(R.id.containerPlaceholder);
+            setLayout(type);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            setTitle(type);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
-        favouritesList = new ArrayList<>();
-        movieModels = new ArrayList<>();
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        llPlaceholder = (LinearLayout) findViewById(R.id.containerPlaceholder);
-        setLayout(type);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setTitle(type);
     }
 
     private void setTitle(String type){
-        if(type.contains("movie")){
-            String subType = type.split(":")[1];
-            getSupportActionBar().setTitle(subType);
-            getMovies(subType.toLowerCase().replaceAll(" ", "_"));
-        }else {
-            switch (type) {
-                case "review": {
-                    getSupportActionBar().setTitle("Reviews");
-                    break;
-                }
-                case "followers": {
-                    if (profileType.equals(getString(R.string.profile_user)))
-                        getSupportActionBar().setTitle("Followers");
-                    else if (profileType.equals(getString(R.string.profile_movies)))
-                        getSupportActionBar().setTitle("Users Watched");
-                    break;
-                }
-                case "following": {
-                    getSupportActionBar().setTitle("Following");
-                    break;
-                }
-                case "watched": {
-                    getSupportActionBar().setTitle("Watched");
-                    break;
+        try {
+            if (type.contains("movie")) {
+                String subType = type.split(":")[1];
+                getSupportActionBar().setTitle(subType);
+                getMovies(subType.toLowerCase().replaceAll(" ", "_"));
+            } else {
+                switch (type) {
+                    case "review": {
+                        getSupportActionBar().setTitle("Reviews");
+                        break;
+                    }
+                    case "followers": {
+                        if (profileType.equals(getString(R.string.profile_user)))
+                            getSupportActionBar().setTitle("Followers");
+                        else if (profileType.equals(getString(R.string.profile_movies)))
+                            getSupportActionBar().setTitle("Users Watched");
+                        break;
+                    }
+                    case "following": {
+                        getSupportActionBar().setTitle("Following");
+                        break;
+                    }
+                    case "watched": {
+                        getSupportActionBar().setTitle("Watched");
+                        break;
+                    }
                 }
             }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
     private void setLayout(String type){
-        SqlHelper sqlHelper = new SqlHelper(FollowReviewActivity.this, FollowReviewActivity.this);
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        switch(type){
-            case "review":
-                sqlHelper.setMethod("GET");
-                sqlHelper.setActionString("review");
-                sqlHelper.setExecutePath("get-review.php");
-                params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
-                params.add(new BasicNameValuePair("type", getString(R.string.profile_user)));
-                sqlHelper.setParams(params);
-                sqlHelper.executeUrl(true);
-                break;
-            case "followers":
-                if(profileType.equals(getString(R.string.profile_user))) {
+        try {
+            SqlHelper sqlHelper = new SqlHelper(FollowReviewActivity.this, FollowReviewActivity.this);
+            ArrayList<NameValuePair> params = new ArrayList<>();
+            switch (type) {
+                case "review":
                     sqlHelper.setMethod("GET");
-                    sqlHelper.setActionString("followers");
-                    sqlHelper.setExecutePath("follow.php");
-                    params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+                    sqlHelper.setActionString("review");
+                    sqlHelper.setExecutePath("get-review.php");
                     params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
-                    params.add(new BasicNameValuePair("type", getString(R.string.followers).toLowerCase()));
-                    sqlHelper.setParams(params);
-                    sqlHelper.executeUrl(true);
-                }else if(profileType.equals(getString(R.string.profile_movies))){
-                    sqlHelper.setMethod("GET");
-                    sqlHelper.setActionString("followers");
-                    sqlHelper.setExecutePath("get-users-watched.php");
-                    params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-                    params.add(new BasicNameValuePair("m_id", bundle.getString("id")));
-                    sqlHelper.setParams(params);
-                    sqlHelper.executeUrl(true);
-                }
-                break;
-            case "following":
-                if(profileType.equals(getString(R.string.profile_user))) {
-                    sqlHelper.setMethod("GET");
-                    sqlHelper.setActionString("following");
-                    sqlHelper.setExecutePath("follow.php");
-                    params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-                    params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
-                    params.add(new BasicNameValuePair("type", getString(R.string.following).toLowerCase()));
+                    params.add(new BasicNameValuePair("type", getString(R.string.profile_user)));
                     sqlHelper.setParams(params);
                     sqlHelper.executeUrl(true);
                     break;
-                }
-            case "watched":
-                getMoviesWatched();
-                return;
+                case "followers":
+                    if (profileType.equals(getString(R.string.profile_user))) {
+                        sqlHelper.setMethod("GET");
+                        sqlHelper.setActionString("followers");
+                        sqlHelper.setExecutePath("follow.php");
+                        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+                        params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
+                        params.add(new BasicNameValuePair("type", getString(R.string.followers).toLowerCase()));
+                        sqlHelper.setParams(params);
+                        sqlHelper.executeUrl(true);
+                    } else if (profileType.equals(getString(R.string.profile_movies))) {
+                        sqlHelper.setMethod("GET");
+                        sqlHelper.setActionString("followers");
+                        sqlHelper.setExecutePath("get-users-watched.php");
+                        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+                        params.add(new BasicNameValuePair("m_id", bundle.getString("id")));
+                        sqlHelper.setParams(params);
+                        sqlHelper.executeUrl(true);
+                    }
+                    break;
+                case "following":
+                    if (profileType.equals(getString(R.string.profile_user))) {
+                        sqlHelper.setMethod("GET");
+                        sqlHelper.setActionString("following");
+                        sqlHelper.setExecutePath("follow.php");
+                        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+                        params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
+                        params.add(new BasicNameValuePair("type", getString(R.string.following).toLowerCase()));
+                        sqlHelper.setParams(params);
+                        sqlHelper.executeUrl(true);
+                        break;
+                    }
+                case "watched":
+                    getMoviesWatched();
+                    return;
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
-//        favouritesAdapter = new FavouritesAdapter(this, favouritesList, recyclerView);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-//        recyclerView.setLayoutManager(layoutManager);
-//        recyclerView.setAdapter(favouritesAdapter);
     }
 
     private void getMoviesWatched() {
-        SqlHelper sqlHelper = new SqlHelper(FollowReviewActivity.this, FollowReviewActivity.this);
-        sqlHelper.setMethod("GET");
-        sqlHelper.setActionString("get_watched");
-        sqlHelper.setExecutePath("get-watched.php");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
-        sqlHelper.setParams(params);
-        sqlHelper.executeUrl(true);
+        try {
+            SqlHelper sqlHelper = new SqlHelper(FollowReviewActivity.this, FollowReviewActivity.this);
+            sqlHelper.setMethod("GET");
+            sqlHelper.setActionString("get_watched");
+            sqlHelper.setExecutePath("get-watched.php");
+            ArrayList<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+            params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
+            sqlHelper.setParams(params);
+            sqlHelper.executeUrl(true);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
     private void getMovies(String type){
@@ -187,46 +205,55 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
     }
 
     public void OnClick(int position, Context context, View rootview, ArrayList<?> model, String type){
-        Bundle bundle;
-        switch(type){
-            case "watched":{
-                ArrayList<MovieModel> movieModel = (ArrayList<MovieModel>) model;
-                bundle = new ModelHelper(FollowReviewActivity.this).buildMovieModelBundle(movieModel.get(position), "ProfileFragment");
-                bundle.putString("return_path", "ProfileFragment");
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra("bundle", bundle);
-                startActivity(intent);
-                break;
+        try {
+            Bundle bundle;
+            switch (type) {
+                case "watched": {
+                    ArrayList<MovieModel> movieModel = (ArrayList<MovieModel>) model;
+                    bundle = new ModelHelper(FollowReviewActivity.this).buildMovieModelBundle(movieModel.get(position), "ProfileFragment");
+                    bundle.putString("return_path", "ProfileFragment");
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("bundle", bundle);
+                    startActivity(intent);
+                    break;
+                }
+                case "following":
+                case "followers": {
+                    ArrayList<FavouritesModel> favouritesModels = (ArrayList<FavouritesModel>) model;
+                    getUserDetails(favouritesModels.get(position).getUserId());
+                    break;
+                }
+                case "user": {
+                    ArrayList<FavouritesModel> favouritesModels = (ArrayList<FavouritesModel>) model;
+                    bundle = new ModelHelper(FollowReviewActivity.this).buildUserModelBundle(favouritesModels.get(position).getUser(), "ProfileFragment");
+                    bundle.putString("return_path", "ProfileFragment");
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("bundle", bundle);
+                    startActivity(intent);
+                    break;
+                }
             }
-            case "following":
-            case "followers":{
-                ArrayList<FavouritesModel> favouritesModels = (ArrayList<FavouritesModel>) model;
-                getUserDetails(favouritesModels.get(position).getUserId());
-                break;
-            }
-            case "user":{
-                ArrayList<FavouritesModel> favouritesModels = (ArrayList<FavouritesModel>) model;
-                bundle = new ModelHelper(FollowReviewActivity.this).buildUserModelBundle(favouritesModels.get(position).getUser(), "ProfileFragment");
-                bundle.putString("return_path", "ProfileFragment");
-                Intent intent = new Intent(context, MainActivity.class);
-                intent.putExtra("bundle", bundle);
-                startActivity(intent);
-                break;
-            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
-        //finish();
     }
 
     public void getUserDetails(String userId){
-        SqlHelper sqlHelper = new SqlHelper(FollowReviewActivity.this, FollowReviewActivity.this);
-        sqlHelper.setExecutePath("fetch-user.php");
-        sqlHelper.setActionString("get_user");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("u_id", userId));
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-        sqlHelper.setMethod(getString(R.string.method_get));
-        sqlHelper.setParams(params);
-        sqlHelper.executeUrl(true);
+        try {
+            SqlHelper sqlHelper = new SqlHelper(FollowReviewActivity.this, FollowReviewActivity.this);
+            sqlHelper.setExecutePath("fetch-user.php");
+            sqlHelper.setActionString("get_user");
+            ArrayList<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("u_id", userId));
+            params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+            sqlHelper.setMethod(getString(R.string.method_get));
+            sqlHelper.setParams(params);
+            sqlHelper.executeUrl(true);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
     @Override
@@ -315,7 +342,8 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                 }
             }
         }catch (Exception e){
-            Log.e("FollowReview:onResp", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
             finish();
         }
     }
@@ -337,18 +365,25 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
             }
         }catch (Exception e){
             Toast.makeText(this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
             finish();
         }
     }
 
     private void initRecyclerView(String dataType, String layoutType){
-        if(layoutType.equals("grid")){
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-            recyclerView.setLayoutManager(gridLayoutManager);
-            if(dataType.equals("get_watched")){
-                RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, movieModels, recyclerView, "watched");
-                recyclerView.setAdapter(adapter);
+        try {
+            if (layoutType.equals("grid")) {
+                GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+                recyclerView.setLayoutManager(gridLayoutManager);
+                if (dataType.equals("get_watched")) {
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, movieModels, recyclerView, "watched");
+                    recyclerView.setAdapter(adapter);
+                }
             }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 }

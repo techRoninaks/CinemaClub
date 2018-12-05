@@ -16,8 +16,10 @@ import android.widget.Toast;
 
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.PermissionsHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
+import com.create.sidhu.movbox.helpers.StringHelper;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -60,88 +62,92 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-        activity = this;
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.google_web_client_id))
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(RegisterActivity.this, gso);
-        callbackManager = CallbackManager.Factory.create();
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList(PermissionsHelper.FACEBOOK_EMAIL, PermissionsHelper.FACEBOOK_USERNAME));
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(final LoginResult loginResult) {
-                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        try{
-                            attemptSignUp(RegisterActivity.this.getString(R.string.default_signin), object.getString("name"),
-                                    object.getString("email"), object.getString("id"), "fb");
-                        }catch (Exception e){
-                            Log.e("FB Register:", e.getMessage());
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_register);
+            activity = this;
+            gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.google_web_client_id))
+                    .requestEmail()
+                    .build();
+            googleSignInClient = GoogleSignIn.getClient(RegisterActivity.this, gso);
+            callbackManager = CallbackManager.Factory.create();
+            loginButton = (LoginButton) findViewById(R.id.login_button);
+            loginButton.setReadPermissions(Arrays.asList(PermissionsHelper.FACEBOOK_EMAIL, PermissionsHelper.FACEBOOK_USERNAME));
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(final LoginResult loginResult) {
+                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject object, GraphResponse response) {
+                            try {
+                                attemptSignUp(RegisterActivity.this.getString(R.string.default_signin), object.getString("name"),
+                                        object.getString("email"), object.getString("id"), "fb");
+                            } catch (Exception e) {
+                                Log.e("FB Register:", e.getMessage());
+                            }
                         }
-                    }
-                });
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "name,email");
-                request.setParameters(parameters);
-                request.executeAsync();
-            }
+                    });
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "name,email");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+                }
 
-            @Override
-            public void onCancel() {
-                Toast.makeText(RegisterActivity.this, "Register Cancelled", Toast.LENGTH_SHORT).show();
-            }
+                @Override
+                public void onCancel() {
+                    Toast.makeText(RegisterActivity.this, "Register Cancelled", Toast.LENGTH_SHORT).show();
+                }
 
-            @Override
-            public void onError(FacebookException error) {
-                Log.e("FB Register failed", error.getMessage());
-            }
-        });
-        editTextName = (EditText) findViewById(R.id.editText_Name);
-        editTextUsername = (EditText) findViewById(R.id.editText_Username);
-        editTextPassword = (EditText) findViewById(R.id.editText_Password);
-        editTextPasswordConfirm = (EditText) findViewById(R.id.editText_ConfirmPassword);
+                @Override
+                public void onError(FacebookException error) {
+                    Log.e("FB Register failed", error.getMessage());
+                }
+            });
+            editTextName = (EditText) findViewById(R.id.editText_Name);
+            editTextUsername = (EditText) findViewById(R.id.editText_Username);
+            editTextPassword = (EditText) findViewById(R.id.editText_Password);
+            editTextPasswordConfirm = (EditText) findViewById(R.id.editText_ConfirmPassword);
 //        editTextPhone = (EditText) findViewById(R.id.editText_Phone);
 //        spinnerCountry = (Spinner) findViewById(R.id.spinner_Country);
-        btnSignUp = (Button) findViewById(R.id.buttonSignUp);
-        imgGoogleSignIn = (ImageView) findViewById(R.id.img_GoogleSignIn);
-        imgFbSignIn = (ImageView) findViewById(R.id.img_FbSignIn);
-        llContainerMaster = (LinearLayout) findViewById(R.id.containerMaster);
-        View.OnClickListener onButtonClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (view.getId()){
-                    case R.id.buttonSignUp:
-                        if(validateSignUp()){
-                            attemptSignUp(getString(R.string.default_signin), editTextName.getText().toString(), editTextUsername.getText().toString(), editTextPassword.getText().toString(), "app");
+            btnSignUp = (Button) findViewById(R.id.buttonSignUp);
+            imgGoogleSignIn = (ImageView) findViewById(R.id.img_GoogleSignIn);
+            imgFbSignIn = (ImageView) findViewById(R.id.img_FbSignIn);
+            llContainerMaster = (LinearLayout) findViewById(R.id.containerMaster);
+            View.OnClickListener onButtonClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switch (view.getId()) {
+                        case R.id.buttonSignUp:
+                            if (validateSignUp()) {
+                                attemptSignUp(getString(R.string.default_signin), editTextName.getText().toString(), editTextUsername.getText().toString(), editTextPassword.getText().toString(), "app");
+                            }
+                            break;
+                        case R.id.img_FbSignIn: {
+                            attemptSignUp(getString(R.string.fb_signin), "", "", "", "");
+                            break;
                         }
-                        break;
-                    case R.id.img_FbSignIn: {
-                        attemptSignUp(getString(R.string.fb_signin), "", "", "", "");
-                        break;
-                    }
-                    case R.id.img_GoogleSignIn: {
-                        attemptSignUp(getString(R.string.google_signin), "", "", "", "");
-                        break;
-                    }
-                    case R.id.containerMaster: {
-                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-                        break;
+                        case R.id.img_GoogleSignIn: {
+                            attemptSignUp(getString(R.string.google_signin), "", "", "", "");
+                            break;
+                        }
+                        case R.id.containerMaster: {
+                            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+                            break;
+                        }
                     }
                 }
-            }
-        };
-        btnSignUp.setOnClickListener(onButtonClickListener);
-        imgGoogleSignIn.setOnClickListener(onButtonClickListener);
-        imgFbSignIn.setOnClickListener(onButtonClickListener);
-        llContainerMaster.setOnClickListener(onButtonClickListener);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //populateCountry();
+            };
+            btnSignUp.setOnClickListener(onButtonClickListener);
+            imgGoogleSignIn.setOnClickListener(onButtonClickListener);
+            imgFbSignIn.setOnClickListener(onButtonClickListener);
+            llContainerMaster.setOnClickListener(onButtonClickListener);
+
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(RegisterActivity.this, EmailHelper.TECH_SUPPORT, "Error: RegisterActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
     private void attemptSignUp(String type, String name, String username, String password, String password_type) {
@@ -226,7 +232,8 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             attemptSignUp(getString(R.string.default_signin), account.getDisplayName(),account.getEmail(), account.getIdToken().substring(0,30), "google");
         } catch (ApiException e) {
-            Log.e("Login:GoogleAuth", "signInResult:failed code=" + e.getStatusCode());
+            EmailHelper emailHelper = new EmailHelper(RegisterActivity.this, EmailHelper.TECH_SUPPORT, "Error: RegisterActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
             Toast.makeText(RegisterActivity.this, "Failed to register: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -288,6 +295,8 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
             }
         }catch (Exception e){
             Toast.makeText(RegisterActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+            EmailHelper emailHelper = new EmailHelper(RegisterActivity.this, EmailHelper.TECH_SUPPORT, "Error: RegisterActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 }

@@ -33,7 +33,7 @@
     <dimen name="review_tab_text_size">14sp</dimen>
     <dimen name="review_close_button_size">18dp</dimen>
     <dimen name="review_info_size">10sp</dimen>
-    <dimen name="review_like_button">10dp</dimen>
+    <dimen name="review_like_button">15dp</dimen>
     <!-- RatingsDialog -->
     <dimen name="ratings_title_size">15sp</dimen>
     <dimen name="ratings_subtitle">13sp</dimen>

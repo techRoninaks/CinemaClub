@@ -24,7 +24,9 @@ import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.fragments.MoviesFragment;
 import com.create.sidhu.movbox.fragments.PostStatusFragment;
 import com.create.sidhu.movbox.fragments.ProfileFragment;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
+import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.MovieModel;
 
 import org.w3c.dom.Text;
@@ -86,31 +88,36 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position)  {
-        Glide.with(context)
-                .asBitmap()
-                .load(movieModels.get(position).getImage())
-                .into(holder.movie_img);
-        holder.movie_name.setText(movieModels.get(position).getName());
-        holder.movie_rating.setText(movieModels.get(position).getRating());
-        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(type.equalsIgnoreCase(context.getString(R.string.profile))) {
-                    ProfileFragment fragment = new ProfileFragment();
-                    fragment.OnClick(position, context, rootview, movieModels);
-                }else if(type.equalsIgnoreCase(context.getString(R.string.profile_movies))){
-                    MoviesFragment fragment = new MoviesFragment();
-                    fragment.OnClick(position, context, rootview, movieModels);
-                }else if(type.equalsIgnoreCase(context.getString(R.string.watched))){
-                    FollowReviewActivity followReviewActivity = (FollowReviewActivity) context;
-                    followReviewActivity.OnClick(position, context, rootview, movieModels, context.getString(R.string.watched));
-                }else if(type.equalsIgnoreCase(context.getString(R.string.post_status_type))){
-                    ptFragment.OnClick(position, context, rootview, movieModels, callType);
-                }
+        try {
+            Glide.with(context)
+                    .asBitmap()
+                    .load(movieModels.get(position).getImage())
+                    .into(holder.movie_img);
+            holder.movie_name.setText(movieModels.get(position).getName());
+            holder.movie_rating.setText(movieModels.get(position).getRating());
+            holder.parentLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (type.equalsIgnoreCase(context.getString(R.string.profile))) {
+                        ProfileFragment fragment = new ProfileFragment();
+                        fragment.OnClick(position, context, rootview, movieModels);
+                    } else if (type.equalsIgnoreCase(context.getString(R.string.profile_movies))) {
+                        MoviesFragment fragment = new MoviesFragment();
+                        fragment.OnClick(position, context, rootview, movieModels);
+                    } else if (type.equalsIgnoreCase(context.getString(R.string.watched))) {
+                        FollowReviewActivity followReviewActivity = (FollowReviewActivity) context;
+                        followReviewActivity.OnClick(position, context, rootview, movieModels, context.getString(R.string.watched));
+                    } else if (type.equalsIgnoreCase(context.getString(R.string.post_status_type))) {
+                        ptFragment.OnClick(position, context, rootview, movieModels, callType);
+                    }
 //                ProfileFragment fragment = new ProfileFragment();
 //                fragment.OnClick(position, context, rootview, movieModels);
-            }
-        });
+                }
+            });
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RecyclerViewAdapter", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
     @Override

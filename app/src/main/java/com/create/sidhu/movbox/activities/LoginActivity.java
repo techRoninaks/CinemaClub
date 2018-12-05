@@ -20,9 +20,11 @@ import android.widget.Toast;
 
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.PermissionsHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
+import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.UserModel;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -66,97 +68,102 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        activity = this;
-        SharedPreferences sharedPreferences = getSharedPreferences("CinemaClub", 0);
-        if(sharedPreferences.getBoolean("login", false)){
-            if(!sharedPreferences.getString("username", "").isEmpty()){
-                startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                finish();
-            }
-        }
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.google_web_client_id))
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(this, gso);
-        callbackManager = CallbackManager.Factory.create();
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList(PermissionsHelper.FACEBOOK_EMAIL));
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(final LoginResult loginResult) {
-                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        try{
-                            attemptLogin(LoginActivity.this.getString(R.string.default_signin), object.getString("email"), object.getString("id"));
-                        }catch (Exception e){
-                            Log.e("FB Register:", e.getMessage());
-                        }
-                    }
-                });
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "email");
-                request.setParameters(parameters);
-                request.executeAsync();
-            }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(LoginActivity.this, "Register Cancelled", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.e("FB Login failed", error.getMessage());
-            }
-        });
-        editTextUsername = (EditText) findViewById(R.id.editText_Username);
-        editTextPassword = (EditText) findViewById(R.id.editText_Password);
-        btnSignIn = (Button) findViewById(R.id.buttonSignIn);
-        tvSignUp = (TextView) findViewById(R.id.textView_Register);
-        tvForgotPassword = (TextView) findViewById(R.id.textView_ForgotPassword);
-        imgGoogleSignIn = (ImageView) findViewById(R.id.img_GoogleSignIn);
-        imgFbSignIn = (ImageView) findViewById(R.id.img_FbSignIn);
-        llContainerMaster = (LinearLayout) findViewById(R.id.containerMaster);
-        View.OnClickListener onButtonClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                switch (view.getId()){
-                    case R.id.buttonSignIn:
-                        if(validateSignIn())
-                            attemptLogin(getString(R.string.default_signin), editTextUsername.getText().toString(), editTextPassword.getText().toString());
-                        break;
-                    case R.id.textView_Register:
-                        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                        break;
-                    case R.id.img_GoogleSignIn:
-                        attemptLogin(getString(R.string.google_signin), "", "");
-                        break;
-                    case R.id.img_FbSignIn:
-                        attemptLogin(getString(R.string.fb_signin), "", "");
-                        break;
-                    case R.id.containerMaster:
-                        InputMethodManager imm = (InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-                        break;
-                    case R.id.textView_ForgotPassword: {
-                        Intent intent = new Intent(LoginActivity.this, ForgotPassword.class);
-                        intent.putExtra("type", "password_forgot");
-                        startActivity(intent);
-                        break;
-                    }
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_login);
+            activity = this;
+            SharedPreferences sharedPreferences = getSharedPreferences("CinemaClub", 0);
+            if (sharedPreferences.getBoolean("login", false)) {
+                if (!sharedPreferences.getString("username", "").isEmpty()) {
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    finish();
                 }
             }
-        };
-        tvSignUp.setOnClickListener(onButtonClickListener);
-        btnSignIn.setOnClickListener(onButtonClickListener);
-        imgGoogleSignIn.setOnClickListener(onButtonClickListener);
-        imgFbSignIn.setOnClickListener(onButtonClickListener);
-        llContainerMaster.setOnClickListener(onButtonClickListener);
-        tvForgotPassword.setOnClickListener(onButtonClickListener);
+            gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                    .requestIdToken(getString(R.string.google_web_client_id))
+                    .requestEmail()
+                    .build();
+            googleSignInClient = GoogleSignIn.getClient(this, gso);
+            callbackManager = CallbackManager.Factory.create();
+            loginButton = (LoginButton) findViewById(R.id.login_button);
+            loginButton.setReadPermissions(Arrays.asList(PermissionsHelper.FACEBOOK_EMAIL));
+            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+                @Override
+                public void onSuccess(final LoginResult loginResult) {
+                    GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(JSONObject object, GraphResponse response) {
+                            try {
+                                attemptLogin(LoginActivity.this.getString(R.string.default_signin), object.getString("email"), object.getString("id"));
+                            } catch (Exception e) {
+                                Log.e("FB Register:", e.getMessage());
+                            }
+                        }
+                    });
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "email");
+                    request.setParameters(parameters);
+                    request.executeAsync();
+                }
+
+                @Override
+                public void onCancel() {
+                    Toast.makeText(LoginActivity.this, "Register Cancelled", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(FacebookException error) {
+                    Log.e("FB Login failed", error.getMessage());
+                }
+            });
+            editTextUsername = (EditText) findViewById(R.id.editText_Username);
+            editTextPassword = (EditText) findViewById(R.id.editText_Password);
+            btnSignIn = (Button) findViewById(R.id.buttonSignIn);
+            tvSignUp = (TextView) findViewById(R.id.textView_Register);
+            tvForgotPassword = (TextView) findViewById(R.id.textView_ForgotPassword);
+            imgGoogleSignIn = (ImageView) findViewById(R.id.img_GoogleSignIn);
+            imgFbSignIn = (ImageView) findViewById(R.id.img_FbSignIn);
+            llContainerMaster = (LinearLayout) findViewById(R.id.containerMaster);
+            View.OnClickListener onButtonClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switch (view.getId()) {
+                        case R.id.buttonSignIn:
+                            if (validateSignIn())
+                                attemptLogin(getString(R.string.default_signin), editTextUsername.getText().toString(), editTextPassword.getText().toString());
+                            break;
+                        case R.id.textView_Register:
+                            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                            break;
+                        case R.id.img_GoogleSignIn:
+                            attemptLogin(getString(R.string.google_signin), "", "");
+                            break;
+                        case R.id.img_FbSignIn:
+                            attemptLogin(getString(R.string.fb_signin), "", "");
+                            break;
+                        case R.id.containerMaster:
+                            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+                            break;
+                        case R.id.textView_ForgotPassword: {
+                            Intent intent = new Intent(LoginActivity.this, ForgotPassword.class);
+                            intent.putExtra("type", "password_forgot");
+                            startActivity(intent);
+                            break;
+                        }
+                    }
+                }
+            };
+            tvSignUp.setOnClickListener(onButtonClickListener);
+            btnSignIn.setOnClickListener(onButtonClickListener);
+            imgGoogleSignIn.setOnClickListener(onButtonClickListener);
+            imgFbSignIn.setOnClickListener(onButtonClickListener);
+            llContainerMaster.setOnClickListener(onButtonClickListener);
+            tvForgotPassword.setOnClickListener(onButtonClickListener);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
     private boolean validateSignIn() {
@@ -210,20 +217,25 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
     }
 
     private void attemptLogin(String type, String username, String password){
-        if(type.equals(getString(R.string.default_signin))) {
-            SqlHelper sqlHelper = new SqlHelper(LoginActivity.this, LoginActivity.this);
-            sqlHelper.setExecutePath("login.php");
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("username", username));
-            params.add(new BasicNameValuePair("password", password));
-            sqlHelper.setParams(params);
-            sqlHelper.setMethod(getString(R.string.method_get));
-            sqlHelper.executeUrl(true);
-        }else if(type.equals(getString(R.string.google_signin))){
-            Intent signInIntent = googleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent, PermissionsHelper.REQUEST_GOOGLE_AUTHENTICATION);
-        }else if(type.equals(getString(R.string.fb_signin))){
-            loginButton.performClick();
+        try {
+            if (type.equals(getString(R.string.default_signin))) {
+                SqlHelper sqlHelper = new SqlHelper(LoginActivity.this, LoginActivity.this);
+                sqlHelper.setExecutePath("login.php");
+                ArrayList<NameValuePair> params = new ArrayList<>();
+                params.add(new BasicNameValuePair("username", username));
+                params.add(new BasicNameValuePair("password", password));
+                sqlHelper.setParams(params);
+                sqlHelper.setMethod(getString(R.string.method_get));
+                sqlHelper.executeUrl(true);
+            } else if (type.equals(getString(R.string.google_signin))) {
+                Intent signInIntent = googleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, PermissionsHelper.REQUEST_GOOGLE_AUTHENTICATION);
+            } else if (type.equals(getString(R.string.fb_signin))) {
+                loginButton.performClick();
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
@@ -299,7 +311,8 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                 Toast.makeText(LoginActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
             Toast.makeText(LoginActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
         }
 

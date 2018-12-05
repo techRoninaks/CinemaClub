@@ -19,7 +19,9 @@ import android.widget.Toast;
 
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
+import com.create.sidhu.movbox.helpers.StringHelper;
 import com.nostra13.universalimageloader.utils.L;
 
 import org.apache.http.NameValuePair;
@@ -98,161 +100,166 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot_password);
-        type = getIntent().getStringExtra("type");
-        activity = this;
-        llContainerMain = (LinearLayout) findViewById(R.id.containerMainComponent);
-        llContainerOtp = (LinearLayout) findViewById(R.id.containerOtp);
-        llContainerPassword = (LinearLayout) findViewById(R.id.containerPassword);
-        llContainerOriginalPassword = (LinearLayout) findViewById(R.id.containerConfirmPassword);
-        if(type.equals("password_reset")){
-            email = MainActivity.currentUserModel.getEmail();
-            llContainerMain.setVisibility(View.GONE);
-            llContainerOriginalPassword.setVisibility(View.VISIBLE);
-            fetchPassword();
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_forgot_password);
+            type = getIntent().getStringExtra("type");
+            activity = this;
+            llContainerMain = (LinearLayout) findViewById(R.id.containerMainComponent);
+            llContainerOtp = (LinearLayout) findViewById(R.id.containerOtp);
+            llContainerPassword = (LinearLayout) findViewById(R.id.containerPassword);
+            llContainerOriginalPassword = (LinearLayout) findViewById(R.id.containerConfirmPassword);
+            if (type.equals("password_reset")) {
+                email = MainActivity.currentUserModel.getEmail();
+                llContainerMain.setVisibility(View.GONE);
+                llContainerOriginalPassword.setVisibility(View.VISIBLE);
+                fetchPassword();
+            }
+            etUserName = (EditText) findViewById(R.id.editText_Username);
+            etOtp1 = (EditText) findViewById(R.id.editText_Otp1);
+            etOtp2 = (EditText) findViewById(R.id.editText_Otp2);
+            etOtp3 = (EditText) findViewById(R.id.editText_Otp3);
+            etOtp4 = (EditText) findViewById(R.id.editText_Otp4);
+            etOtp5 = (EditText) findViewById(R.id.editText_Otp5);
+            etOtp6 = (EditText) findViewById(R.id.editText_Otp6);
+            etOriginalPassword = (EditText) findViewById(R.id.editText_OriginalPassword);
+            etPassword = (EditText) findViewById(R.id.editText_Password);
+            etConfirmPassword = (EditText) findViewById(R.id.editText_ConfirmPassword);
+            btnSubmit = (Button) findViewById(R.id.buttonRecover);
+            btnCancel = (Button) findViewById(R.id.buttonCancel);
+            btnVerify = (Button) findViewById(R.id.buttonSubmitOtp);
+            btnPasswordSave = (Button) findViewById(R.id.buttonSubmitPassword);
+            btnOriginalPassword = (Button) findViewById(R.id.buttonSubmitOriginalPassword);
+
+            btnSubmit.setOnClickListener(onClickListener);
+            btnCancel.setOnClickListener(onClickListener);
+            btnVerify.setOnClickListener(onClickListener);
+            btnPasswordSave.setOnClickListener(onClickListener);
+            btnOriginalPassword.setOnClickListener(onClickListener);
+
+            etOtp1.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (etOtp1.getText().toString().length() == 1) {
+                        etOtp2.requestFocus();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            etOtp2.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (etOtp2.getText().toString().length() == 1) {
+                        etOtp3.requestFocus();
+                    } else if (etOtp2.getText().toString().length() == 0) {
+                        etOtp1.requestFocus();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            etOtp3.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (etOtp3.getText().toString().length() == 1) {
+                        etOtp4.requestFocus();
+                    } else if (etOtp3.getText().toString().length() == 0) {
+                        etOtp2.requestFocus();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            etOtp4.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (etOtp4.getText().toString().length() == 1) {
+                        etOtp5.requestFocus();
+                    } else if (etOtp4.getText().toString().length() == 0) {
+                        etOtp3.requestFocus();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            etOtp5.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (etOtp5.getText().toString().length() == 1) {
+                        etOtp6.requestFocus();
+                    } else if (etOtp5.getText().toString().length() == 0) {
+                        etOtp4.requestFocus();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+            etOtp6.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (etOtp6.getText().toString().length() == 1) {
+                        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+                    } else if (etOtp6.getText().toString().length() == 0) {
+                        etOtp5.requestFocus();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: ForgotPassword", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
-        etUserName = (EditText) findViewById(R.id.editText_Username);
-        etOtp1 = (EditText) findViewById(R.id.editText_Otp1);
-        etOtp2 = (EditText) findViewById(R.id.editText_Otp2);
-        etOtp3 = (EditText) findViewById(R.id.editText_Otp3);
-        etOtp4 = (EditText) findViewById(R.id.editText_Otp4);
-        etOtp5 = (EditText) findViewById(R.id.editText_Otp5);
-        etOtp6 = (EditText) findViewById(R.id.editText_Otp6);
-        etOriginalPassword = (EditText) findViewById(R.id.editText_OriginalPassword);
-        etPassword = (EditText) findViewById(R.id.editText_Password);
-        etConfirmPassword = (EditText) findViewById(R.id.editText_ConfirmPassword);
-        btnSubmit = (Button) findViewById(R.id.buttonRecover);
-        btnCancel = (Button) findViewById(R.id.buttonCancel);
-        btnVerify = (Button) findViewById(R.id.buttonSubmitOtp);
-        btnPasswordSave = (Button) findViewById(R.id.buttonSubmitPassword);
-        btnOriginalPassword = (Button) findViewById(R.id.buttonSubmitOriginalPassword);
-
-        btnSubmit.setOnClickListener(onClickListener);
-        btnCancel.setOnClickListener(onClickListener);
-        btnVerify.setOnClickListener(onClickListener);
-        btnPasswordSave.setOnClickListener(onClickListener);
-        btnOriginalPassword.setOnClickListener(onClickListener);
-
-        etOtp1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etOtp1.getText().toString().length() == 1){
-                    etOtp2.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        etOtp2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etOtp2.getText().toString().length() == 1){
-                    etOtp3.requestFocus();
-                }else if(etOtp2.getText().toString().length() == 0){
-                    etOtp1.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        etOtp3.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etOtp3.getText().toString().length() == 1){
-                    etOtp4.requestFocus();
-                }else if(etOtp3.getText().toString().length() == 0){
-                    etOtp2.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        etOtp4.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etOtp4.getText().toString().length() == 1){
-                    etOtp5.requestFocus();
-                }else if(etOtp4.getText().toString().length() == 0){
-                    etOtp3.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        etOtp5.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etOtp5.getText().toString().length() == 1){
-                    etOtp6.requestFocus();
-                }else if(etOtp5.getText().toString().length() == 0){
-                    etOtp4.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-        etOtp6.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(etOtp6.getText().toString().length() == 1) {
-                    InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-                }else if(etOtp6.getText().toString().length() == 0){
-                    etOtp5.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
     @Override
     public void onResponse(SqlHelper sqlHelper) {
@@ -288,8 +295,9 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
                 }
             }
         }catch (Exception e){
-            Log.e("ForgotPassword:Response", e.getMessage());
             Toast.makeText(ForgotPassword.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: ForgotPassword", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
@@ -347,13 +355,18 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
     }
 
     private void fetchPassword(){
-        SqlHelper sqlHelper = new SqlHelper(ForgotPassword.this, ForgotPassword.this);
-        sqlHelper.setMethod("GET");
-        sqlHelper.setExecutePath("get-password.php");
-        sqlHelper.setActionString("get_password");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-        sqlHelper.setParams(params);
-        sqlHelper.executeUrl(false);
+        try {
+            SqlHelper sqlHelper = new SqlHelper(ForgotPassword.this, ForgotPassword.this);
+            sqlHelper.setMethod("GET");
+            sqlHelper.setExecutePath("get-password.php");
+            sqlHelper.setActionString("get_password");
+            ArrayList<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+            sqlHelper.setParams(params);
+            sqlHelper.executeUrl(false);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: ForgotPassword", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.create.sidhu.movbox.activities;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -20,11 +21,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.create.sidhu.movbox.Interfaces.CallbackDelegate;
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.adapters.FavouritesAdapter;
 import com.create.sidhu.movbox.adapters.ReviewAdapter;
 import com.create.sidhu.movbox.fragments.ProfileFragment;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
@@ -44,6 +48,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
 
+    RequestOptions requestOptions;
     TextView tvTitle, tvSubtitle, tvTabTop, tvTabFollowing, tvTabAll;
     CircleImageView imgUser;
     ImageView imgClose;
@@ -57,6 +62,10 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
     private String userId, movieId, type;
     private ArrayList<ReviewModel> reviewModels, reviewModelsTop, reviewModelsFollowing;
     private HashMap<String, Integer> globalReplyMask;
+    String currentTab;
+
+    public static CallbackDelegate currentFragment;
+    private int counter = 0;
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -87,6 +96,7 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
                 }
                 case R.id.btn_ReviewSubmit:{
                     if(!etReviewText.getText().toString().isEmpty())
+                        btnReviewSubmit.setEnabled(false);
                         submitReview("original", "", etReviewText.getText().toString());
                     break;
                 }
@@ -96,56 +106,75 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reviews);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
-        imgTitle.setVisibility(View.GONE);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Reviews");
-        bundle = getIntent().getBundleExtra("bundle");
-        type = bundle.getString("type");
-        tvTitle = (TextView) findViewById(R.id.textView_Title);
-        tvSubtitle = (TextView) findViewById(R.id.textView_Subtitle);
-        tvTabTop = (TextView) findViewById(R.id.textView_TabTop);
-        tvTabFollowing = (TextView) findViewById(R.id.textView_TabFollowing);
-        tvTabAll = (TextView) findViewById(R.id.textView_TabAll);
-        imgUser = (CircleImageView) findViewById(R.id.img_User);
-        imgClose = (ImageView) findViewById(R.id.img_Close);
-        etReviewText = (EditText) findViewById(R.id.editText_ReviewText);
-        btnReviewSubmit = (Button) findViewById(R.id.btn_ReviewSubmit);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        llPlaceholder = (LinearLayout) findViewById(R.id.containerPlaceholder);
-        llContainerTitle = (LinearLayout) findViewById(R.id.containerTitle);
-        llContainerWriteReview = (LinearLayout) findViewById(R.id.containerWriteReview);
-        llContainerTab = (LinearLayout) findViewById(R.id.containerTabs);
-        tfSemibold = Typeface.createFromAsset(this.getAssets(), "fonts/MyriadPro-Semibold.otf");
-        tfRegular = Typeface.createFromAsset(this.getAssets(), "fonts/myriadpro.otf");
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        imgClose.setOnClickListener(onClickListener);
-        if(type.equals("movie")){
-            movieId = bundle.getString("movie_id");
-            userId = bundle.getString("user_id");
-            fetchReview();
-            tvTitle.setText(bundle.getString("movie_name") + " (" + StringHelper.toTitleCase(bundle.getString("movie_language")) + ") (" + bundle.getString("movie_dimension") + ")");
-            tvSubtitle.setText(bundle.getString("movie_genre"));
-            Glide.with(ReviewsActivity.this)
-                    .asBitmap()
-                    .load(getString(R.string.master_url) + getString(R.string.profile_image_url) + userId + ".jpg")
-                    .into(imgUser);
-            imgUser.setOnClickListener(onClickListener);
-            tvTabFollowing.setOnClickListener(onClickListener);
-            tvTabAll.setOnClickListener(onClickListener);
-            tvTabTop.setOnClickListener(onClickListener);
-            btnReviewSubmit.setOnClickListener(onClickListener);
-        }else if(type.equals("user")){
-            userId = bundle.getString("user_id");
-            fetchReview();
-            llContainerTitle.setVisibility(View.GONE);
-            llContainerWriteReview.setVisibility(View.GONE);
-            llContainerTab.setVisibility(View.GONE);
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_reviews);
+            Toolbar toolbar = findViewById(R.id.toolbar);
+            ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
+            imgTitle.setVisibility(View.GONE);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setTitle("Reviews");
+            bundle = getIntent().getBundleExtra("bundle");
+            type = bundle.getString("type");
+            requestOptions = new RequestOptions();
+            requestOptions.placeholder(R.drawable.ic_placeholder);
+            requestOptions.error(R.drawable.ic_placeholder);
+            tvTitle = (TextView) findViewById(R.id.textView_Title);
+            tvSubtitle = (TextView) findViewById(R.id.textView_Subtitle);
+            tvTabTop = (TextView) findViewById(R.id.textView_TabTop);
+            tvTabFollowing = (TextView) findViewById(R.id.textView_TabFollowing);
+            tvTabAll = (TextView) findViewById(R.id.textView_TabAll);
+            imgUser = (CircleImageView) findViewById(R.id.img_User);
+            imgClose = (ImageView) findViewById(R.id.img_Close);
+            etReviewText = (EditText) findViewById(R.id.editText_ReviewText);
+            btnReviewSubmit = (Button) findViewById(R.id.btn_ReviewSubmit);
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            llPlaceholder = (LinearLayout) findViewById(R.id.containerPlaceholder);
+            llContainerTitle = (LinearLayout) findViewById(R.id.containerTitle);
+            llContainerWriteReview = (LinearLayout) findViewById(R.id.containerWriteReview);
+            llContainerTab = (LinearLayout) findViewById(R.id.containerTabs);
+            tfSemibold = Typeface.createFromAsset(this.getAssets(), "fonts/MyriadPro-Semibold.otf");
+            tfRegular = Typeface.createFromAsset(this.getAssets(), "fonts/myriadpro.otf");
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            imgClose.setOnClickListener(onClickListener);
+            if (type.equals("movie")) {
+                movieId = bundle.getString("movie_id");
+                userId = bundle.getString("user_id");
+                fetchReview();
+                tvTitle.setText(bundle.getString("movie_name") + " (" + StringHelper.toTitleCase(bundle.getString("movie_language")) + ") (" + bundle.getString("movie_dimension") + ")");
+                tvSubtitle.setText(bundle.getString("movie_genre"));
+                Glide.with(ReviewsActivity.this)
+                        .setDefaultRequestOptions(requestOptions)
+                        .asBitmap()
+                        .load(getString(R.string.master_url) + getString(R.string.profile_image_url) + userId + ".jpg")
+                        .into(imgUser);
+                imgUser.setOnClickListener(onClickListener);
+                tvTabFollowing.setOnClickListener(onClickListener);
+                tvTabAll.setOnClickListener(onClickListener);
+                tvTabTop.setOnClickListener(onClickListener);
+                btnReviewSubmit.setOnClickListener(onClickListener);
+            } else if (type.equals("user")) {
+                userId = bundle.getString("user_id");
+                fetchReview();
+                llContainerTitle.setVisibility(View.GONE);
+                llContainerWriteReview.setVisibility(View.GONE);
+                llContainerTab.setVisibility(View.GONE);
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
 
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if(currentFragment != null) {
+            HashMap<String, String> extras = new HashMap<>();
+            extras.put("counter", "" + counter);
+            currentFragment.onResultReceived("review", counter > 0, extras);
+        }
     }
 
     @Override
@@ -196,8 +225,10 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
             }else if(sqlHelper.getActionString().equals("add_review")){
                 JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");
                 String response = jsonObject.getString("response");
+                btnReviewSubmit.setEnabled(true);
                 if(response.equals(getString(R.string.response_success))){
                     etReviewText.setText("");
+                    counter++;
                     MainActivity.currentUserModel.setTotalReviews(MainActivity.currentUserModel.getTotalReviews() + 1);
                     fetchReview();
                     new ModelHelper(ReviewsActivity.this).addToUpdatesModel(movieId, jsonObject.getString("r_id"), "review");
@@ -206,15 +237,37 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
                 }else if(response.equals(getString(R.string.unexpected))){
                     Toast.makeText(ReviewsActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                 }
+            }else if(sqlHelper.getActionString().equals("update_like")){
+                String response = sqlHelper.getJSONResponse().getJSONObject("data").getString("response");
+                int position = Integer.parseInt(sqlHelper.getExtras().get("position"));
+                ArrayList<ReviewModel> model = new ArrayList<>();
+                if(response.equals(getString(R.string.response_success))){
+                    if(currentTab.equals("top"))
+                        model = reviewModelsTop;
+                    else if(currentTab.equals("following"))
+                        model = reviewModelsFollowing;
+                    else if(currentTab.equals("all"))
+                        model = reviewModels;
+                    if(model.get(position).getLiked())
+                        model.get(position).setLikes(model.get(position).getLikes() + 1);
+                    else
+                        model.get(position).setLikes(model.get(position).getLikes() - 1);
+                }else if(response.equals(getString(R.string.response_unsuccessful)) || response.equals(getString(R.string.unexpected))){
+                    model.get(position).setLiked(!model.get(position).getLiked());
+                    Toast.makeText(ReviewsActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+                }
+                recyclerView.getAdapter().notifyItemChanged(position);
             }
         }catch (Exception e){
-            Log.e("ReviewsAct:onResponse", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
             Toast.makeText(ReviewsActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             onBackPressed();
         }
     }
 
     private void toggleTab(int id){
+        currentTab = (id == R.id.textView_TabTop ? "top" : id == R.id.textView_TabFollowing ? "following" : "all");
         tvTabTop.setTextColor(id == R.id.textView_TabTop ? getResources().getColor(R.color.colorTextPrimary) : getResources().getColor(R.color.colorTextSecondary));
         tvTabAll.setTextColor(id == R.id.textView_TabAll ? getResources().getColor(R.color.colorTextPrimary) : getResources().getColor(R.color.colorTextSecondary));
         tvTabFollowing.setTextColor(id == R.id.textView_TabFollowing ? getResources().getColor(R.color.colorTextPrimary) : getResources().getColor(R.color.colorTextSecondary));
@@ -267,7 +320,8 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
             attachAdapter(recyclerView, type.equals("movie") ? reviewModelsTop : reviewModels);
             toggleTab(R.id.textView_TabTop);
         }catch (Exception e){
-           Log.e("Review:initRecycler", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
@@ -284,10 +338,15 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
     }
 
     public void attachAdapter(RecyclerView recyclerView, ArrayList<ReviewModel> model){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(ReviewsActivity.this, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        ReviewAdapter reviewAdapter = new ReviewAdapter(ReviewsActivity.this, model, recyclerView);
-        recyclerView.setAdapter(reviewAdapter);
+        try {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(ReviewsActivity.this, LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            ReviewAdapter reviewAdapter = new ReviewAdapter(ReviewsActivity.this, model, recyclerView);
+            recyclerView.setAdapter(reviewAdapter);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
     public void getUserDetails(String userId){
@@ -347,7 +406,7 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
      * @param reviewId- ID of Review
      * @param isLiked- True if current user has liked review, else False
      */
-    public void updateReviewLike(String userId, String movieId, String reviewId, boolean isLiked){
+    public void updateReviewLike(int position, String userId, String movieId, String reviewId, boolean isLiked){
         SqlHelper sqlHelper = new SqlHelper(ReviewsActivity.this, ReviewsActivity.this);
         sqlHelper.setExecutePath("update-like.php");
         sqlHelper.setActionString("update_like");
@@ -359,6 +418,9 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
         params.add(new BasicNameValuePair("is_liked", "" + isLiked));
         sqlHelper.setMethod(getString(R.string.method_get));
         sqlHelper.setParams(params);
+        HashMap<String, String> extras = new HashMap<>();
+        extras.put("position", "" + position);
+        sqlHelper.setExtras(extras);
         sqlHelper.executeUrl(false);
     }
 }

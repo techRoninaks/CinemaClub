@@ -22,9 +22,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.fragments.HomeFragment;
+import com.create.sidhu.movbox.helpers.EmailHelper;
+import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.ReviewModel;
 
 import java.text.SimpleDateFormat;
@@ -41,12 +44,16 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     private ArrayList<ReviewModel> reviewModels;
     private Context context;
     private View rootview;
+    private RequestOptions requestOptions;
 
 
     public ReviewAdapter(Context context, ArrayList<ReviewModel> reviewModels, View rootview) {
         this.context = context;
         this.reviewModels = reviewModels;
         this.rootview = rootview;
+        requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.ic_placeholder);
+        requestOptions.error(R.drawable.ic_placeholder);
     }
 
 
@@ -85,11 +92,14 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                             break;
                         }
                         case R.id.textView_Reply:{
-                            holder.llWriteReplies.setVisibility(View.VISIBLE);
+                            if(holder.llWriteReplies.getVisibility() == View.VISIBLE)
+                                holder.llWriteReplies.setVisibility(View.GONE);
+                            else
+                                holder.llWriteReplies.setVisibility(View.VISIBLE);
                             break;
                         }
                         case R.id.img_LikeButton:{
-                            reviewsActivity.updateReviewLike(reviewModels.get(position).getUserId(),
+                            reviewsActivity.updateReviewLike(position, reviewModels.get(position).getUserId(),
                                     reviewModels.get(position).getMovieId(),
                                     reviewModels.get(position).getReviewId(),
                                     reviewModels.get(position).getLiked());
@@ -122,6 +132,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                     context.getString(R.string.master_url) + context.getString(R.string.profile_image_url) + reviewModels.get(position).getUserId() + ".jpg" :
                     context.getString(R.string.master_url) + context.getString(R.string.movie_image_portrait_url) + reviewModels.get(position).getMovieId() + ".jpg";
             Glide.with(context)
+                    .setDefaultRequestOptions(requestOptions)
                     .asBitmap()
                     .load(imageUrl)
                     .into(holder.imgUser);
@@ -163,7 +174,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             holder.imgLike.setOnClickListener(onClickListener);
             holder.btnSubmitReply.setOnClickListener(onClickListener);
         }catch (Exception e){
-            Log.e("ReviewAdapter: onBind", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ReviewAdapter", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.FollowReviewActivity;
@@ -33,6 +34,7 @@ import com.create.sidhu.movbox.activities.MainActivity;
 import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.fragments.FavouritesFragment;
 import com.create.sidhu.movbox.fragments.ProfileFragment;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
@@ -67,12 +69,16 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
     private View rootview;
     private Date today;
     private Date currentDate;
+    private RequestOptions requestOptions;
     String dateStatus;
 
     public FavouritesAdapter(Context context, ArrayList<FavouritesModel> favouritesList, View rootview) {
         this.favouritesList = favouritesList;
         this.context = context;
         this.rootview = rootview;
+        requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.ic_placeholder);
+        requestOptions.error(R.drawable.ic_placeholder);
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
             String date = simpleDateFormat.format(Calendar.getInstance().getTime());
@@ -155,6 +161,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                             holder.object.setVisibility(View.GONE);
                             holder.dateTitle.setText(ago);
                             Glide.with(context)
+                                    .setDefaultRequestOptions(requestOptions)
                                     .asBitmap()
                                     .load(favouritesList.get(position).getUser().getImage())
                                     .into(holder.list_img);
@@ -166,9 +173,10 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                             stringBuilder.append(context.getString(R.string.favourites_watching));
                             holder.title.setText(stringBuilder);
                             holder.subject.setText(favouritesList.get(position).getUser().getName());
-                            holder.object.setText(favouritesList.get(position).getMovie().getName());
-                            holder.dateTitle.setText("." + ago);
+                            holder.object.setText(favouritesList.get(position).getMovie().getName() + ".");
+                            holder.dateTitle.setText(ago);
                             Glide.with(context)
+                                    .setDefaultRequestOptions(requestOptions)
                                     .asBitmap()
                                     .load(favouritesList.get(position).getUser().getImage())
                                     .into(holder.list_img);
@@ -180,9 +188,10 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                             stringBuilder.append(context.getString(R.string.favourites_rating));
                             holder.title.setText(stringBuilder);
                             holder.subject.setText(favouritesList.get(position).getUser().getName());
-                            holder.object.setText(favouritesList.get(position).getMovie().getName());
-                            holder.dateTitle.setText("." + ago);
+                            holder.object.setText(favouritesList.get(position).getMovie().getName() + ".");
+                            holder.dateTitle.setText(ago);
                             Glide.with(context)
+                                    .setDefaultRequestOptions(requestOptions)
                                     .asBitmap()
                                     .load(favouritesList.get(position).getUser().getImage())
                                     .into(holder.list_img);
@@ -194,9 +203,10 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                             stringBuilder.append(context.getString(R.string.favourites_review));
                             holder.title.setText(stringBuilder);
                             holder.subject.setText(favouritesList.get(position).getUser().getName());
-                            holder.object.setText(favouritesList.get(position).getMovie().getName());
-                            holder.dateTitle.setText("." + ago);
+                            holder.object.setText(favouritesList.get(position).getMovie().getName() + ".");
+                            holder.dateTitle.setText(ago);
                             Glide.with(context)
+                                    .setDefaultRequestOptions(requestOptions)
                                     .asBitmap()
                                     .load(favouritesList.get(position).getUser().getImage())
                                     .into(holder.list_img);
@@ -208,9 +218,10 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                             stringBuilder.append(context.getString(R.string.favourites_vote));
                             holder.title.setText(stringBuilder);
                             holder.subject.setText(favouritesList.get(position).getUser().getName());
-                            holder.object.setText(favouritesList.get(position).getMovie().getName());
-                            holder.dateTitle.setText("." + ago);
+                            holder.object.setText(favouritesList.get(position).getMovie().getName() + ".");
+                            holder.dateTitle.setText(ago);
                             Glide.with(context)
+                                    .setDefaultRequestOptions(requestOptions)
                                     .asBitmap()
                                     .load(favouritesList.get(position).getUser().getImage())
                                     .into(holder.list_img);
@@ -258,6 +269,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                     stringBuilder.append(spannableString);
                     stringBuilder.append(" movies watched");
                     Glide.with(context)
+                            .setDefaultRequestOptions(requestOptions)
                             .asBitmap()
                             .load(context.getString(R.string.master_url) + context.getString(R.string.profile_image_url) + favouritesList.get(position).getUserId() + ".jpg")
                             .into(holder.list_img);
@@ -284,6 +296,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                     stringBuilder.append(spannableString);
                     stringBuilder.append(" movies watched");
                     Glide.with(context)
+                            .setDefaultRequestOptions(requestOptions)
                             .asBitmap()
                             .load(context.getString(R.string.master_url) + context.getString(R.string.profile_image_url) + favouritesList.get(position).getUserId() + ".jpg")
                             .into(holder.list_img);
@@ -307,7 +320,9 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                     holder.object.setVisibility(View.GONE);
                     holder.subject.setText(favouritesList.get(position).getUser().getName());
                     holder.subtitle.setText(favouritesList.get(position).getUser().getTotalWatched() + " Movies Watched");
-                    Glide.with(context).asBitmap()
+                    Glide.with(context)
+                            .setDefaultRequestOptions(requestOptions)
+                            .asBitmap()
                             .load(favouritesList.get(position).getUser().getImage())
                             .into(holder.list_img);
                     holder.llDateTime.setVisibility(View.GONE);
@@ -356,8 +371,9 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                     holder.list_img.setOnClickListener(onClickListener);
 
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesAdapter", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
 
 //        Glide.with(context)

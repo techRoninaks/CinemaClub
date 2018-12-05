@@ -1,7 +1,5 @@
 package com.create.sidhu.movbox.activities;
 
-import android.app.ActionBar;
-import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -13,12 +11,10 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.app.FragmentTransaction;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,7 +31,6 @@ import android.support.v7.widget.SearchView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.adapters.FavouritesAdapter;
@@ -47,10 +42,11 @@ import com.create.sidhu.movbox.fragments.PostStatusFragment;
 import com.create.sidhu.movbox.fragments.ProfileFragment;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.fragments.RatingsDialog;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
-import com.create.sidhu.movbox.helpers.UserFeedJobService;
+import com.create.sidhu.movbox.services.UserFeedJobService;
 import com.create.sidhu.movbox.models.FavouritesModel;
 import com.create.sidhu.movbox.models.MovieModel;
 import com.create.sidhu.movbox.models.UpdatesModel;
@@ -62,12 +58,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -75,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
 
    //public static MainActivity mainActivity;
     private  static final int JOB_ID = 1000;
+    private static final int JOB_ID_INSTANT = 1100;
     public String username;
     private ConstraintLayout masterParent;
     private FrameLayout masterFrame;
@@ -150,88 +144,97 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        StringHelper.changeToolbarFont(toolbar, MainActivity.this);
-        isFirst = true;
-        SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
-        username = sharedPreferences.getString("username","");
-        LoginStatus = sharedPreferences.getBoolean("login", false);
-        if(!username.isEmpty() && LoginStatus) {
-            if(currentUserModel == null) {
-                getUserDetails();
-                updatesModels = new ArrayList<>();
-            }else{
-                scheduleJob();
-            }
-            masterParent = (ConstraintLayout) findViewById(R.id.containerMainParent);
-            masterFrame = (FrameLayout) findViewById(R.id.content);
-            llSearch = (LinearLayout) findViewById(R.id.containerSearchMaster);
-            llSearchPlaceholder = (LinearLayout) findViewById(R.id.containerSearchPlaceholder);
-            llSearchResults = (LinearLayout) findViewById(R.id.containerSearchResults);
-            llSearchMovie = (LinearLayout) findViewById(R.id.containerSearchMovie);
-            llSearchUser = (LinearLayout) findViewById(R.id.containerSearchUser);
-            textTabMovie = findViewById(R.id.textView_SearchMovie);
-            textTabUser = findViewById(R.id.textView_SearchUser);
-            View.OnClickListener onSearchTabClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switch (view.getId()){
-                        case R.id.textView_SearchUser:
-                            textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
-                            textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
-                            llSearchUser.setVisibility(View.VISIBLE);
-                            llSearchMovie.setVisibility(View.GONE);
-                            break;
-                        case R.id.textView_SearchMovie:
-                            textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
-                            textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
-                            llSearchUser.setVisibility(View.GONE);
-                            llSearchMovie.setVisibility(View.VISIBLE);
-                            break;
-                    }
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            StringHelper.changeToolbarFont(toolbar, MainActivity.this);
+            isFirst = true;
+            SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
+            username = sharedPreferences.getString("username", "");
+            LoginStatus = sharedPreferences.getBoolean("login", false);
+            if (!username.isEmpty() && LoginStatus) {
+                if (currentUserModel == null) {
+                    getUserDetails();
+                    updatesModels = new ArrayList<>();
+                } else {
+                    scheduleJob();
                 }
-            };
-            textTabUser.setOnClickListener(onSearchTabClickListener);
-            textTabMovie.setOnClickListener(onSearchTabClickListener);
-            Bundle bundle = getIntent().getBundleExtra("bundle");
-            try {
-                navigation = findViewById(R.id.navigation);
-                navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-                masterFrame.setOnTouchListener(new OnSwipeTouchListener(this));
+                masterParent = (ConstraintLayout) findViewById(R.id.containerMainParent);
+                masterFrame = (FrameLayout) findViewById(R.id.content);
+                llSearch = (LinearLayout) findViewById(R.id.containerSearchMaster);
+                llSearchPlaceholder = (LinearLayout) findViewById(R.id.containerSearchPlaceholder);
+                llSearchResults = (LinearLayout) findViewById(R.id.containerSearchResults);
+                llSearchMovie = (LinearLayout) findViewById(R.id.containerSearchMovie);
+                llSearchUser = (LinearLayout) findViewById(R.id.containerSearchUser);
+                textTabMovie = findViewById(R.id.textView_SearchMovie);
+                textTabUser = findViewById(R.id.textView_SearchUser);
+                View.OnClickListener onSearchTabClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        switch (view.getId()) {
+                            case R.id.textView_SearchUser:
+                                textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
+                                textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
+                                llSearchUser.setVisibility(View.VISIBLE);
+                                llSearchMovie.setVisibility(View.GONE);
+                                break;
+                            case R.id.textView_SearchMovie:
+                                textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
+                                textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
+                                llSearchUser.setVisibility(View.GONE);
+                                llSearchMovie.setVisibility(View.VISIBLE);
+                                break;
+                        }
+                    }
+                };
+                textTabUser.setOnClickListener(onSearchTabClickListener);
+                textTabMovie.setOnClickListener(onSearchTabClickListener);
+                Bundle bundle = getIntent().getBundleExtra("bundle");
+                try {
+                    navigation = findViewById(R.id.navigation);
+                    navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+                    masterFrame.setOnTouchListener(new OnSwipeTouchListener(this));
 
-                // Navigation Bar Customization
-                navigation.enableAnimation(false);
-                navigation.enableShiftingMode(false);
-                navigation.enableItemShiftingMode(false);
-                navigation.setTextVisibility(false);
-                navigation.setItemIconTintList(null);
+                    // Navigation Bar Customization
+                    navigation.enableAnimation(false);
+                    navigation.enableShiftingMode(false);
+                    navigation.enableItemShiftingMode(false);
+                    navigation.setTextVisibility(false);
+                    navigation.setItemIconTintList(null);
 
-                // Load Home fragment on start
-                if ((bundle == null || bundle.isEmpty()) && currentUserModel != null) {
+                    // Load Home fragment on start
+                    if ((bundle == null || bundle.isEmpty()) && currentUserModel != null) {
 //                    navigation.setCurrentItem(R.id.navigation_home);
-                    navigation.setSelectedItemId(R.id.navigation_home);
+                        navigation.setSelectedItemId(R.id.navigation_home);
 //                    HomeFragment fragment1 = new HomeFragment();
 //                    initFragment(fragment1);
-                } else {
-                    String returnPath = bundle.getString("return_path");
-                    switch (returnPath) {
-                        case "ProfileFragment":
-                            ProfileFragment fragment = new ProfileFragment();
-                            initFragment(fragment, bundle);
-                            break;
+                    } else {
+                        String returnPath = bundle.getString("return_path");
+                        switch (returnPath) {
+                            case "ProfileFragment": {
+                                ProfileFragment fragment = new ProfileFragment();
+                                initFragment(fragment, bundle);
+                                break;
+                            }
+                            case "FavouritesFragment": {
+                                navigation.setSelectedItemId(R.id.navigation_favourites);
+                                break;
+                            }
+                        }
                     }
+                } catch (Exception e) {
+                    Log.e("Main:onCreate", e.getMessage());
                 }
-            } catch (Exception e) {
-                Log.e("Main:onCreate", e.getMessage());
+            } else {
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
             }
-        }
-        else{
-            startActivity(new Intent(MainActivity.this,LoginActivity.class));
-            finish();
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
 
     }
@@ -280,17 +283,20 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
 
             @Override
             public boolean onQueryTextChange(String s) {
-//                if(!s.isEmpty()){
-//                    SqlHelper sqlHelper = new SqlHelper(MainActivity.this, MainActivity.this);
-//                    sqlHelper.setExecutePath("search.php");
-//                    sqlHelper.setMethod("GET");
-//                    sqlHelper.setActionString("search");
-//                    ArrayList<NameValuePair> params = new ArrayList<>();
-//                    params.add(new BasicNameValuePair("u_id", currentUserModel.getUserId()));
-//                    params.add(new BasicNameValuePair("srch_key", s));
-//                    sqlHelper.setParams(params);
-//                    sqlHelper.executeUrl(true);
-//                }
+                return true;
+            }
+        });
+        MenuItem shareItem = menu.findItem(R.id.app_bar_share);
+        shareItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                String shareBody = "Get diving into the world of Cinema.\n\nInstall Cinema Club now.\n\n" + MainActivity.this.getString(R.string.app_store_uri);
+                String shareSub = "Cinema Club Invitation";
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                startActivityForResult(Intent.createChooser(shareIntent, "Share using"), 0);
                 return true;
             }
         });
@@ -386,7 +392,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
@@ -460,7 +467,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
     @Override
@@ -489,6 +497,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             pBundle.putString("home_feed_mask", "false");
             pBundle.putString("favourites_feed_mask", "false");
             pBundle.putString("updates_mask", "false");
+            pBundle.putString("initial_run", "false");
             ComponentName componentName = new ComponentName(MainActivity.this, UserFeedJobService.class);
             JobInfo info = new JobInfo.Builder(JOB_ID, componentName)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
@@ -497,34 +506,71 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                     .setExtras(pBundle)
                     .build();
             JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-            cancelJob();
+            cancelJob(JOB_ID);
             int resultCode = scheduler.schedule(info);
             if (resultCode == JobScheduler.RESULT_FAILURE) {
                 throw new Exception();
             }
         }catch (Exception e){
-            Log.e("MainActivity: Job", "Failed to schedule job");
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
-    public void cancelJob(){
+    public void cancelJob(int id){
         try {
             JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-            scheduler.cancel(JOB_ID);
+            scheduler.cancel(id);
         }catch (Exception e){
-            Log.e("MainActivity: Job", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+    }
+
+    public void scheduleInstantJob(String type){
+        try {
+            PersistableBundle pBundle = new PersistableBundle();
+            pBundle.putString("userid", currentUserModel.getUserId());
+            pBundle.putString("home_feed_mask", type.charAt(0) == '1' ? "false" : "true");
+            pBundle.putString("favourites_feed_mask", type.charAt(1) == '1' ? "false" : "true");
+            pBundle.putString("updates_mask", type.charAt(2) == '1' ? "false" : "true");
+            ComponentName componentName = new ComponentName(MainActivity.this, UserFeedJobService.class);
+            JobInfo info = new JobInfo.Builder(JOB_ID_INSTANT, componentName)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setPersisted(true)
+                    .setExtras(pBundle)
+                    .setMinimumLatency(1)
+                    .setOverrideDeadline(1)
+                    .build();
+            JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+            cancelJob(JOB_ID_INSTANT);
+            int resultCode = scheduler.schedule(info);
+            if (resultCode == JobScheduler.RESULT_FAILURE) {
+                throw new Exception();
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+            Toast.makeText(MainActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
         }
     }
 
     public void OnClick(int position, Context context, View rootview, ArrayList<?> model, String type){
-        switch (type){
-            case "user":{
-                ArrayList<FavouritesModel> favouritesModels = (ArrayList<FavouritesModel>) model;
-                Bundle bundle = new ModelHelper(MainActivity.this).buildUserModelBundle(favouritesModels.get(position).getUser(), "ProfileFragment");
-                ProfileFragment profileFragment = new ProfileFragment();
-                initFragment(profileFragment, bundle);
-                break;
+        try {
+            switch (type) {
+                case "user": {
+                    ArrayList<FavouritesModel> favouritesModels = (ArrayList<FavouritesModel>) model;
+                    Bundle bundle = new ModelHelper(MainActivity.this).buildUserModelBundle(favouritesModels.get(position).getUser(), "ProfileFragment");
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    initFragment(profileFragment, bundle);
+                    break;
+                }
             }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 

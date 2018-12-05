@@ -17,9 +17,11 @@ import android.widget.Toast;
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.fragments.HomeFragment;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
-import com.create.sidhu.movbox.helpers.UserFeedJobService;
+import com.create.sidhu.movbox.helpers.StringHelper;
+import com.create.sidhu.movbox.services.UserFeedJobService;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -35,80 +37,85 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
     boolean launched = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
-        imgLogoOuter = (ImageView) findViewById(R.id.img_LogoOuter);
-        imgLogoInner = (ImageView) findViewById(R.id.img_LogoInner);
-        Animation animationOuter = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.rotate_logo_outer);
-        animationOuter.setStartOffset(650);
-        animationOuter.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_splash_screen);
+            imgLogoOuter = (ImageView) findViewById(R.id.img_LogoOuter);
+            imgLogoInner = (ImageView) findViewById(R.id.img_LogoInner);
+            Animation animationOuter = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.rotate_logo_outer);
+            animationOuter.setStartOffset(650);
+            animationOuter.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
-            }
+                }
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                switch (stage) {
-                    case 1: {
-                        SharedPreferences sharedPreferences = getSharedPreferences("CinemaClub", 0);
-                        if (sharedPreferences.getBoolean("login", false)) {
-                            String username = sharedPreferences.getString("username", "");
-                            if (!username.isEmpty()) {
-                                animation.setRepeatCount(Animation.INFINITE);
-                                animation.startNow();
-                                getUserDetails(username);
-                                stage = 2;
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    switch (stage) {
+                        case 1: {
+                            SharedPreferences sharedPreferences = getSharedPreferences("CinemaClub", 0);
+                            if (sharedPreferences.getBoolean("login", false)) {
+                                String username = sharedPreferences.getString("username", "");
+                                if (!username.isEmpty()) {
+                                    animation.setRepeatCount(Animation.INFINITE);
+                                    animation.startNow();
+                                    getUserDetails(username);
+                                    stage = 2;
+                                } else {
+                                    startActivity(new Intent(SplashScreen.this, LoginActivity.class));
+                                    SplashScreen.this.finish();
+                                }
                             } else {
                                 startActivity(new Intent(SplashScreen.this, LoginActivity.class));
                                 SplashScreen.this.finish();
                             }
-                        } else {
-                            startActivity(new Intent(SplashScreen.this, LoginActivity.class));
-                            SplashScreen.this.finish();
+                            break;
                         }
-                        break;
                     }
                 }
-            }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                animation.setStartOffset(500);
-                if(stage == 2) {
-                    if (HomeFragment.homeModels != null) {
-                        int size = HomeFragment.homeModels.size();
-                        if(size == 0)
-                            HomeFragment.homeModels = null;
-                        if(!launched) {
-                            startActivity(new Intent(SplashScreen.this, MainActivity.class));
-                            launched = true;
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                    animation.setStartOffset(500);
+                    if (stage == 2) {
+                        if (HomeFragment.homeModels != null) {
+                            int size = HomeFragment.homeModels.size();
+                            if (size == 0)
+                                HomeFragment.homeModels = null;
+                            if (!launched) {
+                                startActivity(new Intent(SplashScreen.this, MainActivity.class));
+                                launched = true;
+                            }
+                            finish();
                         }
-                        finish();
                     }
                 }
-            }
-        });
-        Animation animationInner = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.rotate_logo_inner);
-        animationInner.setStartOffset(500);
-        animationInner.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
+            });
+            Animation animationInner = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.rotate_logo_inner);
+            animationInner.setStartOffset(500);
+            animationInner.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                animation.setRepeatCount(Animation.INFINITE);
-                animation.startNow();
-            }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    animation.setRepeatCount(Animation.INFINITE);
+                    animation.startNow();
+                }
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-                animation.setStartOffset(500);
-            }
-        });
-        imgLogoOuter.startAnimation(animationOuter);
-        imgLogoInner.startAnimation(animationInner);
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                    animation.setStartOffset(500);
+                }
+            });
+            imgLogoOuter.startAnimation(animationOuter);
+            imgLogoInner.startAnimation(animationInner);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
     @Override
@@ -127,7 +134,8 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
                 }
             }
         }catch (Exception e){
-            Log.e("SplashScreen:UserFetch", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
@@ -164,7 +172,8 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
                 throw new Exception();
             }
         }catch (Exception e){
-            Log.e("SplashScreen: Job", "Failed to schedule job");
+            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
             Toast.makeText(SplashScreen.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(SplashScreen.this, LoginActivity.class));
             finish();
@@ -176,7 +185,8 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
             JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             scheduler.cancel(JOB_ID);
         }catch (Exception e){
-            Log.e("SpalshScreen: Job", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 }

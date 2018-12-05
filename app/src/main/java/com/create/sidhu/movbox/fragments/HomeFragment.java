@@ -9,6 +9,7 @@ import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.telecom.Call;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.create.sidhu.movbox.Interfaces.CallbackDelegate;
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.FollowReviewActivity;
@@ -24,6 +26,7 @@ import com.create.sidhu.movbox.activities.MainActivity;
 import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.adapters.FavouritesAdapter;
 import com.create.sidhu.movbox.adapters.HomeAdapter;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
@@ -48,7 +51,7 @@ import java.util.HashMap;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HomeFragment extends Fragment implements SqlDelegate {
+public class HomeFragment extends Fragment implements SqlDelegate, CallbackDelegate {
 
     View rootView;
     RecyclerView recyclerView;
@@ -68,22 +71,27 @@ public class HomeFragment extends Fragment implements SqlDelegate {
         // Inflate the layout for this fragment
         context = getActivity();
         rootView =  inflater.inflate(R.layout.fragment_home, container, false);
-        recyclerView = rootView.findViewById(R.id.recyclerView);
-        llContainerPlaceholder = rootView.findViewById(R.id.containerPlaceholder);
-        Toolbar toolbar = ((MainActivity) context).findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
-        imgTitle.setVisibility(View.VISIBLE);
-        StringHelper.changeToolbarFont(toolbar, (MainActivity)context);
-        if(homeModels==null)
-            fetchUpdates();
-        else{
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            homeAdapter = new HomeAdapter(context, homeModels, rootView, this);
-            recyclerView.setAdapter(homeAdapter);
+        try {
+            recyclerView = rootView.findViewById(R.id.recyclerView);
+            llContainerPlaceholder = rootView.findViewById(R.id.containerPlaceholder);
+            Toolbar toolbar = ((MainActivity) context).findViewById(R.id.toolbar);
+            toolbar.setTitle("");
+            ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
+            imgTitle.setVisibility(View.VISIBLE);
+            StringHelper.changeToolbarFont(toolbar, (MainActivity) context);
+            if (homeModels == null)
+                fetchUpdates();
+            else {
+                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                recyclerView.setLayoutManager(layoutManager);
+                homeAdapter = new HomeAdapter(context, homeModels, rootView, this);
+                recyclerView.setAdapter(homeAdapter);
+            }
+            //initRecyclerView();
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
-        //initRecyclerView();
         return rootView;
     }
 
@@ -110,14 +118,17 @@ public class HomeFragment extends Fragment implements SqlDelegate {
             if(length >= 0) {
                 ModelHelper modelHelper = new ModelHelper(context);
                 String castString = "";
+                boolean flag = false;
                 for (int i = 1; i <= length; i++) {
                     if (!jsonObject.getJSONObject("" + i).getString("type").equals("follow") && !jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")) {
                         HomeModel homeModel = new HomeModel();
                         homeModel.setFavourites(modelHelper.buildFavouritesModel(jsonObject.getJSONObject("" + i), "favourites"));
-                        if(i != 1){
+                        if(flag){
                             castString = castString.concat("!:");
+                        }else{
+                            flag = true;
                         }
-                        castString = castString.concat(homeModel.getFavourites().getMovie().getId() + "!@" + (i - 1) + "!@" + homeModel.getFavourites().getMovie().getCast());
+                        castString = castString.concat(homeModel.getFavourites().getMovie().getId() + "!@" + homeModels.size() + "!@" + homeModel.getFavourites().getMovie().getCast());
                         homeModels.add(homeModel);
                     }
                 }
@@ -131,7 +142,8 @@ public class HomeFragment extends Fragment implements SqlDelegate {
                 llContainerPlaceholder.setVisibility(View.VISIBLE);
             }
         }catch (Exception e){
-            Log.e("Home:InitRecyler", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
@@ -147,11 +159,16 @@ public class HomeFragment extends Fragment implements SqlDelegate {
             sqlHelper.setMethod("GET");
             sqlHelper.executeUrl(false);
         }else{
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            homeAdapter = new HomeAdapter(context, homeModels, rootView, HomeFragment.this);
-            recyclerView.setAdapter(homeAdapter);
-            pDialog.dismiss();
+            try {
+                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                recyclerView.setLayoutManager(layoutManager);
+                homeAdapter = new HomeAdapter(context, homeModels, rootView, HomeFragment.this);
+                recyclerView.setAdapter(homeAdapter);
+                pDialog.dismiss();
+            }catch (Exception e){
+                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+                emailHelper.sendEmail();
+            }
         }
     }
 
@@ -171,11 +188,49 @@ public class HomeFragment extends Fragment implements SqlDelegate {
                 }
                 homeModels.get(position).setCast(actorModels);
             } catch (JSONException e) {
-                e.printStackTrace();
+                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+                emailHelper.sendEmail();
             }
 
         }
         fetchActors("", false);
+    }
+
+    private void updateDataset(String type, HashMap<String, String> extras){
+        try {
+            switch (type) {
+                case "rating": {
+                    String id = extras.get("movie_id");
+                    int totalRatings = Integer.parseInt(extras.get("total_ratings"));
+                    float avgRatings = Float.parseFloat(extras.get("avg_ratings"));
+                    int length = homeModels.size();
+                    for (int i = 0; i < length; i++) {
+                        if (homeModels.get(i).getFavourites().getMovie().getId().equals(id)) {
+                            homeModels.get(i).getFavourites().getMovie().setTotalRatings(totalRatings);
+                            homeModels.get(i).getFavourites().getMovie().setRating("" + StringHelper.roundFloat(avgRatings, 1));
+                            homeModels.get(i).getFavourites().getMovie().setRated(true);
+                        }
+                    }
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                    break;
+                }
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+    }
+
+    public void removeNotification(String id, Context context){
+        SqlHelper sqlHelper = new SqlHelper(context, HomeFragment.this);
+        sqlHelper.setExecutePath("remove-update.php");
+        sqlHelper.setMethod("GET");
+        sqlHelper.setActionString("remove_notification");
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+        params.add(new BasicNameValuePair("n_id", id));
+        sqlHelper.setParams(params);
+        sqlHelper.executeUrl(false);
     }
 
     public void OnClick(int position, Context context, View rootView, ArrayList<?> model, View view, String mainType){
@@ -193,24 +248,10 @@ public class HomeFragment extends Fragment implements SqlDelegate {
                     case R.id.textView_TitleTypeSubject:
                     case R.id.definition_image: {
                         switch (subType) {
-                            case "new_releases": {
-                                bundle = new Bundle();
-                                bundle.putString("type", "new_releases");
-                                Intent intent = new Intent(context, FollowReviewActivity.class);
-                                intent.putExtra("bundle", bundle);
-                                startActivity(intent);
-                                break;
-                            }
-                            case "recommendations": {
-                                bundle = new Bundle();
-                                bundle.putString("type", "recommendations");
-                                Intent intent = new Intent(context, FollowReviewActivity.class);
-                                intent.putExtra("bundle", bundle);
-                                startActivity(intent);
-                                break;
-                            }
+                            case "new_releases":
+                            case "recommendations":
                             case "review_watched": {
-                                bundle = new Bundle();
+                                bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
                                 bundle.putString("type", "watching");
                                 Intent intent = new Intent(context, FollowReviewActivity.class);
                                 intent.putExtra("bundle", bundle);
@@ -309,14 +350,12 @@ public class HomeFragment extends Fragment implements SqlDelegate {
                         bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
                         bundle.putString("type", "cast");
                         RatingsDialog ratingsDialog = new RatingsDialog();
+                        ratingsDialog.setCallbackDelegate(HomeFragment.this);
+                        ratingsDialog.setRated(homeModel.getFavourites().getMovie().getIsRated());
                         mainActivity.initFragment(ratingsDialog, bundle);
                         break;
                     }
                     case R.id.img_Review: {
-                        bundle = new ModelHelper(context).buildReviewModelBundle(homeModel, "HomeFragment");
-                        Intent intent = new Intent(context, ReviewsActivity.class);
-                        intent.putExtra("bundle", bundle);
-                        startActivity(intent);
                         break;
                     }
                     case R.id.containerWatched: {
@@ -330,10 +369,6 @@ public class HomeFragment extends Fragment implements SqlDelegate {
                         break;
                     }
                     case R.id.containerReviews: {
-                        bundle = new ModelHelper(context).buildReviewModelBundle(homeModel, "HomeFragment");
-                        Intent intent = new Intent(context, ReviewsActivity.class);
-                        intent.putExtra("bundle", bundle);
-                        startActivity(intent);
                         break;
                     }
                 }
@@ -344,7 +379,8 @@ public class HomeFragment extends Fragment implements SqlDelegate {
                 mainActivity.initFragment(fragment, bundle);
             }
         }catch (Exception e){
-            Log.e("HomeFragment:Click", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
 
     }
@@ -370,20 +406,23 @@ public class HomeFragment extends Fragment implements SqlDelegate {
                 if(response.equals(context.getString(R.string.response_success))){
                     if(homeModels.get(position).getFavourites().getMovie().getIsWatched()){
                         homeModels.get(position).getFavourites().getMovie().setWatched(false);
-                        ImageView imageView = (ImageView) recyclerView.findViewById(Integer.parseInt(sqlHelper.getExtras().get("view_id")));
-                        imageView.setImageDrawable(context.getDrawable(R.drawable.ic_eye));
+                        homeModels.get(position).getFavourites().getMovie().setTotalWatched(homeModels.get(position).getFavourites().getMovie().getTotalWatched() - 1);
+//                        ImageView imageView = (ImageView) recyclerView.findViewById(Integer.parseInt(sqlHelper.getExtras().get("view_id")));
+//                        imageView.setImageDrawable(context.getDrawable(R.drawable.ic_eye));
                         int watching = MainActivity.currentUserModel.getTotalWatched();
                         MainActivity.currentUserModel.setTotalWatched(watching - 1);
                         Toast.makeText(context, "Movie has been marked as unwatched.", Toast.LENGTH_SHORT).show();
                     }else{
                         homeModels.get(position).getFavourites().getMovie().setWatched(true);
-                        ImageView imageView = (ImageView) recyclerView.findViewById(Integer.parseInt(sqlHelper.getExtras().get("view_id")));
-                        imageView.setImageDrawable(context.getDrawable(R.drawable.ic_eye_filled));
+                        homeModels.get(position).getFavourites().getMovie().setTotalWatched(homeModels.get(position).getFavourites().getMovie().getTotalWatched() + 1);
+//                        ImageView imageView = (ImageView) recyclerView.findViewById(Integer.parseInt(sqlHelper.getExtras().get("view_id")));
+//                        imageView.setImageDrawable(context.getDrawable(R.drawable.ic_eye_filled));
                         new ModelHelper(context).addToUpdatesModel(homeModels.get(position).getFavourites().getMovie().getId(), "", "watching");
                         int watching = MainActivity.currentUserModel.getTotalWatched();
                         MainActivity.currentUserModel.setTotalWatched(watching + 1);
                         Toast.makeText(context, "Movie has been marked as watched.", Toast.LENGTH_SHORT).show();
                     }
+                    recyclerView.getAdapter().notifyItemChanged(position);
                 }else if(response.equals(context.getString(R.string.response_unsuccessful))){
                     if(homeModels.get(position).getFavourites().getMovie().getIsWatched())
                         Toast.makeText(context, "Failed to remove from watching. Please try later", Toast.LENGTH_SHORT).show();
@@ -403,9 +442,24 @@ public class HomeFragment extends Fragment implements SqlDelegate {
                 }else if(response.equals(context.getString(R.string.unexpected))){
                     Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                 }
+            }else if(sqlHelper.getActionString().equals("remove_notification")){
+                
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+    }
+
+    @Override
+    public void onResultReceived(String type, boolean resultCode, HashMap<String, String> extras) {
+        if(resultCode){
+            switch (type){
+                case "rating":{
+                    updateDataset(type, extras);
+                    break;
+                }
+            }
         }
     }
 }

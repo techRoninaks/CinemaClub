@@ -6,7 +6,6 @@ import com.create.sidhu.movbox.activities.MainActivity;
  * Holds User information
  */
 
-//TODO Set preference
 public class UserModel {
     private String UserId;
     private String Name;

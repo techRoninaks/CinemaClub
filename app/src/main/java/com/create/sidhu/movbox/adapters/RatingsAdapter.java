@@ -17,7 +17,10 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.helpers.EmailHelper;
+import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.ActorModel;
 import com.create.sidhu.movbox.models.RatingsModel;
 
@@ -27,6 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 
 public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHolder>{
+    private RequestOptions requestOptions;
     private ArrayList<ActorModel> actorModels;
     private ArrayList<RatingsModel> ratingsModels;
     private Context context;
@@ -42,6 +46,9 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
             this.ratingsModels = (ArrayList<RatingsModel>) models;
         this.rootview = rootview;
         this.type = type;
+        requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.ic_placeholder);
+        requestOptions.error(R.drawable.ic_placeholder);
     }
 
 
@@ -57,6 +64,7 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
         try {
             if(type.equals("cast")) {
                 Glide.with(context)
+                        .setDefaultRequestOptions(requestOptions)
                         .asBitmap()
                         .load(actorModels.get(position).getImage())
                         .into(holder.imgCast);
@@ -83,6 +91,7 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
                 });
             }else if(type.equals("list")){
                 Glide.with(context)
+                        .setDefaultRequestOptions(requestOptions)
                         .asBitmap()
                         .load(context.getString(R.string.master_url) + context.getString(R.string.profile_image_url) + ratingsModels.get(position).getUserId() + ".jpg")
                         .into(holder.imgCast);
@@ -94,7 +103,8 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
                 holder.llContainerUserRating.setVisibility(View.VISIBLE);
             }
         }catch (Exception e){
-            Log.e("ReviewAdapter: onBind", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsAdapter", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 

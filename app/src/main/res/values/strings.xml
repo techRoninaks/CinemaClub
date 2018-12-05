@@ -10,6 +10,8 @@
     <string name="facebook_app_id">2567368729944839</string>
     <string name="fb_login_protocol_scheme">fb2567368729944839</string>
     <string name="hello_blank_fragment">Hello Home fragment</string>
+    <string name="app_store_uri">https://play.google.com/store/apps/details?id=com.roninaks.cinemaclub</string>
+    <string name="version_name">v1.0.0</string>
 
     <!-- User Resource Strings -->
     <string name="settings">Settings</string>
@@ -24,6 +26,10 @@
     <string name="follow_button_watchlist_remove">Remove from Watchlist</string>
     <string name="country">Country</string>
     <string name="phone">Phone No:</string>
+    <string name="email_tech_support">tech@roninaks.com</string>
+    <string name="email_admin">tech@roninaks.com</string>
+    <string name="email_all">tech@roninaks.com,nihalpradeep@roninaks.com</string>
+    <string name="email_sender">report@cinemaclub.com</string>
 
     <!-- Permission Resource Strings -->
     <string name="permission_camera_denied">Please allow camera permission to take picture.</string>
@@ -80,6 +86,7 @@
     <string name="home_recommendation">Recommended for you</string>
     <string name="home_review_reminder">Have you reviewed this movie yet?</string>
     <string name="home_watchlist_reminder">Have you watched this movie yet?</string>
+    <string name="home_menu_hide">Hide</string>
 
     <!-- Login Title Strings -->
     <string name="logo">Logo</string>
@@ -149,6 +156,24 @@
     <string name="settings_profile_preference">Preferences</string>
     <string name="settings_preference_language">Languages</string>
     <string name="settings_preference_genre">Genres</string>
+    <string name="settings_about_detail_primary">Cinema Club is a social networking platform designed to enhance Movie experience by enabling users to make informed decisions based on interactive information from users they follow/trust. The platform aims at providing a new dimension to reviews by factoring in the psychology of trusting people you know personally. We are constantly pushing ourselves to make your experience satisfying and we are bringing in a whole lot of updates soon. Stay tuned. And happy Cinema-ing</string>
+    <string name="settings_design_detail">Designed and Developed by <a href="https://www.roninaks.com">Roninaks</a>.</string>
+    <string name="settings_eua_title">End-User License Agreement (&quot;Agreement&quot;)</string>
+    <string name="settings_eua_primary">Last updated: 08/11/2018\n\nPlease read this End-User License Agreement (&quot;Agreement&quot;) carefully before downloading or using Cinema Club("Application").\n\nBy downloading or using the Application, you are agreeing to be bound by the terms and conditions of this Agreement.\n\nIf you do not agree to the terms of this Agreement, do not download or use the Application.</string>
+    <string name="settings_eua_license_title">License</string>
+    <string name="settings_eua_license_content">Roninaks grants you a revocable, non-exclusive, non-transferable, limited license to download, install and use the Application solely for your personal, non-commercial purposes strictly in accordance with the terms of this Agreement.</string>
+    <string name="settings_eua_restrictions_title">Restrictions</string>
+    <string name="settings_eua_restrictions_content">You agree not to, and you will not permit others to:\n\na) license, sell, rent, lease, assign, distribute, transmit, host, outsource, disclose or otherwise commercially exploit the Application or make the Application available to any third party.\n\nb) reuse designs, remake or redesign the application under the same or any different name.</string>
+    <string name="settings_eua_modifications_title">Modifications to Application</string>
+    <string name="settings_eua_modifications_content">Cinema Club reserves the right to modify, suspend or discontinue, temporarily or permanently, the Application or any service to which it connects, with or without notice and without liability to you.</string>
+    <string name="settings_eua_term_title">Term and Termination</string>
+    <string name="settings_eua_term_content">This Agreement shall remain in effect until terminated by you or Roninaks.\n\nRoninaks may, in its sole discretion, at any time and for any or no reason, suspend or terminate this Agreement with or without prior notice.\n\nThis Agreement will terminate immediately, without prior notice from Roninaks, in the event that you fail to comply with any provision of this Agreement. You may also terminate this Agreement by deleting the Application and all copies thereof from your mobile device or from your desktop.\n\nUpon termination of this Agreement, you shall cease all use of the Application and delete all copies of the Application from your mobile device or from your desktop.</string>
+    <string name="settings_eua_severability_title">Severability</string>
+    <string name="settings_eua_severability_content">If any provision of this Agreement is held to be unenforceable or invalid, such provision will be changed and interpreted to accomplish the objectives of such provision to the greatest extent possible under applicable law and the remaining provisions will continue in full force and effect.</string>
+    <string name="settings_eua_amendments_title">Amendments to this Agreement</string>
+    <string name="settings_eua_amendments_content">Roninaks reserves the right, at its sole discretion, to modify or replace this Agreement at any time. If a revision is material we will provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</string>
+    <string name="settings_eua_contact_title">Contact Information</string>
+    <string name="settings_eua_contact_content">If you have any questions about this Agreement, please contact us.\n\nsupport@roninaks.com</string>
 
     <!-- Movie Title Strings -->
     <string name="movie_watched">Watched</string>
@@ -193,5 +218,12 @@
     <string name="button_close">Close</string>
     <string name="no_internet">No internet! Please check your network internet and try again.</string>
     <string name="retry">Retry</string>
+    <string name="notification_ticker">Cinema Club - New notifications for you!</string>
+    <string name="channel_name">New notification</string>
+    <string name="channel_description">Shows you new application notifications</string>
+    <string name="notification_group_title_follow">You have a new follower</string>
+    <string name="notification_group_title_review">New Review!</string>
+    <string name="notification_group_title_review_vote">New Like!</string>
+    <string name="notification_group_title_watching_now">Now watching</string>
 
 </resources>

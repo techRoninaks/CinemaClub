@@ -30,6 +30,7 @@ import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.MainActivity;
 import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.adapters.RecyclerViewAdapter;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
@@ -52,7 +53,8 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
     Context context;
     Bundle bundle;
     String type;
-    ArrayList<MovieModel> movieModelsMaster, movieModelsSearch;
+    ArrayList<MovieModel> movieModelsSearch;
+    static ArrayList<MovieModel> movieModelsMaster;
 
     LinearLayout llMasterPostStatus, llMaster, llPlaceholder;
     LinearLayout llWatched, llReview, llRating;
@@ -74,36 +76,42 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
                 case R.id.containerReview:
                 case R.id.btn_Review:{
                     type = "review";
-                    if(movieModelsMaster != null && movieModelsMaster.size() > 0) {
+                    if(movieModelsMaster != null) {
                         llMasterPostStatus.setVisibility(View.GONE);
                         llMaster.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                        tvSearchTitle.setText(context.getString(R.string.post_status_new_releases));
-                        initRecyclerView(recyclerView, movieModelsMaster);
+                        if(movieModelsMaster.size() > 0) {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            tvSearchTitle.setText(context.getString(R.string.post_status_new_releases));
+                            initRecyclerView(recyclerView, movieModelsMaster);
+                        }
                     }
                     break;
                 }
                 case R.id.containerRating:
                 case R.id.btn_Rating:{
                     type = "rating";
-                    if(movieModelsMaster != null && movieModelsMaster.size() > 0) {
+                    if(movieModelsMaster != null) {
                         llMasterPostStatus.setVisibility(View.GONE);
                         llMaster.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                        tvSearchTitle.setText(context.getString(R.string.post_status_new_releases));
-                        initRecyclerView(recyclerView, movieModelsMaster);
+                        if(movieModelsMaster.size() > 0) {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            tvSearchTitle.setText(context.getString(R.string.post_status_new_releases));
+                            initRecyclerView(recyclerView, movieModelsMaster);
+                        }
                     }
                     break;
                 }
                 case R.id.containerWatched:
                 case R.id.btn_Watched:{
                     type = "watched";
-                    if(movieModelsMaster != null && movieModelsMaster.size() > 0) {
+                    if(movieModelsMaster != null) {
                         llMasterPostStatus.setVisibility(View.GONE);
                         llMaster.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                        tvSearchTitle.setText(context.getString(R.string.post_status_new_releases));
-                        initRecyclerView(recyclerView, movieModelsMaster);
+                        if(movieModelsMaster.size() > 0) {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            tvSearchTitle.setText(context.getString(R.string.post_status_new_releases));
+                            initRecyclerView(recyclerView, movieModelsMaster);
+                        }
                     }
                     break;
                 }
@@ -129,8 +137,10 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
         tfSemibold = Typeface.createFromAsset(context.getAssets(), "fonts/MyriadPro-Semibold.otf");
         tfRegular = Typeface.createFromAsset(context.getAssets(), "fonts/myriadpro.otf");
         type = "";
-        movieModelsMaster = new ArrayList<>();
-        fetchMovies();
+        if(movieModelsMaster == null) {
+            movieModelsMaster = new ArrayList<>();
+            fetchMovies();
+        }
         llMasterPostStatus = (LinearLayout) v.findViewById(R.id.containerPostStatus);
         llMaster = (LinearLayout) v.findViewById(R.id.containerReviews);
         llPlaceholder = (LinearLayout) v.findViewById(R.id.containerPlaceholder);
@@ -237,16 +247,23 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
                 initRecyclerView(recyclerView, movieModelsSearch);
         }catch (Exception e){
             Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
     private void initRecyclerView(RecyclerView recyclerView, ArrayList<MovieModel> models){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);            // Calling the RecyclerView Adapter with a layout
-        recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, models, recyclerView, "post_status", type, PostStatusFragment.this);
-        recyclerView.setAdapter(adapter);
-        this.recyclerView.setVisibility(View.VISIBLE);
-        llPlaceholder.setVisibility(View.GONE);
+        try {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);            // Calling the RecyclerView Adapter with a layout
+            recyclerView.setLayoutManager(layoutManager);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(context, models, recyclerView, "post_status", type, PostStatusFragment.this);
+            recyclerView.setAdapter(adapter);
+            this.recyclerView.setVisibility(View.VISIBLE);
+            llPlaceholder.setVisibility(View.GONE);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
     @Override
     public void onCancel(DialogInterface dialog){
@@ -288,6 +305,8 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
             }
         }catch (Exception e){
             Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
@@ -295,58 +314,63 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
         this.context = context;
         this.type = type;
         MainActivity mainActivity = (MainActivity) context;
-        switch (type){
-            case "review":{
-                Bundle bundle = new ModelHelper(context).buildReviewModelBundle(movieModels.get(position), "PostStatusFragment");
-                Intent intent = new Intent(context, ReviewsActivity.class);
-                intent.putExtra("bundle", bundle);
-                context.startActivity(intent);
-                dismiss();
-                break;
-            }
-            case "rating":{
-                bundle = new ModelHelper(context).buildMovieModelBundle(movieModels.get(position), "ProfileFragment");
-                bundle.putString("type", "cast");
-                RatingsDialog ratingsDialog = new RatingsDialog();
-                mainActivity.initFragment(ratingsDialog, bundle);
-                dismiss();
-                break;
-            }
-            case "watched":{
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-                                SqlHelper sqlHelper = new SqlHelper(context, PostStatusFragment.this);
-                                sqlHelper.setMethod("GET");
-                                sqlHelper.setActionString("update_watching");
-                                sqlHelper.setExecutePath("add-now-watching.php");
-                                ArrayList<NameValuePair> params = new ArrayList<>();
-                                params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-                                params.add(new BasicNameValuePair("m_id", movieModels.get(position).getId()));
-                                params.add(new BasicNameValuePair("is_watched", "" + movieModels.get(position).getIsWatched()));
-                                sqlHelper.setParams(params);
-                                sqlHelper.executeUrl(false);
-                                Toast.makeText(context, "Movie has been marked as now watching", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                                PostStatusFragment.this.dismiss();
-                                break;
+        try {
+            switch (type) {
+                case "review": {
+                    Bundle bundle = new ModelHelper(context).buildReviewModelBundle(movieModels.get(position), "PostStatusFragment");
+                    Intent intent = new Intent(context, ReviewsActivity.class);
+                    intent.putExtra("bundle", bundle);
+                    context.startActivity(intent);
+                    dismiss();
+                    break;
+                }
+                case "rating": {
+                    bundle = new ModelHelper(context).buildMovieModelBundle(movieModels.get(position), "ProfileFragment");
+                    bundle.putString("type", "cast");
+                    RatingsDialog ratingsDialog = new RatingsDialog();
+                    mainActivity.initFragment(ratingsDialog, bundle);
+                    dismiss();
+                    break;
+                }
+                case "watched": {
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    SqlHelper sqlHelper = new SqlHelper(context, PostStatusFragment.this);
+                                    sqlHelper.setMethod("GET");
+                                    sqlHelper.setActionString("update_watching");
+                                    sqlHelper.setExecutePath("add-now-watching.php");
+                                    ArrayList<NameValuePair> params = new ArrayList<>();
+                                    params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+                                    params.add(new BasicNameValuePair("m_id", movieModels.get(position).getId()));
+                                    params.add(new BasicNameValuePair("is_watched", "" + movieModels.get(position).getIsWatched()));
+                                    sqlHelper.setParams(params);
+                                    sqlHelper.executeUrl(false);
+                                    Toast.makeText(context, "Movie has been marked as now watching", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
+                                    PostStatusFragment.this.dismiss();
+                                    break;
 
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                dialog.dismiss();
-                                break;
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    dialog.dismiss();
+                                    break;
+                            }
                         }
-                    }
-                };
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-                alertDialog.setTitle(StringHelper.toTitleCase(type));
-                alertDialog.setMessage("Do you wish to add this movie to now watching?");
-                alertDialog.setPositiveButton("Yes", dialogClickListener);
-                alertDialog.setNegativeButton("No", dialogClickListener);
-                alertDialog.show();
-                break;
+                    };
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+                    alertDialog.setTitle(StringHelper.toTitleCase(type));
+                    alertDialog.setMessage("Do you wish to add this movie to now watching?");
+                    alertDialog.setPositiveButton("Yes", dialogClickListener);
+                    alertDialog.setNegativeButton("No", dialogClickListener);
+                    alertDialog.show();
+                    break;
+                }
             }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 }

@@ -81,9 +81,11 @@ public class ModelHelper {
             movieModel.setAddedToWatchlist(jsonObject.getString("is_watchlist").equals("1"));
             movieModel.setRated(jsonObject.getString("is_rated").equals("1"));
             movieModel.setLanguage(jsonObject.getString("language"));
+            movieModel.setReviewed(jsonObject.getString("is_reviewed").equals("1"));
             return movieModel;
         }catch(Exception e){
-            Log.e("ModelHelper: build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new MovieModel();
     }
@@ -104,7 +106,8 @@ public class ModelHelper {
             actorModel.setTotalMovies(Integer.parseInt(jsonObject.getString("total_movies")));
             return actorModel;
         }catch (Exception e){
-            Log.e("ModelHelper: build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new ActorModel();
     }
@@ -132,7 +135,8 @@ public class ModelHelper {
             userModel.setIsFollowing(jsonObject.getString("is_following").equals("1"));
             return userModel;
         }catch (Exception e){
-           Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new UserModel();
     }
@@ -156,6 +160,7 @@ public class ModelHelper {
                 case "favourites":{
                     favouritesModel.setId(jsonObject.getString("id"));
                     favouritesModel.setType(type);
+                    favouritesModel.setRead(jsonObject.getString("has_seen").equals("1"));
                     favouritesModel.setSubType(jsonObject.getString("type"));
                     favouritesModel.setDate(jsonObject.getString("time").split(" ")[0]);
                     favouritesModel.setTime(jsonObject.getString("time").split(" ")[1]);
@@ -225,7 +230,8 @@ public class ModelHelper {
             }
             return favouritesModel;
         }catch (Exception e){
-            Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new FavouritesModel();
     }
@@ -251,7 +257,8 @@ public class ModelHelper {
             reviewModel.setUserPrivacy(Integer.parseInt(jsonObject.getString("u_privacy")));
             return reviewModel;
         }catch (Exception e){
-            Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new ReviewModel();
     }
@@ -270,7 +277,8 @@ public class ModelHelper {
             ratingsModel.setFollowing(jsonObject.getString("is_following").equals("1"));
             return ratingsModel;
         }catch (Exception e){
-            Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new RatingsModel();
     }
@@ -287,7 +295,8 @@ public class ModelHelper {
             preferenceModel.setName(jsonObject.getString("name"));
             return preferenceModel;
         }catch (Exception e){
-            Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new PreferenceModel();
     }
@@ -321,9 +330,11 @@ public class ModelHelper {
                 bundle.putString("language", movieModel.getLanguage());
                 bundle.putString("story", movieModel.getStory());
                 bundle.putString("release", new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(movieModel.getRelease()));
+                bundle.putBoolean("is_reviewed", movieModel.getIsReviewed());
             }
         }catch (Exception e){
-            Log.e("ModelHelper: build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return bundle;
     }
@@ -350,7 +361,8 @@ public class ModelHelper {
                 bundle.putBoolean("is_following", userModel.getIsFollowing());
             }
         }catch (Exception e){
-            Log.e("ModelHelper:Build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return bundle;
     }
@@ -374,7 +386,8 @@ public class ModelHelper {
                 bundle.putString("id", actorModel.getId());
             }
         }catch (Exception e){
-            Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return bundle;
     }
@@ -399,7 +412,8 @@ public class ModelHelper {
                 bundle.putString("movie_language", homeModel.getFavourites().getMovie().getLanguage());
             }
         }catch (Exception e){
-            Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return bundle;
     }
@@ -424,7 +438,8 @@ public class ModelHelper {
                 bundle.putString("movie_language", movieModel.getLanguage());
             }
         }catch (Exception e){
-            Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return bundle;
     }
@@ -436,15 +451,20 @@ public class ModelHelper {
      * @param type- Type identifier
      */
     public void addToUpdatesModel(String movieId, String reviewId, String type){
-        UpdatesModel updatesModel = new UpdatesModel();
-        updatesModel.setId("" + System.currentTimeMillis());
-        updatesModel.setUserId(MainActivity.currentUserModel.getUserId());
-        updatesModel.setReviewId(reviewId);
-        updatesModel.setMovieId(movieId);
-        updatesModel.setType(type);
-        if(MainActivity.updatesModels == null)
-            MainActivity.updatesModels = new ArrayList<>();
-        MainActivity.updatesModels.add(updatesModel);
+        try {
+            UpdatesModel updatesModel = new UpdatesModel();
+            updatesModel.setId("" + System.currentTimeMillis());
+            updatesModel.setUserId(MainActivity.currentUserModel.getUserId());
+            updatesModel.setReviewId(reviewId);
+            updatesModel.setMovieId(movieId);
+            updatesModel.setType(type);
+            if (MainActivity.updatesModels == null)
+                MainActivity.updatesModels = new ArrayList<>();
+            MainActivity.updatesModels.add(updatesModel);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
 }

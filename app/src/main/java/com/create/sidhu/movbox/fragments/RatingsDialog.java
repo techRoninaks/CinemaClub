@@ -21,12 +21,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.create.sidhu.movbox.Interfaces.CallbackDelegate;
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.MainActivity;
 import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.adapters.RatingsAdapter;
 import com.create.sidhu.movbox.adapters.ReviewAdapter;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
@@ -40,6 +42,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 
@@ -56,6 +59,11 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
     ArrayList<RatingsModel> ratingsModels, ratingsModelsTop, ratingsModelsFollowing;
     Bundle bundle;
     String type;
+    boolean isRated = false;
+    boolean initiallyRated = false;
+    float currentRating;
+
+    CallbackDelegate callbackDelegate;
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -100,55 +108,61 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.ratings_dialog, null);
         builder.setView(view);
-        tvTitle = view.findViewById(R.id.textView_Title);
-        tvSubtitle = view.findViewById(R.id.textView_Subtitle);
-        tvUserRating = view.findViewById(R.id.textView_UserRating);
-        tvTotalRatings = view.findViewById(R.id.textView_TotalRating);
-        rbUserRating = view.findViewById(R.id.rb_UserRating);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        llRecyclerView = view.findViewById(R.id.containerRecyclerView);
-        llPlaceholder = view.findViewById(R.id.containerPlaceholder);
-        llContainerTabs = view.findViewById(R.id.containerTabs);
-        tvTabAll = view.findViewById(R.id.textView_TabAll);
-        tvTabFollowing = view.findViewById(R.id.textView_TabFollowing);
-        tvTabTop = view.findViewById(R.id.textView_TabTop);
-        btnSubmit = view.findViewById(R.id.btnSubmit);
-        btnCancel = view.findViewById(R.id.btnCancel);
-        tvTitle.setText(bundle.getString("name") + "(" + bundle.getString("language") + ") (" + bundle.getString("display_dimension") + ")");
-        tvSubtitle.setText(bundle.getString("genre"));
-        rbUserRating.setRating(0.0f);
-        tvUserRating.setTypeface(tfSemibold);
-        SpannableStringBuilder stringBuilder = new SpannableStringBuilder(bundle.getString("rating") + "/10");
-        stringBuilder.setSpan(new CalligraphyTypefaceSpan(tfSemibold), 0, stringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        stringBuilder.append(" from ");
-        SpannableString spannableString = new SpannableString(StringHelper.formatTextCount(Integer.parseInt(bundle.getString("total_ratings"))));
-        spannableString.setSpan(new CalligraphyTypefaceSpan(tfSemibold), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        stringBuilder.append(spannableString);
-        stringBuilder.append(" votes");
-        if(type.equals("cast")){
-            tvUserRating.setText("0/10");
-        }else if(type.equals("list")){
-            tvUserRating.setVisibility(View.GONE);
-            llContainerTabs.setVisibility(View.VISIBLE);
-            tvTabTop.setTextColor(context.getResources().getColor(R.color.colorTextPrimary));
-            tvTabFollowing.setTextColor(context.getResources().getColor(R.color.colorTextSecondary));
-            tvTabAll.setTextColor(context.getResources().getColor(R.color.colorTextSecondary));
-            btnSubmit.setVisibility(View.GONE);
-            btnCancel.setText("Close");
-            rbUserRating.setRating(Float.parseFloat(bundle.getString("rating")));
-        }
-        tvTotalRatings.setText(stringBuilder);
-        btnSubmit.setOnClickListener(onClickListener);
-        btnCancel.setOnClickListener(onClickListener);
-        tvTabAll.setOnClickListener(onClickListener);
-        tvTabFollowing.setOnClickListener(onClickListener);
-        tvTabTop.setOnClickListener(onClickListener);
-        rbUserRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                tvUserRating.setText(rating + "/10");
+        try {
+            tvTitle = view.findViewById(R.id.textView_Title);
+            tvSubtitle = view.findViewById(R.id.textView_Subtitle);
+            tvUserRating = view.findViewById(R.id.textView_UserRating);
+            tvTotalRatings = view.findViewById(R.id.textView_TotalRating);
+            rbUserRating = view.findViewById(R.id.rb_UserRating);
+            recyclerView = view.findViewById(R.id.recyclerView);
+            llRecyclerView = view.findViewById(R.id.containerRecyclerView);
+            llPlaceholder = view.findViewById(R.id.containerPlaceholder);
+            llContainerTabs = view.findViewById(R.id.containerTabs);
+            tvTabAll = view.findViewById(R.id.textView_TabAll);
+            tvTabFollowing = view.findViewById(R.id.textView_TabFollowing);
+            tvTabTop = view.findViewById(R.id.textView_TabTop);
+            btnSubmit = view.findViewById(R.id.btnSubmit);
+            btnCancel = view.findViewById(R.id.btnCancel);
+            tvTitle.setText(bundle.getString("name") + "(" + bundle.getString("language") + ") (" + bundle.getString("display_dimension") + ")");
+            tvSubtitle.setText(bundle.getString("genre"));
+            rbUserRating.setRating(0.0f);
+            tvUserRating.setTypeface(tfSemibold);
+            SpannableStringBuilder stringBuilder = new SpannableStringBuilder(bundle.getString("rating") + "/10");
+            stringBuilder.setSpan(new CalligraphyTypefaceSpan(tfSemibold), 0, stringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            stringBuilder.append(" from ");
+            SpannableString spannableString = new SpannableString(StringHelper.formatTextCount(Integer.parseInt(bundle.getString("total_ratings"))));
+            spannableString.setSpan(new CalligraphyTypefaceSpan(tfSemibold), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            stringBuilder.append(spannableString);
+            stringBuilder.append(" votes");
+            if (type.equals("cast")) {
+                tvUserRating.setText("0/10");
+            } else if (type.equals("list")) {
+                tvUserRating.setVisibility(View.GONE);
+                llContainerTabs.setVisibility(View.VISIBLE);
+                tvTabTop.setTextColor(context.getResources().getColor(R.color.colorTextPrimary));
+                tvTabFollowing.setTextColor(context.getResources().getColor(R.color.colorTextSecondary));
+                tvTabAll.setTextColor(context.getResources().getColor(R.color.colorTextSecondary));
+                btnSubmit.setVisibility(View.GONE);
+                btnCancel.setText("Close");
+                rbUserRating.setRating(Float.parseFloat(bundle.getString("rating")));
+                rbUserRating.setIsIndicator(true);
             }
-        });
+            tvTotalRatings.setText(stringBuilder);
+            btnSubmit.setOnClickListener(onClickListener);
+            btnCancel.setOnClickListener(onClickListener);
+            tvTabAll.setOnClickListener(onClickListener);
+            tvTabFollowing.setOnClickListener(onClickListener);
+            tvTabTop.setOnClickListener(onClickListener);
+            rbUserRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+                @Override
+                public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                    tvUserRating.setText(rating + "/10");
+                }
+            });
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
         return builder.create();
     }
 
@@ -156,6 +170,23 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
     public void onResume() {
         super.onResume();
         getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    public void dismiss(){
+        super.dismiss();
+        HashMap<String, String> extras = new HashMap<>();
+        if(type.equals("cast")) {
+            if (isRated && callbackDelegate != null) {
+                int totalRatings = Integer.parseInt(bundle.getString("total_ratings"));
+                if (!initiallyRated)
+                    totalRatings += 1;
+                extras.put("total_ratings", "" + totalRatings);
+                extras.put("avg_ratings", "" + currentRating);
+                extras.put("movie_id", bundle.getString("id"));
+                callbackDelegate.onResultReceived("rating", true, extras);
+            }
+        }
     }
 
     @Override
@@ -191,13 +222,16 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                 if(response.equals(context.getString(R.string.response_success))) {
                     Toast.makeText(context, "Your ratings have been saved", Toast.LENGTH_SHORT).show();
                     new ModelHelper(context).addToUpdatesModel(bundle.getString("id"), "", "rating");
+                    isRated = true;
+                    currentRating = Float.parseFloat(sqlHelper.getJSONResponse().getJSONObject("data").getString("avg_rating"));
                     dismiss();
                 }else if(response.equals(context.getString(R.string.response_unsuccessful)) || response.equals(context.getString(R.string.unexpected))){
                     Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                 }
             }
         }catch (Exception e){
-            Log.e("RatingsDialog:response", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
             Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             dismiss();
         }
@@ -253,13 +287,15 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                 attachAdapter(recyclerView, ratingsModelsTop);
             }
         }catch (Exception e){
-            Log.e("RatingsDialog:init", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
             Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             dismiss();
         }
     }
 
     public void addToSortedList(RatingsModel ratingsModel){
+
         int length = ratingsModelsTop.size();
         float rating = ratingsModel.getUserRating();
         for(int i = 0; i < length; i++){
@@ -272,10 +308,15 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
     }
 
     public void attachAdapter(RecyclerView recyclerView, ArrayList<?> model){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        RatingsAdapter ratingsAdapter = new RatingsAdapter(context, model, recyclerView, type);
-        recyclerView.setAdapter(ratingsAdapter);
+        try {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            RatingsAdapter ratingsAdapter = new RatingsAdapter(context, model, recyclerView, type);
+            recyclerView.setAdapter(ratingsAdapter);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
     public void submitRatings(){
@@ -295,5 +336,13 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         params.add(new BasicNameValuePair("type", type));
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(false);
+    }
+
+    public void setCallbackDelegate(CallbackDelegate callbackDelegate){
+        this.callbackDelegate = callbackDelegate;
+    }
+
+    public void setRated(boolean isRated){
+        this.initiallyRated = isRated;
     }
 }

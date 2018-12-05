@@ -612,7 +612,7 @@
                         android:textSize="@dimen/text_medium"
                         android:textColor="@color/colorTextPrimary"
                         android:id="@+id/textView_Release_Title"
-                        android:text="ReleaseDate"/>
+                        android:text="Release Date"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
