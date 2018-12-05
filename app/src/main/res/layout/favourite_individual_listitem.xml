@@ -3,19 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:id="@+id/containerMaster">
+    android:id="@+id/containerMaster"
+    android:layout_marginBottom="@dimen/standard_gap_large">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/containerSuperHeading"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_marginBottom="@dimen/standard_gap_large">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Today"
             android:id="@+id/textView_SuperText"
-            android:textSize="@dimen/list_supertext"/>
+            android:textSize="@dimen/text_medium"/>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -38,10 +40,7 @@
                 android:layout_width="@dimen/list_image"
                 android:layout_height="@dimen/list_image"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="10dp"
-                android:src="@drawable/profile_default"
-                app:civ_border_color="@color/colorPrimary"
-                app:civ_border_width="1dp" />
+                android:src="@drawable/profile_default" />
         </LinearLayout>
         <!-- Title and Subtitle -->
         <LinearLayout
@@ -49,11 +48,11 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:id="@+id/containerMainText"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/standard_gap">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="@dimen/list_padding"
                 android:orientation="vertical"
                 android:gravity="center">
                 <!-- Title -->
@@ -67,7 +66,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/list_titletext"
+                        android:textSize="@dimen/text_medium"
                         android:text="Subject"
                         android:textColor="@color/colorTextPrimary"
                         android:id="@+id/textView_TitleSubject"
@@ -76,7 +75,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/list_titletext"
+                        android:textSize="@dimen/text_medium"
                         android:text="text"
                         android:textColor="@color/colorTextPrimary"
                         android:id="@+id/textView_TitleText"
@@ -84,17 +83,24 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/list_titletext"
+                        android:textSize="@dimen/text_medium"
                         android:text="Object"
                         android:textColor="@color/colorTextPrimary"
                         android:id="@+id/textView_TitleObject"
                         android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_medium"
+                        android:text="Date"
+                        android:textColor="@color/colorTextSecondary"
+                        android:id="@+id/textView_DateObject" />
                 </com.nex3z.flowlayout.FlowLayout>
                 <!-- Subtitle -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/list_subtext"
+                    android:textSize="@dimen/text_small"
                     android:text="Testing Sub Text"
                     android:textColor="@color/colorTextSecondary"
                     android:id="@+id/textView_SubText"
@@ -110,7 +116,8 @@
             android:id="@+id/containerOtherInfo"
             android:orientation="vertical"
             android:padding="@dimen/standard_gap"
-            android:layout_weight="2">
+            android:layout_weight="2"
+            android:visibility="gone">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -141,7 +148,7 @@
         <!-- Button -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_weight="1.5"
             android:padding="@dimen/standard_touch_space"
@@ -149,11 +156,12 @@
             android:id="@+id/containerButton"
             android:visibility="gone">
             <Button
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/follow_button_follow"
                 android:textSize="@dimen/list_subtext"
-                android:background="@drawable/custom_button_yellow"/>
+                android:background="@drawable/custom_button_yellow"
+                android:id="@+id/btn_Follow"/>
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

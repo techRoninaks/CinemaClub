@@ -5,15 +5,23 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.activities.MainActivity;
 import com.create.sidhu.movbox.models.ActorModel;
 import com.create.sidhu.movbox.models.FavouritesModel;
 import com.create.sidhu.movbox.models.HomeModel;
 import com.create.sidhu.movbox.models.MovieModel;
+import com.create.sidhu.movbox.models.PreferenceModel;
+import com.create.sidhu.movbox.models.RatingsModel;
+import com.create.sidhu.movbox.models.ReviewModel;
+import com.create.sidhu.movbox.models.UpdatesModel;
 import com.create.sidhu.movbox.models.UserModel;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by nihalpradeep on 05/09/18.
@@ -66,15 +74,18 @@ public class ModelHelper {
             movieModel.setTotalWatched(Integer.parseInt(jsonObject.getString("total_watched")));
             movieModel.setTotalRatings(Integer.parseInt(jsonObject.getString("total_ratings")));
             movieModel.setTotalReviews(Integer.parseInt(jsonObject.getString("total_reviews")));
-            movieModel.setRating(jsonObject.getString("rating"));
+            movieModel.setRating("" + (int)Float.parseFloat(jsonObject.getString("rating")));
             movieModel.setDisplayDimension(jsonObject.getString("dimension"));
-            movieModel.setCast(jsonObject.getString("director") + "!~" + jsonObject.getString("actor") + "!~" + jsonObject.getString("actress"));
-            movieModel.setWatched(jsonObject.getString("is_watched").equals("1") ? true : false);
-            movieModel.setAddedToWatchlist(jsonObject.getString("is_watchlist").equals("1") ? true : false);
-            movieModel.setRated(jsonObject.getString("is_rated").equals("1") ? true : false);
+            movieModel.setCast(jsonObject.getString("director") + "!~" + jsonObject.getString("actor") + "!~" + jsonObject.getString("actress") + "!~" + jsonObject.getString("screenplay") + "!~" + jsonObject.getString("music"));
+            movieModel.setWatched(jsonObject.getString("is_watched").equals("1"));
+            movieModel.setAddedToWatchlist(jsonObject.getString("is_watchlist").equals("1"));
+            movieModel.setRated(jsonObject.getString("is_rated").equals("1"));
+            movieModel.setLanguage(jsonObject.getString("language"));
+            movieModel.setReviewed(jsonObject.getString("is_reviewed").equals("1"));
             return movieModel;
         }catch(Exception e){
-            Log.e("ModelHelper: build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new MovieModel();
     }
@@ -95,7 +106,8 @@ public class ModelHelper {
             actorModel.setTotalMovies(Integer.parseInt(jsonObject.getString("total_movies")));
             return actorModel;
         }catch (Exception e){
-            Log.e("ModelHelper: build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new ActorModel();
     }
@@ -119,9 +131,12 @@ public class ModelHelper {
             userModel.setTotalReviews(Integer.parseInt(jsonObject.getString("mov_reviewed")));
             userModel.setFollowing(Integer.parseInt(jsonObject.getString("u_following")));
             userModel.setFollowers(Integer.parseInt(jsonObject.getString("u_followers")));
+            userModel.setPrivacy(Integer.parseInt(jsonObject.getString("u_privacy")));
+            userModel.setIsFollowing(jsonObject.getString("is_following").equals("1"));
             return userModel;
         }catch (Exception e){
-           Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new UserModel();
     }
@@ -145,9 +160,11 @@ public class ModelHelper {
                 case "favourites":{
                     favouritesModel.setId(jsonObject.getString("id"));
                     favouritesModel.setType(type);
+                    favouritesModel.setRead(jsonObject.getString("has_seen").equals("1"));
                     favouritesModel.setSubType(jsonObject.getString("type"));
                     favouritesModel.setDate(jsonObject.getString("time").split(" ")[0]);
                     favouritesModel.setTime(jsonObject.getString("time").split(" ")[1]);
+                    favouritesModel.setDateTime(jsonObject.getString("time"));
                     switch (favouritesModel.getSubType()){
                         case "follow":
                             favouritesModel.setUser(buildUserModel(jsonObject.getJSONObject("results")));
@@ -177,15 +194,111 @@ public class ModelHelper {
                         case "watchlist_reminder":
                             favouritesModel.setMovie(buildMovieModel(jsonObject.getJSONObject("results")));
                             break;
+                        case "watching_now":
+                            favouritesModel.setUser(buildUserModel(jsonObject.getJSONObject("results").getJSONObject("user_data")));
+                            favouritesModel.setMovie(buildMovieModel(jsonObject.getJSONObject("results").getJSONObject("movie_data")));
+                            break;
+                        case "new_releases":
+                            favouritesModel.setMovie(buildMovieModel(jsonObject.getJSONObject("results")));
+                            break;
+                        case "recommendations":
+                            favouritesModel.setMovie(buildMovieModel(jsonObject.getJSONObject("results")));
+                            break;
                     }
+                    break;
+                }
+                case "following":{
+                    favouritesModel.setType("user");
+                    favouritesModel.setUser(buildUserModel(jsonObject));
+//                    favouritesModel.setUserId(jsonObject.getString("u_id"));
+//                    favouritesModel.setTitle(jsonObject.getString("name"));
+//                    favouritesModel.setSubtitle(jsonObject.getString("movies_watched"));
+//                    favouritesModel.setDate("Following: " + jsonObject.getString("following"));
+//                    favouritesModel.setTime("Followers: " + jsonObject.getString("followers"));
+                    break;
+                }
+                case "followers":{
+                    favouritesModel.setType("user");
+                    favouritesModel.setUser(buildUserModel(jsonObject));
+//                    favouritesModel.setUserId(jsonObject.getString("u_id"));
+//                    favouritesModel.setTitle(jsonObject.getString("name"));
+//                    favouritesModel.setSubtitle(jsonObject.getString("movies_watched"));
+//                    favouritesModel.setDate("Following: " + jsonObject.getString("following"));
+//                    favouritesModel.setTime("Followers: " + jsonObject.getString("followers"));
                     break;
                 }
             }
             return favouritesModel;
         }catch (Exception e){
-            Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return new FavouritesModel();
+    }
+    /***
+     * Populates ReviewModel members from jsonObject
+     * @param jsonObject
+     * @return ReviewModel object userModel
+     */
+    public ReviewModel buildReviewModel(JSONObject jsonObject){
+        try{
+            ReviewModel reviewModel = new ReviewModel();
+            reviewModel.setReviewId(jsonObject.getString("r_id"));
+            reviewModel.setReviewText(jsonObject.getString("r_text"));
+            reviewModel.setLikes(Integer.parseInt(jsonObject.getString("upvotes")));
+            reviewModel.setUserId(jsonObject.getString("u_id"));
+            reviewModel.setUserName(jsonObject.getString("u_name"));
+            reviewModel.setMovieId(jsonObject.getString("m_id"));
+            reviewModel.setMovieName(jsonObject.getString("m_name"));
+            reviewModel.setReplies(jsonObject.getString("r_reply"));
+            reviewModel.setTime(jsonObject.getString("r_time"));
+            reviewModel.setFollowing(jsonObject.getString("is_following").equals("1"));
+            reviewModel.setLiked(jsonObject.getString("is_liked").equals("1"));
+            reviewModel.setUserPrivacy(Integer.parseInt(jsonObject.getString("u_privacy")));
+            return reviewModel;
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+        return new ReviewModel();
+    }
+    /***
+     * Populates RatingsModel members from jsonObject
+     * @param jsonObject
+     * @return RatingsModel object ratingsModel
+     */
+    public RatingsModel buildRatingsModel(JSONObject jsonObject){
+        try{
+            RatingsModel ratingsModel = new RatingsModel();
+            ratingsModel.setRatingId(jsonObject.getString("r_id"));
+            ratingsModel.setUserName(jsonObject.getString("u_name"));
+            ratingsModel.setUserId(jsonObject.getString("u_id"));
+            ratingsModel.setUserRating(Float.parseFloat(jsonObject.getString("u_rating")));
+            ratingsModel.setFollowing(jsonObject.getString("is_following").equals("1"));
+            return ratingsModel;
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+        return new RatingsModel();
+    }
+    /***
+     * Populates Preference members from jsonObject
+     * @param jsonObject
+     * @return PreferenceModel object preferenceModel
+     */
+    public PreferenceModel buildPreferenceModel(JSONObject jsonObject, String type){
+        try{
+            PreferenceModel preferenceModel = new PreferenceModel();
+            preferenceModel.setType(type);
+            preferenceModel.setId(jsonObject.getString("id"));
+            preferenceModel.setName(jsonObject.getString("name"));
+            return preferenceModel;
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+        return new PreferenceModel();
     }
 
     /***
@@ -213,9 +326,15 @@ public class ModelHelper {
                 bundle.putString("cast", movieModel.getCast());
                 bundle.putBoolean("is_watched", movieModel.getIsWatched());
                 bundle.putBoolean("is_watchlist", movieModel.getIsAddedToWatchlist());
+                bundle.putBoolean("is_rated", movieModel.getIsRated());
+                bundle.putString("language", movieModel.getLanguage());
+                bundle.putString("story", movieModel.getStory());
+                bundle.putString("release", new SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(movieModel.getRelease()));
+                bundle.putBoolean("is_reviewed", movieModel.getIsReviewed());
             }
         }catch (Exception e){
-            Log.e("ModelHelper: build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return bundle;
     }
@@ -230,7 +349,7 @@ public class ModelHelper {
         try{
             if(requestPath.equals("ProfileFragment")) {
                 bundle.putString("type", context.getString(R.string.profile_user));
-                bundle.putBoolean("isIdentity", true);
+                bundle.putBoolean("isIdentity", userModel.getUserId().equals(MainActivity.currentUserModel.getUserId()));
                 bundle.putString("id", userModel.getUserId());
                 bundle.putString("name", userModel.getName());
                 bundle.putString("image", userModel.getImage());
@@ -238,9 +357,12 @@ public class ModelHelper {
                 bundle.putInt("movies_reviewed", userModel.getTotalReviews());
                 bundle.putInt("followers", userModel.getFollowers());
                 bundle.putInt("following", userModel.getFollowing());
+                bundle.putString("privacy", userModel.getPrivacy());
+                bundle.putBoolean("is_following", userModel.getIsFollowing());
             }
         }catch (Exception e){
-            Log.e("ModelHelper:Build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return bundle;
     }
@@ -261,11 +383,88 @@ public class ModelHelper {
                 bundle.putString("cast_type", actorModel.getType());
                 bundle.putFloat("rating", actorModel.getAverageRating());
                 bundle.putInt("movies", actorModel.getTotalMovies());
+                bundle.putString("id", actorModel.getId());
             }
         }catch (Exception e){
-            Log.e("ModelHelper:build", e.getMessage());
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
         return bundle;
+    }
+    /***
+     * Builds bundle required for corresponding fragment
+     * @param homeModel- HomeModel object
+     * @param requestPath- Fragment path to which the bundle is to be attached
+     * @return bundle
+     */
+    public Bundle buildReviewModelBundle(HomeModel homeModel, String requestPath){
+        Bundle bundle = new Bundle();
+        try{
+            if(requestPath.equals("HomeFragment")) {
+                bundle.putString("type", "movie");
+                bundle.putString("user_id", MainActivity.currentUserModel.getUserId());
+                bundle.putString("user_name", MainActivity.currentUserModel.getName());
+                bundle.putString("user_image", MainActivity.currentUserModel.getImage());
+                bundle.putString("movie_id", homeModel.getFavourites().getMovie().getId());
+                bundle.putString("movie_name", homeModel.getFavourites().getMovie().getName());
+                bundle.putString("movie_genre", homeModel.getFavourites().getMovie().getGenre());
+                bundle.putString("movie_dimension", homeModel.getFavourites().getMovie().getDisplayDimension());
+                bundle.putString("movie_language", homeModel.getFavourites().getMovie().getLanguage());
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+        return bundle;
+    }
+    /***
+     * Builds bundle required for corresponding fragment
+     * @param movieModel- HomeModel object
+     * @param requestPath- Fragment path to which the bundle is to be attached
+     * @return bundle
+     */
+    public Bundle buildReviewModelBundle(MovieModel movieModel, String requestPath){
+        Bundle bundle = new Bundle();
+        try{
+            if(requestPath.equals("PostStatusFragment")) {
+                bundle.putString("type", "movie");
+                bundle.putString("user_id", MainActivity.currentUserModel.getUserId());
+                bundle.putString("user_name", MainActivity.currentUserModel.getName());
+                bundle.putString("user_image", MainActivity.currentUserModel.getImage());
+                bundle.putString("movie_id", movieModel.getId());
+                bundle.putString("movie_name", movieModel.getName());
+                bundle.putString("movie_genre", movieModel.getGenre());
+                bundle.putString("movie_dimension", movieModel.getDisplayDimension());
+                bundle.putString("movie_language", movieModel.getLanguage());
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+        return bundle;
+    }
+
+    /***
+     *
+     * @param movieId - Id of the Movie
+     * @param reviewId- Id of the Review
+     * @param type- Type identifier
+     */
+    public void addToUpdatesModel(String movieId, String reviewId, String type){
+        try {
+            UpdatesModel updatesModel = new UpdatesModel();
+            updatesModel.setId("" + System.currentTimeMillis());
+            updatesModel.setUserId(MainActivity.currentUserModel.getUserId());
+            updatesModel.setReviewId(reviewId);
+            updatesModel.setMovieId(movieId);
+            updatesModel.setType(type);
+            if (MainActivity.updatesModels == null)
+                MainActivity.updatesModels = new ArrayList<>();
+            MainActivity.updatesModels.add(updatesModel);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
 }

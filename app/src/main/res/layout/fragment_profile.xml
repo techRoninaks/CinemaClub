@@ -7,461 +7,643 @@
     tools:context=".fragments.ProfileFragment"
     android:layout_marginBottom="?attr/actionBarSize"
     android:id="@+id/parentView">
-    <RelativeLayout
-        android:id="@+id/RelLayout1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
-        android:paddingTop="@dimen/layout_top_margin">
-        <!--Key Information-->
+        android:orientation="vertical"
+        android:id="@+id/containerMaster">
         <RelativeLayout
+            android:id="@+id/RelLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/RelLayouts1">
-            <!--Images-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/containerMovieImage"
-                android:visibility="gone"
-                android:paddingBottom="@dimen/layout_top_margin">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/home_poster_image_size"
-                    android:scaleType="fitXY"
-                    android:id="@+id/imgMoviePoster"/>
-            </LinearLayout>
+            android:background="#fff">
+            <!-- Settings -->
+            <ImageView
+                android:layout_width="@dimen/profile_settings_size"
+                android:layout_height="@dimen/profile_settings_size"
+                android:id="@+id/img_Settings"
+                android:src="@drawable/settings"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="@dimen/standard_gap_large"
+                android:layout_marginEnd="@dimen/standard_gap_large"
+                android:visibility="gone"/>
+            <!--Key Information-->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/containerUserImage"
-                android:layout_below="@+id/containerMovieImage"
-                android:padding="@dimen/layout_top_margin">
-                <FrameLayout
-                    android:layout_width="wrap_content"
+                android:id="@+id/RelLayouts1">
+                <!--Images-->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/circle_background"
-                    android:id="@+id/containerProfileImage"
-                    android:layout_centerHorizontal="true">
-                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/profile_image"
-                        android:layout_width="@dimen/profile_image"
-                        android:layout_height="@dimen/profile_image"
-                        android:layout_margin="@dimen/profile_image_padding"
-                        android:src="@drawable/profile_default"/>
-                </FrameLayout>
+                    android:id="@+id/containerMovieImage"
+                    android:visibility="gone"
+                    android:paddingBottom="@dimen/layout_top_margin">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/home_poster_image_size"
+                        android:scaleType="fitXY"
+                        android:id="@+id/imgMoviePoster"/>
+                </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/containerUserImage"
+                    android:layout_below="@+id/containerMovieImage"
+                    android:paddingTop="@dimen/standard_gap_large"
+                    android:paddingLeft="@dimen/standard_gap_large"
+                    android:paddingRight="@dimen/standard_gap_large"
+                    android:paddingBottom="@dimen/standard_gap_large">
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/circle_background"
+                        android:id="@+id/containerProfileImage"
+                        android:layout_centerHorizontal="true">
+                        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/profile_image"
+                            android:layout_width="@dimen/profile_image"
+                            android:layout_height="@dimen/profile_image"
+                            android:layout_margin="@dimen/profile_image_padding"
+                            android:src="@drawable/profile_default"/>
+                    </FrameLayout>
 
 
-                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="@dimen/profile_image_change_button"
-                    android:layout_height="@dimen/profile_image_change_button"
-                    android:layout_alignEnd="@+id/containerProfileImage"
-                    android:layout_alignTop="@+id/containerProfileImage"
-                    android:src="@drawable/ic_pencil_black"
-                    android:id="@+id/btn_profile_image"
-                    android:background="@drawable/custom_circle"
-                    app:civ_border_color="@color/colorPrimary"
-                    app:civ_border_width="@dimen/profile_image_stroke"
-                    android:layout_marginTop="2dp"
-                    android:padding="3dp"/>
+                    <FrameLayout
+                        android:layout_width="@dimen/profile_image_change_button"
+                        android:layout_height="@dimen/profile_image_change_button"
+                        android:background="@drawable/custom_background2"
+                        android:layout_alignEnd="@+id/containerProfileImage"
+                        android:layout_alignTop="@+id/containerProfileImage"
+                        android:layout_marginTop="2dp"
+                        android:id="@+id/containerImageEdit"
+                        android:visibility="gone">
+                        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_pencil_black"
+                            android:id="@+id/btn_profile_image"
+                            android:background="@drawable/custom_circle"
+                            android:layout_margin="@dimen/standard_touch_space_small"
+                            android:scaleY=".7"
+                            android:scaleX=".7" />
+                    </FrameLayout>
+                </RelativeLayout>
+                <!--Name-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/containerNames"
+                    android:layout_below="@+id/containerUserImage"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/profile_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_bold"
+                        android:text="Alice Wayne"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/text_extra_large"
+                        android:textAlignment="center"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="@dimen/standard_gap_large"
+                        android:paddingEnd="@dimen/standard_gap_large"
+                        android:id="@+id/containerMovieNameInfo"
+                        android:visibility="gone">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="1">
+                            <TextView
+                                android:id="@+id/movie_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/nunito_bold"
+                                android:text="Alice Wayne"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="@dimen/text_extra_large"
+                                android:textAlignment="center"
+                                android:layout_gravity="start"/>
+                        </LinearLayout>
+                        <ImageView
+                            android:layout_width="@dimen/profile_favourites_size"
+                            android:layout_height="@dimen/profile_favourites_size"
+                            android:src="@drawable/ic_heart"
+                            android:layout_gravity="center_vertical"
+                            android:id="@+id/img_Favourites"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <!--Sub Information-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/containerNames"
+                    android:id="@+id/containerWatched"
+                    android:orientation="vertical">
+                    <!-- User Watched -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/containerUserWatchInfo"
+                        android:orientation="horizontal"
+                        android:layout_gravity="center_horizontal">
+                        <TextView
+                            android:id="@+id/profile_watch_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3k"
+                            android:paddingEnd="@dimen/standard_touch_space_small"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/text_small"
+                            android:textStyle="bold"
+                            android:fontFamily="assets/MyriadPro-Semibold.otf"/>
+                        <TextView
+                            android:id="@+id/watched"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Movies Watched"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/text_small" />
+                    </LinearLayout>
+                    <!-- Movie Info -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:id="@+id/containerMovieInfo"
+                        android:visibility="gone"
+                        android:layout_marginTop="@dimen/standard_gap_small">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView_Genre"
+                            android:text="Comedy"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/text_small"
+                            android:textStyle="bold"
+                            android:layout_marginStart="@dimen/standard_gap_large"/>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorSeparationLines"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="@dimen/standard_gap"
+                            android:layout_marginRight="@dimen/standard_gap"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView_Duration"
+                            android:text="130"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/text_small"
+                            android:textStyle="bold" />
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorSeparationLines"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="@dimen/standard_gap"
+                            android:layout_marginRight="@dimen/standard_gap"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView_DisplayDimension"
+                            android:text="2D"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/text_small"
+                            android:textStyle="bold" />
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/colorSeparationLines"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="@dimen/standard_gap"
+                            android:layout_marginRight="@dimen/standard_gap"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/textView_CensorRating"
+                            android:text="U/A"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="@dimen/text_small"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+                <!--Buttons-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/containerFollowButton"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:layout_below="@+id/containerWatched"
+                    android:paddingLeft="@dimen/layout_side_margin"
+                    android:paddingRight="@dimen/layout_side_margin"
+                    android:weightSum="2">
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/list_image"
+                        android:text="@string/follow_button_edit"
+                        android:id="@+id/btn_editProfile"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorTextPrimary"
+                        android:background="@drawable/custom_button_white"
+                        android:textSize="@dimen/list_subtext"
+                        android:layout_marginTop="@dimen/home_description_padding_top"/>
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/list_image"
+                        android:text="@string/follow_button_watchlist_add"
+                        android:id="@+id/btn_watchlist"
+                        android:layout_weight="1"
+                        android:textColor="@color/colorTextPrimary"
+                        android:layout_marginStart="@dimen/standard_touch_space"
+                        android:background="@drawable/custom_button_white"
+                        android:textSize="@dimen/list_subtext"
+                        android:visibility="gone"
+                        android:layout_marginTop="@dimen/home_description_padding_top"/>
+                </LinearLayout>
+                <!--Statistics-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/containerFollowButton"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:weightSum="3"
+                    android:layout_marginTop="@dimen/standard_gap_large"
+                    android:layout_marginBottom="@dimen/standard_gap_large"
+                    android:gravity="center_horizontal"
+                    android:id="@+id/containerStat">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:id="@+id/containerFollowers">
+                        <TextView
+                            android:id="@+id/profile_followers_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="899"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/text_followers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/followers"
+                            android:textColor="@color/colorTextSecondary" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorSeparationLines"
+                        android:id="@+id/viewStatSeparator1"
+                        android:layout_marginTop="@dimen/standard_touch_space"
+                        android:layout_marginBottom="@dimen/standard_touch_space"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:id="@+id/containerFollowing">
+                        <TextView
+                            android:id="@+id/profile_following_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="346"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/text_following"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/following"
+                            android:textColor="@color/colorTextSecondary" />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorSeparationLines"
+                        android:id="@+id/viewStatSeparator2"
+                        android:layout_marginTop="@dimen/standard_touch_space"
+                        android:layout_marginBottom="@dimen/standard_touch_space"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:layout_below="@+id/linear1"
+                        android:id="@+id/containerReviews">
+                        <TextView
+                            android:id="@+id/profile_review_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="45"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/text_review"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/reviews"
+                            android:textColor="@color/colorTextSecondary" />
+                    </LinearLayout>
+                </LinearLayout>
+                <!--Movie Statistics-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/containerMovieButtons"
+                    android:orientation="vertical"
+                    android:layout_below="@+id/containerFollowButton"
+                    android:visibility="gone"
+                    android:paddingStart="@dimen/standard_gap_large">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/standard_gap_extra_large"
+                        android:paddingBottom="@dimen/standard_gap_large">
+                        <ImageView
+                            android:id="@+id/img_Watched"
+                            android:layout_width="@dimen/home_action_image_size"
+                            android:layout_height="@dimen/home_action_image_size"
+                            android:layout_marginEnd="@dimen/standard_gap"
+                            android:src="@drawable/ic_eye" />
+                        <ImageView
+                            android:id="@+id/img_Review"
+                            android:layout_width="@dimen/home_action_image_size"
+                            android:layout_height="@dimen/home_action_image_size"
+                            android:layout_marginLeft="@dimen/standard_gap"
+                            android:layout_marginRight="@dimen/standard_gap"
+                            android:src="@drawable/ic_comment" />
+
+                        <ImageView
+                            android:id="@+id/img_Rating"
+                            android:layout_width="@dimen/home_action_image_size"
+                            android:layout_height="@dimen/home_action_image_size"
+                            android:layout_marginLeft="@dimen/standard_gap"
+                            android:layout_marginRight="@dimen/standard_gap"
+                            android:src="@drawable/ic_star" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/containerDetails"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:id="@+id/containerWatchedStat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingBottom="@dimen/standard_gap_large">
+                            <TextView
+                                android:id="@+id/textView_TotalWatched"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="103k"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="@dimen/list_subtext"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="Watched"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="@dimen/list_subtext" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/standard_gap"
+                            android:layout_marginRight="@dimen/standard_gap"
+                            android:layout_marginBottom="@dimen/standard_gap"
+                            android:background="@color/colorTextHint" />
+                        <LinearLayout
+                            android:id="@+id/containerReviewsStats"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingBottom="@dimen/standard_gap_large">
+                            <TextView
+                                android:id="@+id/textView_TotalReviewed"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="60k"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="@dimen/list_subtext"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="Reviews"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="@dimen/list_subtext" />
+                        </LinearLayout>
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="@dimen/standard_gap"
+                            android:layout_marginRight="@dimen/standard_gap"
+                            android:layout_marginBottom="@dimen/standard_gap"
+                            android:background="@color/colorTextHint" />
+                        <LinearLayout
+                            android:id="@+id/containerRatingStat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingBottom="@dimen/standard_gap_large">
+                            <TextView
+                                android:id="@+id/textView_Ratings"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="14k"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="@dimen/list_subtext"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/textView_TotalRatings"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:text="(14000)"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="@dimen/list_subtext" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
             </RelativeLayout>
-            <!--Name-->
-            <TextView
-                android:id="@+id/profile_name"
+            <!--Recyler View-->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_bold"
-                android:text="Alice Wayne"
-                android:layout_below="@+id/containerUserImage"
-                android:textColor="@color/colorTextPrimary"
-                android:textSize="20sp"
-                android:textAlignment="center"/>
-            <!--Sub Information-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/profile_name"
-                android:id="@+id/containerWatched"
-                android:orientation="vertical">
-                <LinearLayout
+                android:layout_below="@+id/RelLayouts1"
+                android:id="@+id/RelLayouts2"
+                android:background="@color/colorTextDisabled"
+                android:paddingTop="@dimen/standard_gap_large"
+                android:paddingLeft="@dimen/standard_gap_large"
+                android:paddingBottom="@dimen/standard_gap_large">
+                <TextView
+                    android:id="@+id/text_watchlist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/containerUserWatchInfo"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_horizontal">
-                    <TextView
-                        android:id="@+id/profile_watch_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="2dp"
-                        android:text="3k"
-                        android:textColor="@color/colorTextSecondary"
-                        android:textSize="@dimen/list_othertext"
-                        android:textStyle="bold"
-                        android:fontFamily="assets/MyriadPro-Semibold.otf"/>
-                    <TextView
-                        android:id="@+id/watched"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Movies Watched"
-                        android:textColor="@color/colorTextSecondary"
-                        android:textSize="@dimen/list_othertext" />
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:text="@string/watchlist"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="@dimen/standard_touch_space_small"
+                    android:layout_marginTop="@dimen/standard_touch_space"
+                    android:layout_marginBottom="@dimen/standard_gap_large"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/containerMovieInfo"
-                    android:visibility="gone">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView_Genre"
-                        android:text="Comedy"
-                        android:textColor="@color/colorTextSecondary"
-                        android:padding="@dimen/standard_touch_space"
-                        android:textSize="@dimen/list_othertext"
-                        android:textStyle="bold"
-                        android:layout_marginRight="@dimen/list_interspace"/>
-                    <View
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorTextDisabled"
-                        android:layout_gravity="center_horizontal"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView_Duration"
-                        android:text="130"
-                        android:textColor="@color/colorTextSecondary"
-                        android:padding="@dimen/standard_touch_space"
-                        android:textSize="@dimen/list_othertext"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="@dimen/list_interspace"
-                        android:layout_marginRight="@dimen/list_interspace"/>
-                    <View
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorTextDisabled"
-                        android:layout_gravity="center_horizontal"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView_DisplayDimension"
-                        android:text="2D"
-                        android:textColor="@color/colorTextSecondary"
-                        android:padding="@dimen/standard_touch_space"
-                        android:textSize="@dimen/list_othertext"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="@dimen/list_interspace"
-                        android:layout_marginRight="@dimen/list_interspace"/>
-                    <View
-                        android:layout_width="2dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/colorTextDisabled"
-                        android:layout_gravity="center_horizontal"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/textView_CensorRating"
-                        android:text="U/A"
-                        android:textColor="@color/colorTextSecondary"
-                        android:padding="@dimen/standard_touch_space"
-                        android:textSize="@dimen/list_othertext"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="@dimen/list_interspace"/>
-                </LinearLayout>
-             </LinearLayout>
-            <!--Buttons-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/containerFollowButton"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal"
-                android:layout_below="@+id/containerWatched"
-                android:paddingLeft="@dimen/layout_side_margin"
-                android:paddingRight="@dimen/layout_side_margin"
-                android:layout_marginTop="@dimen/home_description_padding_top"
-                android:weightSum="2">
-                <Button
-                    android:layout_width="0dp"
+                    android:layout_below="@+id/text_watchlist"
+                    android:orientation="horizontal">
+                </android.support.v7.widget.RecyclerView>
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/follow_button_edit"
-                    android:id="@+id/btn_editProfile"
-                    android:layout_weight="1"
-                    android:textColor="@color/colorTextPrimary"
-                    android:background="@drawable/custom_button_yellow"
-                    android:textSize="@dimen/list_subtext"/>
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/follow_button_watchlist_add"
-                    android:id="@+id/btn_watchlist"
-                    android:layout_weight="1"
-                    android:textColor="@color/colorTextPrimary"
-                    android:layout_marginStart="@dimen/standard_touch_space"
-                    android:background="@drawable/custom_button_yellow"
-                    android:textSize="@dimen/list_subtext"
+                    android:layout_below="@+id/recyclerView"
+                    android:text="@string/placeholder_show_nothing"
+                    android:id="@+id/textView_WatchlistPlaceholder"
+                    android:textAlignment="center"
                     android:visibility="gone"/>
-            </LinearLayout>
-            <!--Statistics-->
+                <Button
+                    android:id="@+id/btn_click"
+                    android:layout_width="@dimen/grid_icon_size"
+                    android:layout_height="@dimen/grid_icon_size"
+                    android:layout_alignEnd="@+id/text_watchlist"
+                    android:layout_alignParentEnd="true"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/ic_grid"/>
+
+            </RelativeLayout>
+            <!--Tabs-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/containerFollowButton"
-                android:orientation="horizontal"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="5dp"
-                android:weightSum="3"
-                android:layout_marginTop="@dimen/standard_gap"
-                android:gravity="center_horizontal">
-
+                android:id="@+id/containerOtherInfo"
+                android:orientation="vertical"
+                android:layout_below="@+id/RelLayouts2"
+                android:padding="@dimen/standard_gap">
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:id="@+id/containerFollowers">
-
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
                     <TextView
-                        android:id="@+id/profile_followers_count"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="899"
+                        android:text="Text One"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
                         android:textColor="@color/colorTextPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
+                        android:textSize="@dimen/list_titletext"
+                        android:textAllCaps="true"/>
                     <TextView
-                        android:id="@+id/text_followers"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/followers"
-                        android:textColor="@color/colorTextSecondary" />
+                        android:text="Text Two"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/list_titletext"
+                        android:textAllCaps="true"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Text Three"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/list_titletext"
+                        android:textAllCaps="true"/>
                 </LinearLayout>
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorTextDisabled"
-                    android:id="@+id/viewStatSeparator1"/>
+            </LinearLayout>
+            <!-- Movie Synopsis-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/containerMovieSynopsis"
+                android:orientation="vertical"
+                android:layout_below="@+id/RelLayouts2"
+                android:paddingLeft="@dimen/standard_gap_large"
+                android:paddingTop="@dimen/standard_gap_large"
+                android:paddingEnd="@dimen/standard_gap_large"
+                android:paddingBottom="@dimen/standard_gap_large"
+                android:visibility="gone">
+                <!-- Release Date -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:id="@+id/containerFollowing">
-
-
+                    android:id="@+id/containerMovieRelease"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/standard_gap">
                     <TextView
-                        android:id="@+id/profile_following_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="346"
+                        android:textSize="@dimen/text_medium"
                         android:textColor="@color/colorTextPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
+                        android:id="@+id/textView_Release_Title"
+                        android:text="Release Date"/>
                     <TextView
-                        android:id="@+id/text_following"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/following"
-                        android:textColor="@color/colorTextSecondary" />
+                        android:paddingLeft="@dimen/standard_gap_small"
+                        android:textSize="@dimen/text_medium"
+                        android:textColor="@color/colorTextPrimary"
+                        android:id="@+id/textView_Release"/>
                 </LinearLayout>
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/colorTextDisabled"
-                    android:id="@+id/viewStatSeparator2"/>
+                <!-- Summary -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:layout_below="@+id/linear1"
-                    android:id="@+id/containerReviews">
-
+                    android:id="@+id/containerMovieSummary"
+                    android:orientation="vertical">
                     <TextView
-                        android:id="@+id/profile_review_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="45"
+                        android:textSize="@dimen/text_medium"
                         android:textColor="@color/colorTextPrimary"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
+                        android:id="@+id/textView_Summary_Title"
+                        android:text="Summary"
+                        android:paddingBottom="@dimen/standard_gap"/>
                     <TextView
-                        android:id="@+id/text_review"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:text="@string/reviews"
-                        android:textColor="@color/colorTextSecondary" />
+                        android:textSize="@dimen/text_small"
+                        android:textColor="@color/colorTextPrimary"
+                        android:id="@+id/textView_Summary_Text"
+                        android:lineSpacingExtra="@dimen/standard_touch_space_small"/>
                 </LinearLayout>
-
             </LinearLayout>
         </RelativeLayout>
-        <!--Recyler View-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/RelLayouts1"
-            android:id="@+id/RelLayouts2"
-            android:background="@color/colorTextDisabled"
-            android:padding="@dimen/layout_side_margin">
-
-            <TextView
-                android:id="@+id/text_watchlist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="@string/watchlist"
-                android:textColor="@android:color/black"
-                android:textSize="15sp"
-                android:textStyle="bold"/>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_watchlist"
-                android:orientation="horizontal">
-            </android.support.v7.widget.RecyclerView>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/recyclerView"
-                android:text="@string/placeholder_show_nothing"
-                android:id="@+id/textView_WatchlistPlaceholder"
-                android:textAlignment="center"
-                android:visibility="gone"/>
-            <Button
-                android:id="@+id/btn_click"
-                android:layout_width="@dimen/grid_icon_size"
-                android:layout_height="@dimen/grid_icon_size"
-                android:layout_alignEnd="@+id/text_watchlist"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="5dp"
-                android:background="@drawable/ic_grid"/>
-
-        </RelativeLayout>
-        <!--Tabs-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/containerOtherInfo"
-            android:orientation="vertical"
-            android:layout_below="@+id/RelLayouts2"
-            android:padding="@dimen/standard_gap">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Text One"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="@dimen/list_titletext"
-                    android:textAllCaps="true"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Text Two"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="@dimen/list_titletext"
-                    android:textAllCaps="true"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Text Three"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="@dimen/list_titletext"
-                    android:textAllCaps="true"/>
-            </LinearLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@+id/containerOtherInfo"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/containerSettings"
-                android:weightSum="5"
-                android:padding="@dimen/list_padding">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:padding="@dimen/list_padding"
-                    android:id="@+id/imgSettings"
-                    android:src="@drawable/settings"
-                    android:contentDescription="@string/settings"/>
-                <TextView
-                    android:id="@+id/textViewSettings"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_bg"
-                    android:text="@string/settings"
-                    android:layout_gravity="start"
-                    android:padding="@dimen/list_padding"
-                    android:textSize="@dimen/list_titletext"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorTextDisabled"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/containerLogout"
-                android:weightSum="5"
-                android:padding="@dimen/list_padding">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:padding="@dimen/list_padding"
-                    android:id="@+id/imgLogout"
-                    android:src="@drawable/power"
-                    android:contentDescription="@string/logout"/>
-                <TextView
-                    android:id="@+id/textViewLogout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_bg"
-                    android:text="@string/logout"
-                    android:layout_gravity="start"
-                    android:padding="@dimen/list_padding"
-                    android:textSize="@dimen/list_titletext"
-                    android:layout_weight="1"/>
-            </LinearLayout>
-        </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

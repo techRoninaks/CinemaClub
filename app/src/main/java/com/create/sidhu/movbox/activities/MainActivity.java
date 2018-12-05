@@ -1,19 +1,20 @@
 package com.create.sidhu.movbox.activities;
 
-import android.app.ActionBar;
 import android.app.Fragment;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
 import android.app.FragmentTransaction;
 import android.support.design.widget.BottomSheetDialogFragment;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,7 +31,6 @@ import android.support.v7.widget.SearchView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.adapters.FavouritesAdapter;
@@ -41,11 +41,15 @@ import com.create.sidhu.movbox.fragments.MoviesFragment;
 import com.create.sidhu.movbox.fragments.PostStatusFragment;
 import com.create.sidhu.movbox.fragments.ProfileFragment;
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.fragments.RatingsDialog;
+import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
+import com.create.sidhu.movbox.services.UserFeedJobService;
 import com.create.sidhu.movbox.models.FavouritesModel;
 import com.create.sidhu.movbox.models.MovieModel;
+import com.create.sidhu.movbox.models.UpdatesModel;
 import com.create.sidhu.movbox.models.UserModel;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -54,23 +58,23 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements SqlDelegate{
 
    //public static MainActivity mainActivity;
+    private  static final int JOB_ID = 1000;
+    private static final int JOB_ID_INSTANT = 1100;
     public String username;
     private ConstraintLayout masterParent;
     private FrameLayout masterFrame;
     private LinearLayout llSearch, llSearchPlaceholder, llSearchResults, llSearchMovie, llSearchUser;
     public static UserModel currentUserModel;
+    public static ArrayList<UpdatesModel> updatesModels;
     private MenuItem PreviousMenuItem;
     private boolean LoginStatus;
     private android.support.v7.widget.Toolbar toolbar;
@@ -78,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
     private TextView textTabMovie, textTabUser;
     private MenuItem searchItem;
     private BottomNavigationViewEx navigation;
+    private boolean isFirst;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -107,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                     return true;
                     case R.id.navigation_post_status: //post status fragment
                     {
-                        item.setIcon(R.drawable.ic_cross_filled);
+                        //item.setIcon(R.drawable.ic_cross_filled);
                         PostStatusFragment bottomSheet = new PostStatusFragment();
                         Bundle bundle = new Bundle();
                         bundle.putString("type", getString(R.string.bottom_dialog_post_status));
@@ -139,84 +144,97 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setTitle(StringHelper.toTitleCase(getString(R.string.app_name)));
-        StringHelper.changeToolbarFont(toolbar, MainActivity.this);
-        SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
-        username = sharedPreferences.getString("username","");
-        LoginStatus = sharedPreferences.getBoolean("login", false);
-        if(!username.isEmpty() && LoginStatus) {
-            if(currentUserModel == null) {
-                getUserDetails();
-            }
-            masterParent = (ConstraintLayout) findViewById(R.id.containerMainParent);
-            masterFrame = (FrameLayout) findViewById(R.id.content);
-            llSearch = (LinearLayout) findViewById(R.id.containerSearchMaster);
-            llSearchPlaceholder = (LinearLayout) findViewById(R.id.containerSearchPlaceholder);
-            llSearchResults = (LinearLayout) findViewById(R.id.containerSearchResults);
-            llSearchMovie = (LinearLayout) findViewById(R.id.containerSearchMovie);
-            llSearchUser = (LinearLayout) findViewById(R.id.containerSearchUser);
-            textTabMovie = findViewById(R.id.textView_SearchMovie);
-            textTabUser = findViewById(R.id.textView_SearchUser);
-            View.OnClickListener onSearchTabClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    switch (view.getId()){
-                        case R.id.textView_SearchUser:
-                            textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
-                            textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
-                            llSearchUser.setVisibility(View.VISIBLE);
-                            llSearchMovie.setVisibility(View.GONE);
-                            break;
-                        case R.id.textView_SearchMovie:
-                            textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
-                            textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
-                            llSearchUser.setVisibility(View.GONE);
-                            llSearchMovie.setVisibility(View.VISIBLE);
-                            break;
-                    }
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main);
+            toolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            StringHelper.changeToolbarFont(toolbar, MainActivity.this);
+            isFirst = true;
+            SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
+            username = sharedPreferences.getString("username", "");
+            LoginStatus = sharedPreferences.getBoolean("login", false);
+            if (!username.isEmpty() && LoginStatus) {
+                if (currentUserModel == null) {
+                    getUserDetails();
+                    updatesModels = new ArrayList<>();
+                } else {
+                    scheduleJob();
                 }
-            };
-            textTabUser.setOnClickListener(onSearchTabClickListener);
-            textTabMovie.setOnClickListener(onSearchTabClickListener);
-            Bundle bundle = getIntent().getBundleExtra("bundle");
-            try {
-                navigation = findViewById(R.id.navigation);
-                navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-                masterFrame.setOnTouchListener(new OnSwipeTouchListener(this));
+                masterParent = (ConstraintLayout) findViewById(R.id.containerMainParent);
+                masterFrame = (FrameLayout) findViewById(R.id.content);
+                llSearch = (LinearLayout) findViewById(R.id.containerSearchMaster);
+                llSearchPlaceholder = (LinearLayout) findViewById(R.id.containerSearchPlaceholder);
+                llSearchResults = (LinearLayout) findViewById(R.id.containerSearchResults);
+                llSearchMovie = (LinearLayout) findViewById(R.id.containerSearchMovie);
+                llSearchUser = (LinearLayout) findViewById(R.id.containerSearchUser);
+                textTabMovie = findViewById(R.id.textView_SearchMovie);
+                textTabUser = findViewById(R.id.textView_SearchUser);
+                View.OnClickListener onSearchTabClickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        switch (view.getId()) {
+                            case R.id.textView_SearchUser:
+                                textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
+                                textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
+                                llSearchUser.setVisibility(View.VISIBLE);
+                                llSearchMovie.setVisibility(View.GONE);
+                                break;
+                            case R.id.textView_SearchMovie:
+                                textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
+                                textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
+                                llSearchUser.setVisibility(View.GONE);
+                                llSearchMovie.setVisibility(View.VISIBLE);
+                                break;
+                        }
+                    }
+                };
+                textTabUser.setOnClickListener(onSearchTabClickListener);
+                textTabMovie.setOnClickListener(onSearchTabClickListener);
+                Bundle bundle = getIntent().getBundleExtra("bundle");
+                try {
+                    navigation = findViewById(R.id.navigation);
+                    navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+                    masterFrame.setOnTouchListener(new OnSwipeTouchListener(this));
 
-                // Navigation Bar Customization
-                navigation.enableAnimation(false);
-                navigation.enableShiftingMode(false);
-                navigation.enableItemShiftingMode(false);
-                navigation.setTextVisibility(false);
-                navigation.setItemIconTintList(null);
+                    // Navigation Bar Customization
+                    navigation.enableAnimation(false);
+                    navigation.enableShiftingMode(false);
+                    navigation.enableItemShiftingMode(false);
+                    navigation.setTextVisibility(false);
+                    navigation.setItemIconTintList(null);
 
-                // Load Home fragment on start
-                if ((bundle == null || bundle.isEmpty()) && currentUserModel != null) {
+                    // Load Home fragment on start
+                    if ((bundle == null || bundle.isEmpty()) && currentUserModel != null) {
 //                    navigation.setCurrentItem(R.id.navigation_home);
-                    navigation.setSelectedItemId(R.id.navigation_home);
+                        navigation.setSelectedItemId(R.id.navigation_home);
 //                    HomeFragment fragment1 = new HomeFragment();
 //                    initFragment(fragment1);
-                } else {
-                    String returnPath = bundle.getString("return_path");
-                    switch (returnPath) {
-                        case "ProfileFragment":
-                            ProfileFragment fragment = new ProfileFragment();
-                            initFragment(fragment, bundle);
-                            break;
+                    } else {
+                        String returnPath = bundle.getString("return_path");
+                        switch (returnPath) {
+                            case "ProfileFragment": {
+                                ProfileFragment fragment = new ProfileFragment();
+                                initFragment(fragment, bundle);
+                                break;
+                            }
+                            case "FavouritesFragment": {
+                                navigation.setSelectedItemId(R.id.navigation_favourites);
+                                break;
+                            }
+                        }
                     }
+                } catch (Exception e) {
+                    Log.e("Main:onCreate", e.getMessage());
                 }
-            } catch (Exception e) {
-                Log.e("Main:onCreate", e.getMessage());
+            } else {
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
             }
-        }
-        else{
-            startActivity(new Intent(MainActivity.this,LoginActivity.class));
-            finish();
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
 
     }
@@ -254,6 +272,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                     ArrayList<NameValuePair> params = new ArrayList<>();
                     params.add(new BasicNameValuePair("u_id", currentUserModel.getUserId()));
                     params.add(new BasicNameValuePair("srch_key", s));
+                    params.add(new BasicNameValuePair("mask", ""));
                     sqlHelper.setParams(params);
                     sqlHelper.executeUrl(true);
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -264,17 +283,20 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
 
             @Override
             public boolean onQueryTextChange(String s) {
-//                if(!s.isEmpty()){
-//                    SqlHelper sqlHelper = new SqlHelper(MainActivity.this, MainActivity.this);
-//                    sqlHelper.setExecutePath("search.php");
-//                    sqlHelper.setMethod("GET");
-//                    sqlHelper.setActionString("search");
-//                    ArrayList<NameValuePair> params = new ArrayList<>();
-//                    params.add(new BasicNameValuePair("u_id", currentUserModel.getUserId()));
-//                    params.add(new BasicNameValuePair("srch_key", s));
-//                    sqlHelper.setParams(params);
-//                    sqlHelper.executeUrl(true);
-//                }
+                return true;
+            }
+        });
+        MenuItem shareItem = menu.findItem(R.id.app_bar_share);
+        shareItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                String shareBody = "Get diving into the world of Cinema.\n\nInstall Cinema Club now.\n\n" + MainActivity.this.getString(R.string.app_store_uri);
+                String shareSub = "Cinema Club Invitation";
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+                startActivityForResult(Intent.createChooser(shareIntent, "Share using"), 0);
                 return true;
             }
         });
@@ -325,57 +347,63 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             for(int i = 1 ; i <= count ; i++){
                 JSONArray jsonArray = jsonObject.getJSONArray("" + i);
                 int length = jsonArray.length();
-                String type = jsonArray.getJSONObject(0).getString("type");
-                if(type.equalsIgnoreCase("users")) {
-                    ArrayList<FavouritesModel> favouritesModels = new ArrayList<>();
-                    for (int j = 1; j < length; j++) {
-                        JSONObject tempObject = jsonArray.getJSONObject(j);
-                        FavouritesModel favouritesModel = modelHelper.buildFavouritesModel(tempObject, "user");
-                        favouritesModels.add(favouritesModel);
-                    }
-                    RecyclerView recyclerView = findViewById(R.id.rv_SearchUser);
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
-                    FavouritesAdapter adapter = new FavouritesAdapter(MainActivity.this, favouritesModels, recyclerView);
-                    recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.setAdapter(adapter);
-                    textTabUser.setVisibility(View.VISIBLE);
-                    if(!isSet){
-                        llSearchUser.setVisibility(View.VISIBLE);
-                        llSearchMovie.setVisibility(View.GONE);
-                        textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
-                        textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
-                    }
+                if(length > 0) {
+                    String type = jsonArray.getJSONObject(0).getString("type");
+                    if (type.equalsIgnoreCase("users")) {
+                        ArrayList<FavouritesModel> favouritesModels = new ArrayList<>();
+                        for (int j = 1; j < length; j++) {
+                            JSONObject tempObject = jsonArray.getJSONObject(j);
+                            FavouritesModel favouritesModel = modelHelper.buildFavouritesModel(tempObject, "user");
+                            favouritesModels.add(favouritesModel);
+                        }
+                        RecyclerView recyclerView = findViewById(R.id.rv_SearchUser);
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
+                        FavouritesAdapter adapter = new FavouritesAdapter(MainActivity.this, favouritesModels, recyclerView);
+                        recyclerView.setLayoutManager(layoutManager);
+                        recyclerView.setAdapter(adapter);
+                        textTabUser.setVisibility(View.VISIBLE);
+                        if (!isSet) {
+                            llSearchUser.setVisibility(View.VISIBLE);
+                            llSearchMovie.setVisibility(View.GONE);
+                            textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
+                            textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
+                        }
 
-                }else if(type.equalsIgnoreCase("movies")){
-                    ArrayList<MovieModel> movieModels = new ArrayList<>();
-                    for(int j = 1; j < length; j++){
-                        JSONObject tempObject = jsonArray.getJSONObject(j);
-                        MovieModel movieModel = modelHelper.buildMovieModel(tempObject);
-                        movieModels.add(movieModel);
-                    }
-                    RecyclerView recyclerView = findViewById(R.id.rv_SearchMovie);
-                    GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this, 3);
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainActivity.this, movieModels,recyclerView, "movie");
-                    recyclerView.setLayoutManager(layoutManager);
-                    recyclerView.setAdapter(adapter);
-                    textTabMovie.setVisibility(View.VISIBLE);
-                    if(!isSet){
-                        llSearchUser.setVisibility(View.GONE);
-                        llSearchMovie.setVisibility(View.VISIBLE);
-                        textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
-                        textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
+                    } else if (type.equalsIgnoreCase("movies")) {
+                        ArrayList<MovieModel> movieModels = new ArrayList<>();
+                        for (int j = 1; j < length; j++) {
+                            JSONObject tempObject = jsonArray.getJSONObject(j);
+                            MovieModel movieModel = modelHelper.buildMovieModel(tempObject);
+                            movieModels.add(movieModel);
+                        }
+                        RecyclerView recyclerView = findViewById(R.id.rv_SearchMovie);
+                        GridLayoutManager layoutManager = new GridLayoutManager(MainActivity.this, 3);
+                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainActivity.this, movieModels, recyclerView, "movie");
+                        recyclerView.setLayoutManager(layoutManager);
+                        recyclerView.setAdapter(adapter);
+                        textTabMovie.setVisibility(View.VISIBLE);
+                        if (!isSet) {
+                            llSearchUser.setVisibility(View.GONE);
+                            llSearchMovie.setVisibility(View.VISIBLE);
+                            textTabMovie.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/MyriadPro-Semibold.otf"));
+                            textTabUser.setTypeface(Typeface.createFromAsset(getAssets(), "fonts/myriadpro.otf"));
+                        }
                     }
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
     public void initFragment(Fragment fragment){
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
-        fragmentTransaction.addToBackStack(null);
+        if(!isFirst)
+            fragmentTransaction.addToBackStack(null);
+        else
+            isFirst = false;
         fragmentTransaction.commit();
         searchItem.collapseActionView();
     }
@@ -391,6 +419,10 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         fragment.setArguments(args);
         fragment.show(getSupportFragmentManager(), "BottomSheet");
         searchItem.collapseActionView();
+    }
+    public void initFragment(RatingsDialog ratingsDialog, Bundle args){
+        ratingsDialog.setArguments(args);
+        ratingsDialog.show(getFragmentManager(), "RatingsFragment");
     }
 
     public static int getResId(String resName, Class<?> c) {
@@ -412,7 +444,9 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 String response = jsonObject.getString("response");
                 if (response.equals(getString(R.string.response_success))) {
                     currentUserModel = new ModelHelper(MainActivity.this).buildUserModel(jsonObject);
+                    currentUserModel.setPreferences(jsonObject.getString("u_preference"));
                     navigation.setSelectedItemId(R.id.navigation_home);
+                    scheduleJob();
                 } else if (response.equals(getString(R.string.exception))) {
                     Toast.makeText(MainActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -433,7 +467,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
     @Override
@@ -450,6 +485,93 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         sqlHelper.setMethod(getString(R.string.method_get));
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(true);
+    }
+
+    /***
+     * Starts the job service to fetch user home and favourites feed in the background
+     */
+    public void scheduleJob(){
+        try {
+            PersistableBundle pBundle = new PersistableBundle();
+            pBundle.putString("userid", currentUserModel.getUserId());
+            pBundle.putString("home_feed_mask", "false");
+            pBundle.putString("favourites_feed_mask", "false");
+            pBundle.putString("updates_mask", "false");
+            pBundle.putString("initial_run", "false");
+            ComponentName componentName = new ComponentName(MainActivity.this, UserFeedJobService.class);
+            JobInfo info = new JobInfo.Builder(JOB_ID, componentName)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setPersisted(true)
+                    .setPeriodic(15 * 60 * 1000)
+                    .setExtras(pBundle)
+                    .build();
+            JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+            cancelJob(JOB_ID);
+            int resultCode = scheduler.schedule(info);
+            if (resultCode == JobScheduler.RESULT_FAILURE) {
+                throw new Exception();
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+    }
+
+    public void cancelJob(int id){
+        try {
+            JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+            scheduler.cancel(id);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+    }
+
+    public void scheduleInstantJob(String type){
+        try {
+            PersistableBundle pBundle = new PersistableBundle();
+            pBundle.putString("userid", currentUserModel.getUserId());
+            pBundle.putString("home_feed_mask", type.charAt(0) == '1' ? "false" : "true");
+            pBundle.putString("favourites_feed_mask", type.charAt(1) == '1' ? "false" : "true");
+            pBundle.putString("updates_mask", type.charAt(2) == '1' ? "false" : "true");
+            ComponentName componentName = new ComponentName(MainActivity.this, UserFeedJobService.class);
+            JobInfo info = new JobInfo.Builder(JOB_ID_INSTANT, componentName)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setPersisted(true)
+                    .setExtras(pBundle)
+                    .setMinimumLatency(1)
+                    .setOverrideDeadline(1)
+                    .build();
+            JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+            cancelJob(JOB_ID_INSTANT);
+            int resultCode = scheduler.schedule(info);
+            if (resultCode == JobScheduler.RESULT_FAILURE) {
+                throw new Exception();
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+            Toast.makeText(MainActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        }
+    }
+
+    public void OnClick(int position, Context context, View rootview, ArrayList<?> model, String type){
+        try {
+            switch (type) {
+                case "user": {
+                    ArrayList<FavouritesModel> favouritesModels = (ArrayList<FavouritesModel>) model;
+                    Bundle bundle = new ModelHelper(MainActivity.this).buildUserModelBundle(favouritesModels.get(position).getUser(), "ProfileFragment");
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    initFragment(profileFragment, bundle);
+                    break;
+                }
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
     }
 
     public class OnSwipeTouchListener implements View.OnTouchListener {

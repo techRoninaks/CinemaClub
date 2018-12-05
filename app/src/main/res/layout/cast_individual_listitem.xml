@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="80dp"
     android:layout_height="wrap_content"
-    android:paddingRight="@dimen/home_description_padding_side"
-    android:paddingLeft="@dimen/home_description_padding_side"
-    android:id="@+id/containerIndvCastMaster">
+    android:paddingEnd="@dimen/standard_gap_extra_large"
+    android:id="@+id/containerIndvCastMaster"
+    android:gravity="center_horizontal">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/containerIndvDefinitionImage">
+        android:id="@+id/containerImage">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/containerDefinitionImage">
+            android:id="@+id/containerCastImage">
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/indvDefinition_image"
+                android:id="@+id/img_Cast"
                 android:layout_width="@dimen/list_image"
                 android:layout_height="@dimen/list_image"
                 android:src="@drawable/profile_default"/>
@@ -23,26 +24,30 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/containerDefinitionImage"
-            android:layout_alignTop="@+id/containerDefinitionImage"
-            android:layout_marginStart="32dp">
+            android:layout_below="@+id/containerCastImage"
+            android:layout_alignTop="@+id/containerCastImage"
+            android:layout_marginStart="24dp">
             <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/indvDefinition_image_btn"
+                android:id="@+id/img_CastType"
                 android:layout_width="@dimen/cast_image_identifier_size"
                 android:layout_height="@dimen/cast_image_identifier_size"
                 android:src="@drawable/ic_director"/>
         </LinearLayout>
     </RelativeLayout>
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/standard_touch_space_small">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/textView_indvDefinitionName"
-            android:text="Actor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Actor text too long"
             android:textAlignment="center"
-            android:textSize="@dimen/list_subtext" />
+            android:textSize="@dimen/text_extra_small"
+            android:textColor="@color/colorTextPrimary"
+            android:layout_marginRight="@dimen/standard_touch_space"/>
     </LinearLayout>
 </LinearLayout>

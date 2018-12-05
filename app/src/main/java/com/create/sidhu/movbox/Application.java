@@ -1,5 +1,8 @@
 package com.create.sidhu.movbox;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -15,5 +18,7 @@ public final class Application extends android.app.Application {
                 .setFontAttrId(R.attr.fontPath)
                 .build()
         );
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
     }
 }

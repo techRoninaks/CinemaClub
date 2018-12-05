@@ -9,5 +9,5 @@ import org.json.JSONObject;
  */
 
 public interface SqlDelegate {
-    public void onResponse(SqlHelper sqlHelper);
+    void onResponse(SqlHelper sqlHelper);
 }

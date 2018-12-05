@@ -29,6 +29,8 @@ public class MovieModel {
     private boolean IsWatched;
     private boolean IsAddedToWatchlist;
     private boolean IsRated;
+    private boolean IsReviewed;
+    private String Language;
 
     //Getters
     public String getId() {
@@ -97,6 +99,14 @@ public class MovieModel {
 
     public boolean getIsRated() {
         return IsRated;
+    }
+
+    public String getLanguage() {
+        return Language;
+    }
+
+    public boolean getIsReviewed(){
+        return IsReviewed;
     }
 
     //Setters
@@ -171,5 +181,13 @@ public class MovieModel {
 
     public void setRated(boolean rated) {
         IsRated = rated;
+    }
+
+    public void setLanguage(String language) {
+        Language = language;
+    }
+
+    public void setReviewed(boolean reviewed) {
+        IsReviewed = reviewed;
     }
 }

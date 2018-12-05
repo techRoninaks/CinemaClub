@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.create.sidhu.movbox.activities.SplashScreen"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/containerLogo"
+            android:layout_centerInParent="true">
+            <ImageView
+                android:layout_width="@dimen/splashscreen_logo_size"
+                android:layout_height="@dimen/splashscreen_logo_size"
+                android:scaleType="fitCenter"
+                android:src="@drawable/main_logo_split1"
+                android:contentDescription="@string/logo"
+                android:layout_marginStart="10dp"
+                android:id="@+id/img_LogoOuter"/>
+            <ImageView
+                android:layout_width="@dimen/splashscreen_logo_size"
+                android:layout_height="@dimen/splashscreen_logo_size"
+                android:scaleType="fitCenter"
+                android:src="@drawable/main_logo_split2"
+                android:contentDescription="@string/logo"
+                android:id="@+id/img_LogoInner"
+                android:layout_alignTop="@+id/img_LogoOuter"
+                android:layout_alignBottom="@+id/img_LogoOuter"
+                android:layout_alignStart="@+id/img_LogoOuter"
+                android:layout_alignEnd="@+id/img_LogoOuter"  />
+        </RelativeLayout>
+        <ImageView
+            android:layout_width="@dimen/splashscreen_logo_text_size"
+            android:layout_height="wrap_content"
+            android:src="@drawable/main_logo_text"
+            android:contentDescription="@string/logo_text"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/standard_gap"/>
+    </RelativeLayout>
+</LinearLayout>

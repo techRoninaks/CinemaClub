@@ -1,5 +1,7 @@
 package com.create.sidhu.movbox.models;
 
+import com.create.sidhu.movbox.activities.MainActivity;
+
 /**
  * Holds User information
  */
@@ -14,10 +16,14 @@ public class UserModel {
     private String Gender;
     private String Dob;
     private String Image;
+    private String Privacy;
+    private String LanguagePreference;
+    private String GenrePreference;
     private int TotalReviews;
     private int TotalWatched;
     private int Followers;
     private int Following;
+    private boolean IsFollowing;
 
     //Getters
 
@@ -72,6 +78,22 @@ public class UserModel {
     public String getCity() {
         return City;
     }
+
+    public String getPrivacy() {
+        return Privacy;
+    }
+
+    public boolean getIsFollowing() {
+        return IsFollowing;
+    }
+
+    public String getLanguagePreference() {
+        return LanguagePreference;
+    }
+
+    public String getGenrePreference() {
+        return GenrePreference;
+    }
     //Setters
 
     public void setGender(String gender) {
@@ -124,5 +146,37 @@ public class UserModel {
 
     public void setCity(String city) {
         City = city;
+    }
+
+    public void setPrivacy(int privacy) {
+        Privacy = Integer.toBinaryString(0x4 | privacy).substring(1);
+    }
+
+    public void setIsFollowing(boolean following){
+        IsFollowing = following;
+    }
+
+    public void setPreferences(String preferences){
+        if(preferences.isEmpty() || preferences == null || preferences == "null"){
+            LanguagePreference = "NULL";
+            GenrePreference = "NULL";
+        }else {
+            String language = preferences.split("!~")[0];
+            String genre = preferences.split("!~")[1];
+            int languageLength = Integer.parseInt(language.split("!@")[0]);
+            language = language.split("!@")[1];
+            int genreLength = Integer.parseInt(genre.split("!@")[0]);
+            genre = genre.split("!@")[1];
+            LanguagePreference = Integer.toBinaryString((int) Math.pow(2, languageLength) | Integer.parseInt(language)).substring(1);
+            GenrePreference = Integer.toBinaryString((int) Math.pow(2, genreLength) | Integer.parseInt(genre)).substring(1);
+        }
+    }
+
+    public void setGenrePreference(String genrePreference) {
+        GenrePreference = genrePreference;
+    }
+
+    public void setLanguagePreference(String languagePreference) {
+        LanguagePreference = languagePreference;
     }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.create.sidhu.movbox.activities.NoInternetActivity"
+    android:padding="@dimen/standard_gap_large"
+    android:gravity="center_horizontal|center_vertical"
+    android:orientation="vertical">
+<ImageView
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:src="@drawable/ic_error"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="@dimen/text_large"
+        android:text="@string/no_internet"
+        android:textAlignment="center"
+        android:paddingTop="@dimen/standard_gap_large"
+        android:paddingBottom="@dimen/standard_gap_large"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_large"
+        android:textColor="@color/colorTextPrimary"
+        android:text="@string/retry"
+        android:textAllCaps="false"
+        android:id="@+id/btn_Retry"/>
+</LinearLayout>

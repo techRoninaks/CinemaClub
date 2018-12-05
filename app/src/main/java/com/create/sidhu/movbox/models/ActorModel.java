@@ -24,6 +24,7 @@ public class ActorModel{
     private String Gender;
     private String Image;
     private float Rating;
+    private float TempRating;
     private float AverageRating;
     private String Type;
     private int TotalMovies;
@@ -61,6 +62,10 @@ public class ActorModel{
     public void setTotalMovies(int totalMovies) {
         TotalMovies = totalMovies;
     }
+
+    public void setTempRating(float tempRating) {
+        TempRating = tempRating;
+    }
     //Getters
 
     public String getId() {
@@ -93,5 +98,9 @@ public class ActorModel{
 
     public int getTotalMovies() {
         return TotalMovies;
+    }
+
+    public float getTempRating() {
+        return TempRating;
     }
 }
