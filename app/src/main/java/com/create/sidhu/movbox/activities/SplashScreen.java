@@ -5,6 +5,7 @@ import android.app.job.JobScheduler;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -112,7 +113,7 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
             });
             imgLogoOuter.startAnimation(animationOuter);
             imgLogoInner.startAnimation(animationInner);
-        }catch (Exception e){
+        } catch (Resources.NotFoundException e) {
             EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }

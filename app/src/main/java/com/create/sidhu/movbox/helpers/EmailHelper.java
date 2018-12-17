@@ -17,10 +17,10 @@ public class EmailHelper {
     public static final String ALL = "all";
     private String sender;
     private String recepient = "";
-    private String cc;
+    private String cc = "";
     private String body = "No body message";
     private String subject;
-    private String bcc;
+    private String bcc = "";
     private Context context;
     private String type = "";
 
