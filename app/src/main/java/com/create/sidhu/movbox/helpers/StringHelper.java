@@ -163,7 +163,8 @@ public class StringHelper {
      */
     public static String encryptPassword(String password) throws Exception{
         byte[] salt = getSalt();
-        return encryptPassword(password, salt);
+        String encryptedPassword = encryptPassword(password, salt);
+        return encryptedPassword.concat("!~" + convertSaltToString(salt));
     }
 
     /***
@@ -200,6 +201,18 @@ public class StringHelper {
         byte[] salt = new byte[16];
         sr.nextBytes(salt);
         return salt;
+    }
+
+    private static String convertSaltToString(byte[] salt){
+        int size = salt.length;
+        String converted = "";
+        for(int i = 0; i < size; i++){
+            if(i == 0)
+                converted = converted.concat("" + salt[i]);
+            else
+                converted = converted.concat("!@" + salt[i]);
+        }
+        return converted;
     }
 
     private static String generateStrongPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {

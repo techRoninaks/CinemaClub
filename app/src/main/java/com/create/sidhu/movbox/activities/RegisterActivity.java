@@ -117,25 +117,29 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
             View.OnClickListener onButtonClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switch (view.getId()) {
-                        case R.id.buttonSignUp:
-                            if (validateSignUp()) {
-                                attemptSignUp(getString(R.string.default_signin), editTextName.getText().toString(), editTextUsername.getText().toString(), editTextPassword.getText().toString(), "app");
+                    try {
+                        switch (view.getId()) {
+                            case R.id.buttonSignUp:
+                                if (validateSignUp()) {
+                                    attemptSignUp(getString(R.string.default_signin), editTextName.getText().toString(), editTextUsername.getText().toString(), StringHelper.encryptPassword(editTextPassword.getText().toString()), "app");
+                                }
+                                break;
+                            case R.id.img_FbSignIn: {
+                                attemptSignUp(getString(R.string.fb_signin), "", "", "", "");
+                                break;
                             }
-                            break;
-                        case R.id.img_FbSignIn: {
-                            attemptSignUp(getString(R.string.fb_signin), "", "", "", "");
-                            break;
+                            case R.id.img_GoogleSignIn: {
+                                attemptSignUp(getString(R.string.google_signin), "", "", "", "");
+                                break;
+                            }
+                            case R.id.containerMaster: {
+                                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                                imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+                                break;
+                            }
                         }
-                        case R.id.img_GoogleSignIn: {
-                            attemptSignUp(getString(R.string.google_signin), "", "", "", "");
-                            break;
-                        }
-                        case R.id.containerMaster: {
-                            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-                            break;
-                        }
+                    }catch (Exception e){
+                        Toast.makeText(RegisterActivity.this, RegisterActivity.this.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                     }
                 }
             };
