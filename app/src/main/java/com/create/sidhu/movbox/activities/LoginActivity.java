@@ -311,7 +311,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
 //                editTextUsername.setError(getString(R.string.invalid_cred));
                 editTextPassword.setText("");
                 editTextUsername.setText("");
-                customToast(R.string.incorrect_password_or_username);
+                customToast(R.string.invalid_cred);
                 if(errorCount % ERROR_THRESHOLD == 0) {
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                         @Override
@@ -336,7 +336,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                     errorCount++;
                 }else {
                     errorCount++;
-                    Toast.makeText(LoginActivity.this, getString(R.string.invalid_cred), Toast.LENGTH_LONG).show();
+                    customToast(R.string.invalid_cred);
                 }
             }else if(response.equals(getString(R.string.exception))){
                 Toast.makeText(LoginActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
