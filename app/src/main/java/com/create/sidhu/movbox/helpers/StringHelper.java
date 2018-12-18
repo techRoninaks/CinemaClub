@@ -1,6 +1,7 @@
 package com.create.sidhu.movbox.helpers;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -203,7 +204,7 @@ public class StringHelper {
         return salt;
     }
 
-    private static String convertSaltToString(byte[] salt){
+    public static String convertSaltToString(byte[] salt){
         int size = salt.length;
         String converted = "";
         for(int i = 0; i < size; i++){
@@ -213,6 +214,15 @@ public class StringHelper {
                 converted = converted.concat("!@" + salt[i]);
         }
         return converted;
+    }
+
+    public static byte[] convertSaltToByte(String saltString){
+        byte[] salt = new byte[16];
+        String saltStringArray[] = saltString.split("!@");
+        for(int i = 0; i < 16; i++){
+            salt[i] = Byte.parseByte(saltStringArray[i]);
+        }
+        return salt;
     }
 
     private static String generateStrongPassword(String password, byte[] salt) throws NoSuchAlgorithmException, InvalidKeySpecException {
