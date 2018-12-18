@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
    //public static MainActivity mainActivity;
     private  static final int JOB_ID = 1000;
     private static final int JOB_ID_INSTANT = 1100;
+    public static final int BOTTOM_NAVIGATION_HOME = 0;
+    public static final int BOTTOM_NAVIGATION_FAV = 3;
     public String username;
     private ConstraintLayout masterParent;
     private FrameLayout masterFrame;
@@ -108,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                         initFragment(fragment);
                         removeBadge(xbadge);
                         unseenCounter=0;
-
                     }
                     return true;
                     case R.id.navigation_movies://movies fragment
@@ -242,7 +243,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                             }
                         }
                     }
-
                 init();
                 } catch (Exception e) {
                     Log.e("Main:onCreate", e.getMessage());
@@ -260,11 +260,10 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
 
     private void init() {
         if (unseenCounter > 0)
-            initnotif(0, unseenCounter);
+            initnotif(BOTTOM_NAVIGATION_HOME, unseenCounter);
         if (followCounter > 0)
-            initnotif(3, followCounter);
+            initnotif(BOTTOM_NAVIGATION_FAV, followCounter);
     }
-
 
     public void initnotif( int pos, int notifications) {
         switch (pos){
@@ -278,8 +277,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 break;
 
         }
-
-
     }
 
     @Override
@@ -479,7 +476,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         }
     }
 
-
     public Badge addBadgeAt(int position, int number) {
         // adding  badge
         return new QBadgeView(this)
@@ -502,8 +498,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
     public   void removeBadge(Badge badge) {
         badge.hide(true);
     }
-
-
 
 
     @Override

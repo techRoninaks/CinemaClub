@@ -188,9 +188,9 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 pDialog.show();
                 fetchActors(castString, true);
                 if(MainActivity.unseenCounter>0)
-                    mainActivity.initnotif(0,MainActivity.unseenCounter);
+                    mainActivity.initnotif(MainActivity.BOTTOM_NAVIGATION_HOME,MainActivity.unseenCounter);
                 if(MainActivity.followCounter>0)
-                    mainActivity.initnotif(3,MainActivity.followCounter);
+                    mainActivity.initnotif(MainActivity.BOTTOM_NAVIGATION_FAV,MainActivity.followCounter);
             }
             else{
                 recyclerView.setVisibility(View.GONE);

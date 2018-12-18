@@ -43,7 +43,6 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
     RecyclerView recyclerView;
     LinearLayout llContainerPlaceholder;
     Context context;
-    View rootview;
     String subTypes[] = {"follow", "watching", "review", "rating", "review_vote"};
 
     public FavouritesFragment() {
@@ -54,7 +53,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         context = getActivity();
-        rootview = inflater.inflate(R.layout.fragment_favourites, container, false);
+       View rootview = inflater.inflate(R.layout.fragment_favourites, container, false);
         try {
             Toolbar toolbar = ((MainActivity) context).findViewById(R.id.toolbar);
             toolbar.setTitle(StringHelper.toTitleCase(context.getString(R.string.title_favourites)));
@@ -63,15 +62,14 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             imgTitle.setVisibility(View.GONE);
             recyclerView = (RecyclerView) rootview.findViewById(R.id.recyclerView_Favourites);
             llContainerPlaceholder = rootview.findViewById(R.id.containerPlaceholder);
-            if (favouritesList == null)
-                fetchUpdates();
+            if (favouritesList == null){
+                fetchUpdates();}
             else {
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
                 recyclerView.setLayoutManager(layoutManager);
                 FavouritesAdapter favouritesAdapter = new FavouritesAdapter(context, favouritesList, recyclerView);
                 recyclerView.setAdapter(favouritesAdapter);
             }
-            //
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
