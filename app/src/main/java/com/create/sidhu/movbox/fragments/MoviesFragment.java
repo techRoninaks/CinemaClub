@@ -445,7 +445,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
             Bundle bundle = new ModelHelper(context).buildMovieModelBundle(movieModels.get(position), "ProfileFragment");
             ProfileFragment fragment2 = new ProfileFragment();
             mainActivity.initFragment(fragment2, bundle);
-            Toast.makeText(context, "Inside Movies", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Inside Movies", Toast.LENGTH_SHORT).show();
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();

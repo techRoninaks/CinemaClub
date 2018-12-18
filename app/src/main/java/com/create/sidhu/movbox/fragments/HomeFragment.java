@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
     }
 
     /***
-     * Fetches the user updates from server
+         * Fetches the user updates from server
      */
     private void fetchUpdates(){
         SqlHelper sqlHelper = new SqlHelper(context, HomeFragment.this);
@@ -112,7 +112,11 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
     }
 
     private void initRecyclerView(JSONObject jsonObject){
+        MainActivity mainActivity = (MainActivity) context;
         homeModels = new ArrayList<>();
+        int flag1=0;
+        MainActivity.unseenCounter = 0;
+        MainActivity.followCounter = 0;
         try{
             int length = Integer.parseInt(jsonObject.getJSONObject("0").getString("length"));
             if(length >= 0) {
@@ -131,11 +135,38 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                         castString = castString.concat(homeModel.getFavourites().getMovie().getId() + "!@" + homeModels.size() + "!@" + homeModel.getFavourites().getMovie().getCast());
                         homeModels.add(homeModel);
                     }
+
+                    // Notification counter code HomeFragment
+
+                    if(flag1 ==0){
+                        if(jsonObject.getJSONObject("" + i).getString("type").equals("watchlist_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                            MainActivity.unseenCounter+=1;
+                        }
+                        if(jsonObject.getJSONObject("" + i).getString("type").equals("review_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                            MainActivity.unseenCounter+=1;
+                        }
+                        if(jsonObject.getJSONObject("" + i).getString("type").equals("follow")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                            MainActivity.followCounter+=1;
+                        }
+
+
+                    }
+                    if(flag1 ==1){
+                    if (jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")) {
+                        MainActivity.unseenCounter+=1;
+                    }
+
+                    }
+
                 }
                 pDialog = new TransparentProgressDialog(context);
                 pDialog.setCancelable(false);
                 pDialog.show();
                 fetchActors(castString, true);
+                if(MainActivity.unseenCounter>0)
+                    mainActivity.initnotif(0,MainActivity.unseenCounter);
+                if(MainActivity.followCounter>0)
+                    mainActivity.initnotif(3,MainActivity.followCounter);
             }
             else{
                 recyclerView.setVisibility(View.GONE);

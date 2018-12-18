@@ -43,6 +43,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
     RecyclerView recyclerView;
     LinearLayout llContainerPlaceholder;
     Context context;
+    View rootview;
     String subTypes[] = {"follow", "watching", "review", "rating", "review_vote"};
 
     public FavouritesFragment() {
@@ -53,7 +54,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         context = getActivity();
-        View rootview = inflater.inflate(R.layout.fragment_favourites, container, false);
+        rootview = inflater.inflate(R.layout.fragment_favourites, container, false);
         try {
             Toolbar toolbar = ((MainActivity) context).findViewById(R.id.toolbar);
             toolbar.setTitle(StringHelper.toTitleCase(context.getString(R.string.title_favourites)));
@@ -70,6 +71,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                 FavouritesAdapter favouritesAdapter = new FavouritesAdapter(context, favouritesList, recyclerView);
                 recyclerView.setAdapter(favouritesAdapter);
             }
+            //
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
@@ -97,9 +99,14 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
         try{
             int length = Integer.parseInt(jsonObject.getJSONObject("0").getString("length"));
             ModelHelper modelHelper = new ModelHelper(context);
-            for(int i = 1; i < length ; i++){
+           for(int i = 1; i < length ; i++){
                 FavouritesModel favouritesModel = modelHelper.buildFavouritesModel(jsonObject.getJSONObject("" + i), "favourites");
                 favouritesList.add(favouritesModel);
+            }
+            if(length<1)
+            {
+                recyclerView.setVisibility(View.GONE);
+                llContainerPlaceholder.setVisibility(View.VISIBLE);
             }
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
@@ -174,7 +181,8 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             if(response.equals(context.getString(R.string.response_success))){
                 populateList(jsonObject);
             }else if(response.equals(context.getString(R.string.response_unsuccessful))){
-
+                recyclerView.setVisibility(View.GONE);
+                llContainerPlaceholder.setVisibility(View.VISIBLE);
             }else if(response.equals(context.getString(R.string.unexpected))){
                 Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             }

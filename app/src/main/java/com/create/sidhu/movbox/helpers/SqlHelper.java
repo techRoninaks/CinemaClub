@@ -65,8 +65,8 @@ public class SqlHelper {
         MasterUrl = context.getString(R.string.master_url);
         isService = false;
     }
-    public SqlHelper(Context context, SqlDelegate sqlDelegate, String executePath){
-        this.MasterUrl = context.getString(R.string.master_url);;
+        public SqlHelper(Context context, SqlDelegate sqlDelegate, String executePath){
+        this.MasterUrl = context.getString(R.string.master_url);
         this.context = context;
         this.ExecutePath = executePath;
         this.sqlDelegate = sqlDelegate;

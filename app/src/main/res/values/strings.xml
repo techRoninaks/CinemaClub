@@ -47,7 +47,7 @@
     <string name="required_field">This field is required</string>
     <string name="invalid_email">Please enter a valid email</string>
     <string name="invalid_password">Password should be atleast 6 characters long and have one uppercase character and one numeral</string>
-    <string name="invalid_cred">Please check your username/password.</string>
+    <string name="invalid_cred">Username or Password is incorrect</string>
     <string name="password_mismatch">The passwords do not match</string>
     <string name="unexpected">Something went wrong. Please try again later</string>
     <string name="exception">exception</string>
@@ -63,6 +63,7 @@
     <string name="success_login">Login Successful</string>
     <string name="response_success">successful</string>
     <string name="response_unsuccessful">unsuccessful</string>
+    <string name="has_seen">1</string>
 
     <!-- DB Resource Strings -->
     <string name="db_server"></string>
