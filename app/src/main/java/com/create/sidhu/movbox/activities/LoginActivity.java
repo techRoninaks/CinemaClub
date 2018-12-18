@@ -6,10 +6,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -172,14 +176,6 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
         userName = editTextUsername.getText().toString();
         password = editTextPassword.getText().toString();
 
-        if(!isValidEmail(userName)){
-            editTextUsername.setError(getString(R.string.invalid_email));
-            signIn = false;
-        }
-        if(!isValidPassword(password)){
-            editTextPassword.setError(getString(R.string.invalid_password));
-            signIn = false;
-        }
         if(userName.isEmpty()){
             editTextUsername.setError(getString(R.string.required_field));
             signIn = false;
@@ -188,8 +184,40 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
             editTextPassword.setError(getString(R.string.required_field));
             signIn = false;
         }
+
+        else if(!userName.isEmpty() || !password.isEmpty()){
+            if(!isValidEmail(userName)){
+//                editTextUsername.setError(getString(R.string.invalid_email));
+                editTextPassword.setText("");
+                editTextUsername.setText("");
+                customToast(R.string.invalid_cred);
+                signIn = false;
+            }
+            if(!isValidPassword(password)){
+                //editTextPassword.setError(getString(R.string.incorrect_password_or_username));
+
+                editTextPassword.setText("");
+                editTextUsername.setText("");
+                customToast(R.string.invalid_cred);
+                signIn = false;
+            }
+        }
+
+
+
         return signIn;
     }
+
+    private void customToast(int incorrect_password_or_username) {
+        Toast toast = Toast.makeText(this   , incorrect_password_or_username, Toast.LENGTH_LONG);
+        View view = toast.getView();
+//            view.setBackgroundResource(R.color.colorPrimary);
+        TextView text = (TextView) view.findViewById(android.R.id.message);
+        /*Here you can do anything with above textview like text.setTextColor(Color.parseColor("#000000"));*/
+        text.setTextColor(getResources().getColor(R.color.colorTextError));
+        toast.show();
+    }
+
 
     public static boolean isValidEmail(String email){
         boolean isValid = false;
@@ -279,8 +307,11 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                 startActivity(new Intent(LoginActivity.this,MainActivity.class));
                 finish();
             }else if(response.equals(getString(R.string.response_unsuccessful))){
-                editTextPassword.setError(getString(R.string.invalid_cred));
-                editTextUsername.setError(getString(R.string.invalid_cred));
+//                editTextPassword.setError(getString(R.string.invalid_cred));
+//                editTextUsername.setError(getString(R.string.invalid_cred));
+                editTextPassword.setText("");
+                editTextUsername.setText("");
+                customToast(R.string.invalid_cred);
                 if(errorCount % ERROR_THRESHOLD == 0) {
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                         @Override
@@ -305,7 +336,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                     errorCount++;
                 }else {
                     errorCount++;
-                    Toast.makeText(LoginActivity.this, getString(R.string.invalid_cred), Toast.LENGTH_LONG).show();
+                    customToast(R.string.invalid_cred);
                 }
             }else if(response.equals(getString(R.string.exception))){
                 Toast.makeText(LoginActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();

@@ -396,6 +396,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
     }
 
     private void initializeFavouritesModel(final JSONObject jsonObject){
+        MainActivity.followCounter = 0;
        favouritesModels = new ArrayList<>();
        try{
            int length = Integer.parseInt(jsonObject.getJSONObject("0").getString("length"));
@@ -403,6 +404,26 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
            for(int i = 1; i <= length ; i++){
                FavouritesModel favouritesModel = modelHelper.buildFavouritesModel(jsonObject.getJSONObject("" + i), "favourites");
                favouritesModels.add(favouritesModel);
+               if (jsonObject.getJSONObject("" + i).getString("type").equals("follow")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+               {
+                   MainActivity.followCounter+=1;
+               }
+               if (jsonObject.getJSONObject("" + i).getString("type").equals("watching")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+               {
+                   MainActivity.followCounter+=1;
+               }
+               if (jsonObject.getJSONObject("" + i).getString("type").equals("rating")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+               {
+                   MainActivity.followCounter+=1;
+               }
+               if (jsonObject.getJSONObject("" + i).getString("type").equals("review")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+               {
+                   MainActivity.followCounter+=1;
+               }
+               if (jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+               {
+                   MainActivity.followCounter+=1;
+               }
            }
            FavouritesFragment.favouritesList = favouritesModels;
            favouritesFeedJob = true;
@@ -483,6 +504,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
             @Override
             public void run() {
                 homeModels = new ArrayList<>();
+                MainActivity.unseenCounter= 0;
                 try{
                     int length = Integer.parseInt(jsonObject.getJSONObject("0").getString("length"));
                     if(length >= 0) {
@@ -500,6 +522,36 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                                 }
                                 castString = castString.concat(homeModel.getFavourites().getMovie().getId() + "!@" + homeModels.size() + "!@" + homeModel.getFavourites().getMovie().getCast());
                                 homeModels.add(homeModel);
+                            }
+                            if(jsonObject.getJSONObject("" + i).getString("type").equals("watchlist_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if(jsonObject.getJSONObject("" + i).getString("type").equals("review_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("review_watched")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("watching_now")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("watching")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("rating")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("review")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
                             }
                         }
                         fetchActors(castString, true);

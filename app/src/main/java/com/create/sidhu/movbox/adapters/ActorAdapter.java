@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.create.sidhu.movbox.GlideApp;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.SplashScreen;
 import com.create.sidhu.movbox.fragments.HomeFragment;
@@ -43,8 +44,8 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ViewHolder>{
         this.actorModels = actorModels;
         this.rootview = rootview;
         requestOptions = new RequestOptions();
-        requestOptions.placeholder(R.drawable.ic_placeholder);
-        requestOptions.error(R.drawable.ic_placeholder);
+//        requestOptions.placeholder(R.drawable.ic_placeholder);
+//        requestOptions.error(R.drawable.ic_placeholder);
     }
 
 
@@ -59,7 +60,10 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorAdapter.ViewHolder>{
     public void onBindViewHolder(@NonNull ActorAdapter.ViewHolder holder, final int position)  {
         try {
             Glide.with(context)
-                    .setDefaultRequestOptions(requestOptions)
+                    .setDefaultRequestOptions(requestOptions
+                            .placeholder(R.drawable.ic_placeholder)
+                            .error(R.drawable.ic_placeholder)
+                    )
                     .asBitmap()
                     .load(actorModels.get(position).getImage())
                     .into(holder.imgDefinitionImage);

@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -62,6 +63,8 @@ import org.json.JSONObject;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import q.rorbin.badgeview.Badge;
+import q.rorbin.badgeview.QBadgeView;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements SqlDelegate{
@@ -69,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
    //public static MainActivity mainActivity;
     private  static final int JOB_ID = 1000;
     private static final int JOB_ID_INSTANT = 1100;
+    public static final int BOTTOM_NAVIGATION_HOME = 0;
+    public static final int BOTTOM_NAVIGATION_FAV = 3;
     public String username;
     private ConstraintLayout masterParent;
     private FrameLayout masterFrame;
@@ -83,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
     private MenuItem searchItem;
     private BottomNavigationViewEx navigation;
     private boolean isFirst;
+    private Badge xbadge,mbadge;
+    public static  int unseenCounter = 0, followCounter = 0;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -101,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                         item.setIcon(R.drawable.ic_home_filled);
                         HomeFragment fragment = new HomeFragment();
                         initFragment(fragment);
+                        removeBadge(xbadge);
+                        unseenCounter=0;
                     }
                     return true;
                     case R.id.navigation_movies://movies fragment
@@ -124,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                         item.setIcon(R.drawable.ic_heart_filled);
                         FavouritesFragment fragment = new FavouritesFragment();
                         initFragment(fragment);
+                        removeBadge(mbadge);
+                        followCounter =0;
                     }
                     return true;
                     case R.id.navigation_profile: //profile fragment
@@ -141,6 +152,13 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             return false;
         }
     };
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        init();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                             }
                         }
                     }
+                init();
                 } catch (Exception e) {
                     Log.e("Main:onCreate", e.getMessage());
                 }
@@ -237,6 +256,27 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             emailHelper.sendEmail();
         }
 
+    }
+
+    private void init() {
+        if (unseenCounter > 0)
+            initnotif(BOTTOM_NAVIGATION_HOME, unseenCounter);
+        if (followCounter > 0)
+            initnotif(BOTTOM_NAVIGATION_FAV, followCounter);
+    }
+
+    public void initnotif( int pos, int notifications) {
+        switch (pos){
+            case  0:
+                xbadge = addBadgeAt(pos, notifications);
+                break;
+            case 3:
+                mbadge = addBadgeAt(pos,notifications);
+                break;
+            default:
+                break;
+
+        }
     }
 
     @Override
@@ -436,6 +476,30 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         }
     }
 
+    public Badge addBadgeAt(int position, int number) {
+        // adding  badge
+        return new QBadgeView(this)
+                .setBadgeNumber(number)
+                .setGravityOffset(12, 2, true)
+                .setBadgeBackgroundColor(getResources().getColor(R.color.colorTextPrimary))
+                .setBadgeTextColor(getResources().getColor(R.color.colorPrimary))
+                .bindTarget(navigation.getBottomNavigationItemView(position))
+                .setOnDragStateChangedListener(new Badge.OnDragStateChangedListener() {
+                    @Override
+                    public void onDragStateChanged(int dragState, Badge badge, View targetView) {
+                        if (Badge.OnDragStateChangedListener.STATE_SUCCEED == dragState)
+                            ;
+                    }
+                });
+    }
+
+
+
+    public   void removeBadge(Badge badge) {
+        badge.hide(true);
+    }
+
+
     @Override
     public void onResponse(SqlHelper sqlHelper) {
         try {
@@ -629,11 +693,11 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         }
 
         public void onSwipeRight() {
-            Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
         }
 
         public void onSwipeLeft() {
-            Toast.makeText(MainActivity.this, "right", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(MainActivity.this, "left", Toast.LENGTH_SHORT).show();
         }
 
         public void onSwipeTop() {

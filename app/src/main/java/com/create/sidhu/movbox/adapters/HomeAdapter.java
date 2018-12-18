@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.create.sidhu.movbox.GlideApp;
 import com.create.sidhu.movbox.Interfaces.CallbackDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.FollowReviewActivity;
@@ -166,7 +167,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     holder.textViewDefinitionTitleSubject.setText(context.getString(R.string.home_new_releases));
                     holder.textViewDefinitionTitle.setVisibility(View.GONE);
                     holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
-                    Glide.with(context)
+                    GlideApp.with(fragment.getActivity())
+                            .setDefaultRequestOptions(requestOptions
+                                    .placeholder(R.drawable.film_poster_placeholder)
+                                    .error(R.drawable.film_poster_placeholder)
+
+                            )
+
                             .asBitmap()
                             .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait", "landscape"))
                             .into(holder.imgMasterPoster);
@@ -194,6 +201,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     holder.textViewDefinitionTitle.setVisibility(View.GONE);
                     holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
                     Glide.with(context)
+                            .setDefaultRequestOptions(requestOptions
+                                    .placeholder(R.drawable.film_poster_placeholder)
+                                    .error(R.drawable.film_poster_placeholder)
+
+                            )
                             .asBitmap()
                             .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait", "landscape"))
                             .into(holder.imgMasterPoster);
@@ -229,6 +241,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
                     holder.textViewDefinitionTitle.setVisibility(View.VISIBLE);
                     Glide.with(context)
+                            .setDefaultRequestOptions(requestOptions
+                                    .placeholder(R.drawable.film_poster_placeholder)
+                                    .error(R.drawable.film_poster_placeholder)
+
+                            )
                             .asBitmap()
                             .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait", "landscape"))
                             .into(holder.imgMasterPoster);
@@ -261,6 +278,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     holder.textViewDefinitionSubtitle.setText(homeModels.get(position).getFavourites().getSubtitle());
                     holder.textViewDefinitionTitle.setVisibility(View.VISIBLE);
                     Glide.with(context)
+                            .setDefaultRequestOptions(requestOptions
+                                    .placeholder(R.drawable.film_poster_placeholder)
+                                    .error(R.drawable.film_poster_placeholder)
+
+                            )
                             .asBitmap()
                             .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait", "landscape"))
                             .into(holder.imgMasterPoster);
@@ -293,6 +315,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     holder.textViewDefinitionSubtitle.setText(homeModels.get(position).getFavourites().getSubtitle());
                     holder.textViewDefinitionTitle.setVisibility(View.VISIBLE);
                     Glide.with(context)
+                            .setDefaultRequestOptions(requestOptions
+                                    .placeholder(R.drawable.film_poster_placeholder)
+                                    .error(R.drawable.film_poster_placeholder)
+
+                            )
                             .asBitmap()
                             .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait", "landscape"))
                             .into(holder.imgMasterPoster);
@@ -321,6 +348,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     holder.textViewDefinitionTitle.setVisibility(View.GONE);
                     holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
                     Glide.with(context)
+                            .setDefaultRequestOptions(requestOptions
+                                    .placeholder(R.drawable.film_poster_placeholder)
+                                    .error(R.drawable.film_poster_placeholder)
+
+                            )
                             .asBitmap()
                             .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait", "landscape"))
                             .into(holder.imgMasterPoster);
@@ -348,6 +380,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     holder.textViewDefinitionTitle.setVisibility(View.GONE);
                     holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
                     Glide.with(context)
+                            .setDefaultRequestOptions(requestOptions
+                                    .placeholder(R.drawable.film_poster_placeholder)
+                                    .error(R.drawable.film_poster_placeholder)
+
+                            )
                             .asBitmap()
                             .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait", "landscape"))
                             .into(holder.imgMasterPoster);
@@ -379,6 +416,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     holder.textViewDefinitionSubtitle.setVisibility(View.GONE);
                     holder.textViewDefinitionTitle.setVisibility(View.VISIBLE);
                     Glide.with(context)
+                            .setDefaultRequestOptions(requestOptions
+                                    .placeholder(R.drawable.film_poster_placeholder)
+                                    .error(R.drawable.film_poster_placeholder)
+
+                            )
                             .asBitmap()
                             .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait", "landscape"))
                             .into(holder.imgMasterPoster);

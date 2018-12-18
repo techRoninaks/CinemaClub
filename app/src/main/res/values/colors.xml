@@ -11,7 +11,7 @@
     <color name="colorSeparationLines">#1F000000</color>
     <color name="colorTextDisabled">#08000000</color>
     <color name="colorTextReply">#3cdeff</color>
-
+    <color name="colorTextError">#ff0000</color>
     <color name="colorTextWhitePrimary">#ffffffff</color>
 
     <color name="colorBlackTransparent">#CC000000</color>

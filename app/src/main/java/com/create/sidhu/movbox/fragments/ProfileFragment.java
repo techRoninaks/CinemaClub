@@ -796,7 +796,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
         Bundle bundle = modelHelper.buildMovieModelBundle(movieModels.get(position), "ProfileFragment");
         ProfileFragment fragment2 = new ProfileFragment();
         mainActivity.initFragment(fragment2, bundle);
-        Toast.makeText(context,"Inside Profile",Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context,"Inside Profile",Toast.LENGTH_SHORT).show();
     }
 
     @Override
