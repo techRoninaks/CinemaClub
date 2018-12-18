@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                     switch (view.getId()) {
                         case R.id.buttonSignIn:
                             if (validateSignIn())
-                                attemptLogin(getString(R.string.default_signin), editTextUsername.getText().toString(), editTextPassword.getText().toString());
+                                fetchSalt(editTextUsername.getText().toString());
                             break;
                         case R.id.textView_Register:
                             startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
@@ -249,6 +249,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
             if (type.equals(getString(R.string.default_signin))) {
                 SqlHelper sqlHelper = new SqlHelper(LoginActivity.this, LoginActivity.this);
                 sqlHelper.setExecutePath("login.php");
+                sqlHelper.setActionString("login");
                 ArrayList<NameValuePair> params = new ArrayList<>();
                 params.add(new BasicNameValuePair("username", username));
                 params.add(new BasicNameValuePair("password", password));
@@ -261,6 +262,22 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
             } else if (type.equals(getString(R.string.fb_signin))) {
                 loginButton.performClick();
             }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+    }
+
+    private void fetchSalt(String username){
+        try{
+            SqlHelper sqlHelper = new SqlHelper(LoginActivity.this, LoginActivity.this);
+            sqlHelper.setExecutePath("fetch-extra.php");
+            sqlHelper.setActionString("fetch_extra");
+            ArrayList<NameValuePair> params = new ArrayList<>();
+            params.add(new BasicNameValuePair("username", username));
+            sqlHelper.setParams(params);
+            sqlHelper.setMethod(getString(R.string.method_get));
+            sqlHelper.executeUrl(true);
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
@@ -295,51 +312,69 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
     @Override
     public void onResponse(SqlHelper sqlHelper) {
         try {
-            JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("user_data");
-            String response = jsonObject.getString("response");
-            if(response.equals(getString(R.string.response_success))){
-                UserModel currentUserModel = new ModelHelper(LoginActivity.this).buildUserModel(jsonObject);
-                MainActivity.currentUserModel = currentUserModel;
-                MainActivity.currentUserModel.setPreferences(jsonObject.getString("u_preference"));
-                SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
-                sharedPreferences.edit().putString("username", currentUserModel.getEmail()).commit();
-                sharedPreferences.edit().putBoolean("login", true).commit();
-                startActivity(new Intent(LoginActivity.this,MainActivity.class));
-                finish();
-            }else if(response.equals(getString(R.string.response_unsuccessful))){
+            switch (sqlHelper.getActionString()) {
+                case "login": {
+                    JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("user_data");
+                    String response = jsonObject.getString("response");
+                    if (response.equals(getString(R.string.response_success))) {
+                        UserModel currentUserModel = new ModelHelper(LoginActivity.this).buildUserModel(jsonObject);
+                        MainActivity.currentUserModel = currentUserModel;
+                        MainActivity.currentUserModel.setPreferences(jsonObject.getString("u_preference"));
+                        SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
+                        sharedPreferences.edit().putString("username", currentUserModel.getEmail()).commit();
+                        sharedPreferences.edit().putBoolean("login", true).commit();
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    } else if (response.equals(getString(R.string.response_unsuccessful))) {
 //                editTextPassword.setError(getString(R.string.invalid_cred));
 //                editTextUsername.setError(getString(R.string.invalid_cred));
-                editTextPassword.setText("");
-                editTextUsername.setText("");
-                customToast(R.string.invalid_cred);
-                if(errorCount % ERROR_THRESHOLD == 0) {
-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                                    break;
+                        editTextPassword.setText("");
+                        editTextUsername.setText("");
+                        customToast(R.string.invalid_cred);
+                        if (errorCount % ERROR_THRESHOLD == 0) {
+                            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which) {
+                                        case DialogInterface.BUTTON_POSITIVE:
+                                            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                                            break;
 
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    dialog.dismiss();
-                                    break;
-                            }
+                                        case DialogInterface.BUTTON_NEGATIVE:
+                                            dialog.dismiss();
+                                            break;
+                                    }
+                                }
+                            };
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
+                            alertDialog.setTitle(getString(R.string.new_user));
+                            alertDialog.setMessage(getString(R.string.new_user_prompt));
+                            alertDialog.setPositiveButton(R.string.confirmation_yes, dialogClickListener);
+                            alertDialog.setNegativeButton(R.string.confirmation_no, dialogClickListener);
+                            alertDialog.show();
+                            errorCount++;
+                        } else {
+                            errorCount++;
+                            customToast(R.string.invalid_cred);
                         }
-                    };
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(LoginActivity.this);
-                    alertDialog.setTitle(getString(R.string.new_user));
-                    alertDialog.setMessage(getString(R.string.new_user_prompt));
-                    alertDialog.setPositiveButton(R.string.confirmation_yes, dialogClickListener);
-                    alertDialog.setNegativeButton(R.string.confirmation_no, dialogClickListener);
-                    alertDialog.show();
-                    errorCount++;
-                }else {
-                    errorCount++;
-                    customToast(R.string.invalid_cred);
+                    } else if (response.equals(getString(R.string.exception))) {
+                        Toast.makeText(LoginActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }else if(response.equals(getString(R.string.exception))){
-                Toast.makeText(LoginActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+                break;
+
+                case "fetch_extra":{
+                    JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("user_data");
+                    String response = jsonObject.getString("response");
+                    if(response.equals(getString(R.string.response_success))){
+                        attemptLogin(getString(R.string.default_signin), editTextUsername.getText().toString(), StringHelper.encryptPassword(editTextPassword.getText().toString(), StringHelper.convertSaltToByte(jsonObject.getString("extra"))));
+                    }else if(response.equals(getString(R.string.response_unsuccessful))){
+                        customToast(R.string.invalid_cred);
+                    }else if(response.equals(getString(R.string.unexpected))){
+                        Toast.makeText(LoginActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
             }
         } catch (Exception e) {
             EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
