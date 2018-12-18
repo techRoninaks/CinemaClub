@@ -151,29 +151,37 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                         if (jsonObject.getJSONObject("" + i).getString("type").equals("watching")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                         {
                             MainActivity.followCounter+=1;
+                            MainActivity.unseenCounter+=1;
                         }
                         if (jsonObject.getJSONObject("" + i).getString("type").equals("rating")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                         {
                             MainActivity.followCounter+=1;
+                            MainActivity.unseenCounter+=1;
                         }
                         if (jsonObject.getJSONObject("" + i).getString("type").equals("review")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                         {
                             MainActivity.followCounter+=1;
+                            MainActivity.unseenCounter+=1;
                         }
                         if (jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                         {
                             MainActivity.followCounter+=1;
+                            MainActivity.unseenCounter+=1;
                         }
-
-
+                        if (jsonObject.getJSONObject("" + i).getString("type").equals("review_watched")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                        {
+                            MainActivity.unseenCounter+=1;
+                        }
+                        if (jsonObject.getJSONObject("" + i).getString("type").equals("watching_now")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                        {
+                            MainActivity.unseenCounter+=1;
+                        }
                     }
                     if(flag1 ==1){
                     if (jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")) {
                         MainActivity.unseenCounter+=1;
                     }
-
                     }
-
                 }
                 pDialog = new TransparentProgressDialog(context);
                 pDialog.setCancelable(false);

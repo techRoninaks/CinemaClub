@@ -529,6 +529,30 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                             if(jsonObject.getJSONObject("" + i).getString("type").equals("review_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
                                 MainActivity.unseenCounter+=1;
                             }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("review_watched")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("watching_now")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("watching")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("rating")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("review")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
+                            if (jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
+                            {
+                                MainActivity.unseenCounter+=1;
+                            }
                         }
                         fetchActors(castString, true);
                     }
