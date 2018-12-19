@@ -637,6 +637,10 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 rlProfileImage.setVisibility(View.GONE);
                 llMovieImage.setVisibility(View.VISIBLE);
                 Glide.with(context)
+                        .applyDefaultRequestOptions(new RequestOptions()
+                                .placeholder(R.drawable.film_placeholder)
+                                .error(R.drawable.film_placeholder)
+                        )
                         .asBitmap()
                         .load(image.replace("portrait", "landscape"))
                         .into(imgMovie);
@@ -661,7 +665,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 imgReview.setImageDrawable(isReviewed ? context.getDrawable(R.drawable.ic_comment_filled) : context.getDrawable(R.drawable.ic_comment));
                 imgRating.setImageDrawable(isRated ? context.getDrawable(R.drawable.ic_star_filled) : context.getDrawable(R.drawable.ic_star));
                 imgWatched.setImageDrawable(isWatched ? context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
-                imgFavourites.setImageDrawable(isAddedToWatchlist ? context.getDrawable(R.drawable.ic_heart_filled) : context.getDrawable(R.drawable.ic_heart));
+                imgFavourites.setImageDrawable(isAddedToWatchlist ? context.getDrawable(R.drawable.ic_bookmark_filled) : context.getDrawable(R.drawable.ic_bookmark));
                 tvMovieTotalWatched.setText(StringHelper.formatTextCount(totalWatched));
                 tvMovieTotalReviewed.setText(StringHelper.formatTextCount(totalReviewed));
                 tvMovieRating.setText(rating + "/10");
@@ -686,8 +690,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 params.add(new BasicNameValuePair("m_id", id));
                 populateWatchlist("get-cast.php", params);
             } else if (type.equals(context.getString(R.string.profile_cast))) {
-                Glide.with(context)
-                        .setDefaultRequestOptions(requestOptions)
+                GlideApp.with(context)
                         .asBitmap()
                         .load(image)
                         .into(imgProfile);
@@ -867,7 +870,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 }else if(response.equals(context.getString(R.string.unexpected))){
                     Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                 }
-                imgFavourites.setImageDrawable(isAddedToWatchlist ? context.getDrawable(R.drawable.ic_heart_filled)  : context.getDrawable(R.drawable.ic_heart));
+                imgFavourites.setImageDrawable(isAddedToWatchlist ? context.getDrawable(R.drawable.ic_bookmark_filled)  : context.getDrawable(R.drawable.ic_bookmark));
             }else if(sqlHelper.getActionString().equals("follow")){
                 String response = sqlHelper.getJSONResponse().getJSONObject("data").getString("response");
                 if(response.equals(context.getString(R.string.response_success))){
