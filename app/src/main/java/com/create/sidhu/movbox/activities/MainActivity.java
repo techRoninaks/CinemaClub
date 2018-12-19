@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                         HomeFragment fragment = new HomeFragment();
                         initFragment(fragment);
                         removeBadge(xbadge);
-                        unseenCounter=0;
                     }
                     return true;
                     case R.id.navigation_movies://movies fragment
@@ -134,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                         FavouritesFragment fragment = new FavouritesFragment();
                         initFragment(fragment);
                         removeBadge(mbadge);
-                        followCounter =0;
                     }
                     return true;
                     case R.id.navigation_profile: //profile fragment
@@ -243,7 +241,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                             }
                         }
                     }
-                init();
                 } catch (Exception e) {
                     Log.e("Main:onCreate", e.getMessage());
                 }
@@ -259,9 +256,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
     }
 
     private void init() {
-        if (unseenCounter > 0)
             initnotif(BOTTOM_NAVIGATION_HOME, unseenCounter);
-        if (followCounter > 0)
             initnotif(BOTTOM_NAVIGATION_FAV, followCounter);
     }
 

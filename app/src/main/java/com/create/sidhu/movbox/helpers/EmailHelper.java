@@ -101,7 +101,7 @@ public class EmailHelper {
             sender = context.getString(R.string.email_sender);
         SqlHelper sqlHelper = new SqlHelper(context);
         sqlHelper.setMethod("POST");
-        sqlHelper.setExecutePath("send-email.php");
+        sqlHelper.setExecutePath("send-mail.php");
         ArrayList<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("sender", sender));
         params.add(new BasicNameValuePair("recepient", recepient));

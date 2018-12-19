@@ -63,18 +63,29 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             recyclerView = (RecyclerView) rootview.findViewById(R.id.recyclerView_Favourites);
             llContainerPlaceholder = rootview.findViewById(R.id.containerPlaceholder);
             if (favouritesList == null){
-                fetchUpdates();}
+                fetchUpdates();
+            }
             else {
-                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-                recyclerView.setLayoutManager(layoutManager);
-                FavouritesAdapter favouritesAdapter = new FavouritesAdapter(context, favouritesList, recyclerView);
-                recyclerView.setAdapter(favouritesAdapter);
+                arrayCheck();
             }
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return rootview;
+    }
+
+    private void arrayCheck() {
+        if(favouritesList.size()==0){
+
+                recyclerView.setVisibility(View.GONE);
+                llContainerPlaceholder.setVisibility(View.VISIBLE);
+        }
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        FavouritesAdapter favouritesAdapter = new FavouritesAdapter(context, favouritesList, recyclerView);
+        recyclerView.setAdapter(favouritesAdapter);
+
     }
 
     /***
@@ -101,16 +112,9 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                 FavouritesModel favouritesModel = modelHelper.buildFavouritesModel(jsonObject.getJSONObject("" + i), "favourites");
                 favouritesList.add(favouritesModel);
             }
-            if(length<1)
-            {
-                recyclerView.setVisibility(View.GONE);
-                llContainerPlaceholder.setVisibility(View.VISIBLE);
-            }
-            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            FavouritesAdapter favouritesAdapter = new FavouritesAdapter(context, favouritesList, recyclerView);
-            recyclerView.setAdapter(favouritesAdapter);
-        }catch (Exception e){
+            arrayCheck();
+        }
+        catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }

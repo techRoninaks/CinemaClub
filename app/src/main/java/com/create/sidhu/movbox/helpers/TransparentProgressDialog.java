@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.R;
 
 public class TransparentProgressDialog extends Dialog {
@@ -41,7 +42,13 @@ public class TransparentProgressDialog extends Dialog {
         textParams.setMargins(16, 16, 0, 0);
 
         layout.setPadding(40, 40, 40, 40);
-        Glide.with(context).load(R.raw.main_logo_spinner_white).into(iv);
+        Glide.with(context)
+                .applyDefaultRequestOptions(new RequestOptions()
+                        .placeholder(R.drawable.main_logo)
+                        .error(R.drawable.main_logo)
+                )
+                .load(R.raw.main_logo_spinner_white)
+                .into(iv);
         layout.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
         iv.setBackgroundColor(context.getResources().getColor(android.R.color.transparent));
 //        tv.setText("Loading...");

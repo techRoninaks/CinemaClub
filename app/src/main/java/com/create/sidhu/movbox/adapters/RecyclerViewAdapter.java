@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.FollowReviewActivity;
 import com.create.sidhu.movbox.activities.MainActivity;
@@ -90,6 +91,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position)  {
         try {
             Glide.with(context)
+                    .applyDefaultRequestOptions(new RequestOptions()
+                            .placeholder(R.drawable.film_placeholder)
+                            .error(R.drawable.film_placeholder)
+                    )
                     .asBitmap()
                     .load(movieModels.get(position).getImage())
                     .into(holder.movie_img);
