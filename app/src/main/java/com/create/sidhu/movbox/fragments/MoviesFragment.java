@@ -568,10 +568,10 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
         try {
             ArrayList<PreferenceModel> genreList = filterModel.getGenreList();
             if (genreList != null) {
-                int sizeLanguage = genreList.size();
+                int sizeGenre = genreList.size();
                 boolean check = false;
                 String genreString = "";
-                for (int i = 0; i < sizeLanguage; i++) {
+                for (int i = 0; i < sizeGenre; i++) {
                     if (genreList.get(i).getChecked()) {
                         check = true;
                         genreString += genreList.get(i).getName();
@@ -585,8 +585,12 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                         ArrayList<MovieModel> innerList = new ArrayList<>();
                         for (int j = 0; j < sizeInner; j++) {
                             MovieModel movieModel = masterFilterList.get(i).get(j);
-                            if (genreString.toLowerCase().contains(movieModel.getGenre().toLowerCase())) {
-                                innerList.add(movieModel);
+                            String movieGenre[] = movieModel.getGenre().split(",");
+                            for (String genre:movieGenre
+                                 ) {
+                                if (genreString.toLowerCase().contains(genre.toLowerCase())) {
+                                    innerList.add(movieModel);
+                                }
                             }
                         }
                         outerList.add(innerList);
