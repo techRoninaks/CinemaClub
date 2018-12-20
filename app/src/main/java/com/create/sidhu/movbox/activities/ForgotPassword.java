@@ -92,7 +92,7 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
                 case R.id.buttonSubmitOriginalPassword:{
                     try {
                         String passwordInfo[] = password.split("!~");
-                        if (password.equals(StringHelper.encryptPassword(passwordInfo[0], StringHelper.convertSaltToByte(passwordInfo[1])))) {
+                        if (passwordInfo[0].equals(StringHelper.encryptPassword(etOriginalPassword.getText().toString(), StringHelper.convertSaltToByte(passwordInfo[1])))) {
                             llContainerOriginalPassword.setVisibility(View.GONE);
                             llContainerPassword.setVisibility(View.VISIBLE);
                         } else {
