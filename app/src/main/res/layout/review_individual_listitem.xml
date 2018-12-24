@@ -22,6 +22,39 @@
             android:orientation="vertical"
             android:layout_weight="1"
             android:layout_marginStart="@dimen/standard_gap">
+            <!-- Headers -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:id="@+id/containerReviewHeader">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="@dimen/review_text_size"
+                    android:textStyle="bold"
+                    android:text="Nihal Pradeep"
+                    android:id="@+id/textView_UserName" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="@dimen/review_text_size"
+                    android:text="@string/review_edit"
+                    android:id="@+id/textView_ReviewEdit"
+                    android:layout_marginStart="@dimen/standard_gap"
+                    android:visibility="gone"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextSecondary"
+                    android:textSize="@dimen/review_text_size"
+                    android:text="@string/review_remove"
+                    android:id="@+id/textView_ReviewRemove"
+                    android:layout_marginStart="@dimen/standard_gap"
+                    android:visibility="gone"/>
+            </LinearLayout>
             <!-- Review text -->
             <TextView
                 android:layout_width="match_parent"
@@ -29,7 +62,8 @@
                 android:textColor="@color/colorTextPrimary"
                 android:text="Large review text owing to the size of content that is to be displayed by the latest organisation"
                 android:textSize="@dimen/review_text_size"
-                android:id="@+id/textView_ReviewText"/>
+                android:id="@+id/textView_ReviewText"
+                android:layout_marginTop="@dimen/standard_touch_space"/>
             <!-- Review info-->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -151,6 +185,24 @@
                         android:textSize="@dimen/text_small"
                         android:id="@+id/btn_ReplySubmit"
                         android:textAllCaps="false"/>
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/review_submit"
+                        android:textSize="@dimen/text_small"
+                        android:id="@+id/btn_ReviewEdit"
+                        android:textAllCaps="false"
+                        android:visibility="gone"/>
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/ratings_cancel"
+                        android:textSize="@dimen/text_small"
+                        android:id="@+id/btn_ReviewCancel"
+                        android:textAllCaps="false"
+                        android:visibility="gone"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -257,6 +257,15 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
                     Toast.makeText(ReviewsActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                 }
                 recyclerView.getAdapter().notifyItemChanged(position);
+            }else if(sqlHelper.getActionString().startsWith("update_review")){
+                String response = sqlHelper.getJSONResponse().getJSONObject("review_data").getString("response");
+                if(response.equals(getString(R.string.response_success))){
+                    if(sqlHelper.getActionString().contains("remove"))
+                        fetchReview();
+                }else if(response.equals(getString(R.string.response_unsuccessful)) || response.equals(getString(R.string.unexpected))){
+                    Toast.makeText(this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+                    fetchReview();
+                }
             }
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", StringHelper.convertStackTrace(e));
@@ -374,6 +383,26 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
         sqlHelper.executeUrl(true);
     }
 
+    /***
+     * Edits or Removes existing reviews
+     * @param reviewId - ID of review
+     * @param reviewText - Updated review
+     * @param operation - Valid operations are "remove" and "update"
+     */
+    public void updateReview(String reviewId, String reviewText, String operation, String reply){
+        SqlHelper sqlHelper = new SqlHelper(ReviewsActivity.this, ReviewsActivity.this);
+        sqlHelper.setExecutePath("update-review.php");
+        sqlHelper.setActionString("update_review:" + operation);
+        ArrayList<NameValuePair> params = new ArrayList<>();
+        params.add(new BasicNameValuePair("r_id", reviewId));
+        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+        params.add(new BasicNameValuePair("operation", operation));
+        params.add(new BasicNameValuePair("r_text", reviewText));
+        params.add(new BasicNameValuePair("reply", reply));
+        sqlHelper.setMethod(getString(R.string.method_get));
+        sqlHelper.setParams(params);
+        sqlHelper.executeUrl(operation.equals("remove"));
+    }
     public void submitReview(String type, String parentId, String reviewText){
         SqlHelper sqlHelper = new SqlHelper(ReviewsActivity.this, ReviewsActivity.this);
         sqlHelper.setExecutePath("add-review.php");
