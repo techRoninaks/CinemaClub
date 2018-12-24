@@ -9,9 +9,6 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,8 +21,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.activities.MainActivity;
 import com.create.sidhu.movbox.activities.ReviewsActivity;
-import com.create.sidhu.movbox.fragments.HomeFragment;
 import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.ReviewModel;
@@ -34,7 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -82,6 +78,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                             }
                             break;
                         }
+                        case R.id.textView_UserName:
                         case R.id.img_User:{
                             String type = reviewModels.get(position).getType();
                             if(type.equals("movie") || type.equals("reply")) {
@@ -96,6 +93,58 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                                 holder.llWriteReplies.setVisibility(View.GONE);
                             else
                                 holder.llWriteReplies.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                        case R.id.textView_ReviewRemove:{
+                            reviewsActivity.updateReview(reviewModels.get(position).getReviewId(), "", "remove", reviewModels.get(position).getReplies());
+                            break;
+                        }
+                        case R.id.textView_ReviewEdit:{
+                            holder.llReviewInfo.setVisibility(View.GONE);
+                            holder.tvReviewText.setVisibility(View.GONE);
+                            holder.btnSubmitReply.setVisibility(View.GONE);
+                            holder.llWriteReplies.setVisibility(View.VISIBLE);
+                            holder.btnReviewEdit.setVisibility(View.VISIBLE);
+                            holder.btnReviewCancel.setVisibility(View.VISIBLE);
+                            String reviewText = reviewModels.get(position).getReviewText();
+                            if(reviewText.startsWith("*~"))
+                                reviewText = reviewText.substring(reviewText.indexOf("~*") + 2);
+                            holder.etReplyText.setText(reviewText);
+                            break;
+                        }
+                        case R.id.btn_ReviewCancel:{
+                            holder.etReplyText.setText("");
+                            holder.llReviewInfo.setVisibility(View.VISIBLE);
+                            holder.tvReviewText.setVisibility(View.VISIBLE);
+                            holder.btnSubmitReply.setVisibility(View.VISIBLE);
+                            holder.llWriteReplies.setVisibility(View.GONE);
+                            holder.btnReviewEdit.setVisibility(View.GONE);
+                            holder.btnReviewCancel.setVisibility(View.GONE);
+                            break;
+                        }
+                        case R.id.btn_ReviewEdit:{
+                            String reviewText = reviewModels.get(position).getReviewText();
+                            String updatedText = holder.etReplyText.getText().toString();
+                            if(reviewText.startsWith("*~")){
+                                if(!reviewText.substring(reviewText.indexOf("~*") + 2).equals(updatedText)) {
+                                    reviewsActivity.updateReview(reviewModels.get(position).getReviewId(), reviewText.substring(0, reviewText.indexOf("~*") + 2).concat(updatedText), "update", reviewModels.get(position).getReplies());
+                                    reviewModels.get(position).setReviewText(reviewText.substring(0, reviewText.indexOf("~*") + 2).concat(updatedText));
+                                    notifyItemChanged(position);
+                                }
+                            }else{
+                                if(!reviewText.equals(updatedText)) {
+                                    reviewsActivity.updateReview(reviewModels.get(position).getReviewId(), updatedText, "update", reviewModels.get(position).getReplies());
+                                    reviewModels.get(position).setReviewText(updatedText);
+                                    notifyItemChanged(position);
+                                }
+                            }
+                            holder.etReplyText.setText("");
+                            holder.llReviewInfo.setVisibility(View.VISIBLE);
+                            holder.tvReviewText.setVisibility(View.VISIBLE);
+                            holder.btnSubmitReply.setVisibility(View.VISIBLE);
+                            holder.llWriteReplies.setVisibility(View.GONE);
+                            holder.btnReviewEdit.setVisibility(View.GONE);
+                            holder.btnReviewCancel.setVisibility(View.GONE);
                             break;
                         }
                         case R.id.img_LikeButton:{
@@ -136,10 +185,12 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                     .asBitmap()
                     .load(imageUrl)
                     .into(holder.imgUser);
-            //SpannableString userName = new SpannableString(reviewModels.get(position).getUserName() + " " + reviewModels.get(position).getReviewText());
-            SpannableStringBuilder stringBuilder = new SpannableStringBuilder(reviewModels.get(position).getType().equals("movie") || reviewModels.get(position).getType().equals("reply")? reviewModels.get(position).getUserName() : reviewModels.get(position).getMovieName());
-            stringBuilder.setSpan(new CalligraphyTypefaceSpan(holder.tfSemibold), 0, stringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            stringBuilder.append(" ");
+            holder.tvReviewUserName.setText(reviewModels.get(position).getType().equals("movie") || reviewModels.get(position).getType().equals("reply")? reviewModels.get(position).getUserName() : reviewModels.get(position).getMovieName());
+            if(reviewModels.get(position).getUserId().equals(MainActivity.currentUserModel.getUserId())){
+                holder.tvReviewEdit.setVisibility(View.VISIBLE);
+                holder.tvReviewRemove.setVisibility(View.VISIBLE);
+            }
+            SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
             String atReference = reviewModels.get(position).getReviewText().contains("*~") ?
                    "@" + reviewModels.get(position).getReviewText().substring(2, reviewModels.get(position).getReviewText().indexOf("~*"))
                     : "";
@@ -173,6 +224,11 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             holder.tvReply.setOnClickListener(onClickListener);
             holder.imgLike.setOnClickListener(onClickListener);
             holder.btnSubmitReply.setOnClickListener(onClickListener);
+            holder.tvReviewUserName.setOnClickListener(onClickListener);
+            holder.tvReviewEdit.setOnClickListener(onClickListener);
+            holder.tvReviewRemove.setOnClickListener(onClickListener);
+            holder.btnReviewCancel.setOnClickListener(onClickListener);
+            holder.btnReviewEdit.setOnClickListener(onClickListener);
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ReviewAdapter", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
@@ -192,12 +248,18 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
         TextView tvLike;
         TextView tvReply;
         TextView tvReplyView;
+        TextView tvReviewUserName;
+        TextView tvReviewEdit;
+        TextView tvReviewRemove;
         EditText etReplyText;
         ImageView imgLike;
         LinearLayout llReplies;
         LinearLayout llWriteReplies;
+        LinearLayout llReviewInfo;
         RecyclerView recyclerView;
         Button btnSubmitReply;
+        Button btnReviewEdit;
+        Button btnReviewCancel;
         Typeface tfSemibold = Typeface.createFromAsset(context.getAssets(), "fonts/MyriadPro-Semibold.otf");
         Typeface tfRegular = Typeface.createFromAsset(context.getAssets(), "fonts/myriadpro.otf");
 
@@ -209,14 +271,22 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             tvLike = itemView.findViewById(R.id.textView_Like);
             tvReply = itemView.findViewById(R.id.textView_Reply);
             tvReplyView = itemView.findViewById(R.id.textView_ReplyView);
+            tvReviewEdit = itemView.findViewById(R.id.textView_ReviewEdit);
+            tvReviewRemove = itemView.findViewById(R.id.textView_ReviewRemove);
+            tvReviewUserName = itemView.findViewById(R.id.textView_UserName);
             etReplyText = itemView.findViewById(R.id.editText_ReviewTextReply);
             imgLike = itemView.findViewById(R.id.img_LikeButton);
             recyclerView = itemView.findViewById(R.id.recyclerViewReplies);
             llReplies = itemView.findViewById(R.id.containerReplies);
             llWriteReplies = itemView.findViewById(R.id.containerWriteReply);
+            llReviewInfo = itemView.findViewById(R.id.containerReviewInfo);
             btnSubmitReply = itemView.findViewById(R.id.btn_ReplySubmit);
+            btnReviewCancel = itemView.findViewById(R.id.btn_ReviewCancel);
+            btnReviewEdit = itemView.findViewById(R.id.btn_ReviewEdit);
             tvLike.setTypeface(tfSemibold);
             tvReply.setTypeface(tfSemibold);
+            tvReviewUserName.setTypeface(tfSemibold);
+
         }
     }
 }

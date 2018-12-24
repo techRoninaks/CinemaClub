@@ -121,6 +121,9 @@
     <string name="review_submit">Submit</string>
     <string name="review_reply_view">View all !#! replies</string>
     <string name="review_reply_hide">Hide replies</string>
+    <string name="review_edit">Edit</string>
+    <string name="review_remove">Delete</string>
+
 
     <!-- Review Title Strings -->
     <string name="ratings_submit">Submit</string>
