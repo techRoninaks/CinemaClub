@@ -67,7 +67,7 @@
 
     <!-- DB Resource Strings -->
     <string name="db_server"></string>
-    <string name="master_url">https://understandable-blin.000webhostapp.com/cinema-club/</string>
+    <string name="master_url">http://understandable-blin.hostingerapp.com/cinema-club/</string>
     <string name="profile_image_url">users/images/profile/</string>
     <string name="movie_image_portrait_url">movies/images/portrait/</string>
     <string name="cast_image_url">cast/images/</string>

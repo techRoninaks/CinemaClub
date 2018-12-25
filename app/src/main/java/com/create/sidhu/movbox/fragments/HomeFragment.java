@@ -414,6 +414,13 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                         break;
                     }
                     case R.id.containerWatched: {
+                        bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                        bundle.putString("return_path", "HomeFragment");
+                        Intent intent = new Intent(context, FollowReviewActivity.class);
+                        intent.putExtra("profile_type", "movie");
+                        intent.putExtra("type", "followers");
+                        intent.putExtra("bundle", bundle);
+                        startActivity(intent);
                         break;
                     }
                     case R.id.containerRating: {
