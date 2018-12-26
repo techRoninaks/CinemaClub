@@ -22,7 +22,7 @@ public class NoInternetActivity extends AppCompatActivity {
             btnretry.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sqlHelper.executeUrl(true);
+                    sqlHelper.executeUrl(sqlHelper.isShowLoading());
                     finish();
                 }
             });
