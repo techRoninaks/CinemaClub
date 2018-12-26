@@ -90,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
     private boolean isFirst;
     private Badge xbadge,mbadge;
     public static  int unseenCounter = 0, followCounter = 0;
+    public static String markList ="";
+    public  SharedPreferences sharedPreferences;
+    int pauseFlag=0;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -108,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                         item.setIcon(R.drawable.ic_home_filled);
                         HomeFragment fragment = new HomeFragment();
                         initFragment(fragment);
+                        unseenCounter=0;
+//                        removeMarked(markList);
                         removeBadge(xbadge);
                     }
                     return true;
@@ -132,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                         item.setIcon(R.drawable.ic_heart_filled);
                         FavouritesFragment fragment = new FavouritesFragment();
                         initFragment(fragment);
+                        followCounter =0;
+//                        removeMarked(markList);
                         removeBadge(mbadge);
                     }
                     return true;
@@ -153,9 +160,19 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
 
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        init();
+    protected void onPostResume() {
+        super.onPostResume();
+        if(pauseFlag == 1) {
+            init();
+            pauseFlag = 0;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pauseFlag = 1;
+
     }
 
     @Override
@@ -168,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             StringHelper.changeToolbarFont(toolbar, MainActivity.this);
             isFirst = true;
-            SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
+            sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
             username = sharedPreferences.getString("username", "");
             LoginStatus = sharedPreferences.getBoolean("login", false);
             if (!username.isEmpty() && LoginStatus) {
@@ -241,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                             }
                         }
                     }
+
                 } catch (Exception e) {
                     Log.e("Main:onCreate", e.getMessage());
                 }
@@ -252,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
+        init();
 
     }
 
@@ -478,20 +497,52 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 .setGravityOffset(12, 2, true)
                 .setBadgeBackgroundColor(getResources().getColor(R.color.colorTextPrimary))
                 .setBadgeTextColor(getResources().getColor(R.color.colorPrimary))
-                .bindTarget(navigation.getBottomNavigationItemView(position))
-                .setOnDragStateChangedListener(new Badge.OnDragStateChangedListener() {
-                    @Override
-                    public void onDragStateChanged(int dragState, Badge badge, View targetView) {
-                        if (Badge.OnDragStateChangedListener.STATE_SUCCEED == dragState)
-                            ;
-                    }
-                });
+                .bindTarget(navigation.getBottomNavigationItemView(position));
+//                .setOnDragStateChangedListener(new Badge.OnDragStateChangedListener() {
+//                    @Override
+//                    public void onDragStateChanged(int dragState, Badge badge, View targetView) {
+//                        if (Badge.OnDragStateChangedListener.STATE_SUCCEED == dragState)
+//                            ;
+//                    }
+//                });
     }
 
 
 
     public   void removeBadge(Badge badge) {
         badge.hide(true);
+    }
+    public void removeBadge(Badge badge,String markList){
+        badge.hide(true);
+        if(markList.equals(""))
+            markList = null;
+        if(!(markList==null)){
+            if (markList.substring(markList.length() - 1).equals(","))
+                markList.replace(markList.substring(markList.length() - 1), "1");
+            markList = markList.substring(0, markList.length() - 1);
+            removeMarked(markList);
+        }
+
+
+    }
+
+    public void removeMarked(String markList){
+//        badge.hide(true);
+        if (!(markList== null))
+        {
+            if(!markList.isEmpty())
+            {
+                SqlHelper sqlHelper = new SqlHelper(MainActivity.this, MainActivity.this);
+                sqlHelper.setActionString("mark_as_read");
+                sqlHelper.setMethod("GET");
+                sqlHelper.setExecutePath("mark-updates.php");
+                ArrayList<NameValuePair> params = new ArrayList<>();
+                params.add(new BasicNameValuePair("c_id", currentUserModel.getUserId()));
+                params.add(new BasicNameValuePair("update_string", markList));
+                sqlHelper.setParams(params);
+                sqlHelper.executeUrl(false);
+            }
+        }
     }
 
 
@@ -504,6 +555,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 if (response.equals(getString(R.string.response_success))) {
                     currentUserModel = new ModelHelper(MainActivity.this).buildUserModel(jsonObject);
                     currentUserModel.setPreferences(jsonObject.getString("u_preference"));
+                    SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
+                    sharedPreferences.edit().putString("current_usermodel", StringHelper.convertObjectToString(MainActivity.currentUserModel)).commit();
                     navigation.setSelectedItemId(R.id.navigation_home);
                     scheduleJob();
                 } else if (response.equals(getString(R.string.exception))) {

@@ -80,8 +80,12 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             imgTitle.setVisibility(View.VISIBLE);
             StringHelper.changeToolbarFont(toolbar, (MainActivity) context);
             if (homeModels == null)
+            {
                 fetchUpdates();
+                markRead(homeModels);
+            }
             else {
+                markRead(homeModels);
                 LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
                 recyclerView.setLayoutManager(layoutManager);
                 homeAdapter = new HomeAdapter(context, homeModels, rootView, this);
@@ -89,10 +93,34 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             }
             //initRecyclerView();
         }catch (Exception e){
+            Toast.makeText(context, "Home fragment exception", Toast.LENGTH_SHORT).show();
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return rootView;
+    }
+
+    private void markRead(ArrayList<HomeModel> homeModels) {
+        int length  = homeModels.size();
+        String markList="";
+        for(int i= 0;i<length;i++){
+            if(homeModels.get(i).getFavourites().getSubType().equals("new_releases") ||homeModels.get(i).getFavourites().getSubType().equals("recommendations"))
+            {
+
+            }
+            else if(!homeModels.get(i).getFavourites().getRead()){
+                markList = markList + homeModels.get(i).getFavourites().getId()+",";
+            }
+        }
+        MainActivity mainActivity = (MainActivity) context;
+        if(markList.equals(""))
+            markList = null;
+        if(!(markList==null)){
+            if (markList.substring(markList.length() - 1).equals(","))
+                markList.replace(markList.substring(markList.length() - 1), "1");
+            markList = markList.substring(0, markList.length() - 1);
+        }
+        mainActivity.removeMarked(markList);
     }
 
     /***
@@ -109,12 +137,15 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
         params.add(new BasicNameValuePair("fragment", "home"));
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(true);
+
     }
+
+
 
     private void initRecyclerView(JSONObject jsonObject){
         MainActivity mainActivity = (MainActivity) context;
         homeModels = new ArrayList<>();
-        int flag1=0;
+        String markList="";
         MainActivity.unseenCounter = 0;
         MainActivity.followCounter = 0;
         try{
@@ -137,60 +168,62 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                     }
 
                     // Notification counter code HomeFragment
-
-                    if(flag1 ==0){
                         if(jsonObject.getJSONObject("" + i).getString("type").equals("watchlist_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                             MainActivity.unseenCounter+=1;
                         }
                         if(jsonObject.getJSONObject("" + i).getString("type").equals("review_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                             MainActivity.unseenCounter+=1;
                         }
                         if(jsonObject.getJSONObject("" + i).getString("type").equals("follow")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                             MainActivity.followCounter+=1;
                         }
                         if (jsonObject.getJSONObject("" + i).getString("type").equals("watching")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                         {
+                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                             MainActivity.followCounter+=1;
                             MainActivity.unseenCounter+=1;
                         }
                         if (jsonObject.getJSONObject("" + i).getString("type").equals("rating")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                         {
+                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                             MainActivity.followCounter+=1;
                             MainActivity.unseenCounter+=1;
                         }
                         if (jsonObject.getJSONObject("" + i).getString("type").equals("review")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                         {
+                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                             MainActivity.followCounter+=1;
                             MainActivity.unseenCounter+=1;
                         }
                         if (jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                         {
+                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                             MainActivity.followCounter+=1;
                             MainActivity.unseenCounter+=1;
                         }
                         if (jsonObject.getJSONObject("" + i).getString("type").equals("review_watched")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                         {
+                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                             MainActivity.unseenCounter+=1;
                         }
                         if (jsonObject.getJSONObject("" + i).getString("type").equals("watching_now")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                         {
+                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                             MainActivity.unseenCounter+=1;
                         }
                     }
-                    if(flag1 ==1){
-                    if (jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")) {
-                        MainActivity.unseenCounter+=1;
-                    }
-                    }
-                }
                 pDialog = new TransparentProgressDialog(context);
                 pDialog.setCancelable(false);
                 pDialog.show();
                 fetchActors(castString, true);
-                if(MainActivity.unseenCounter>0)
-                    mainActivity.initnotif(MainActivity.BOTTOM_NAVIGATION_HOME,MainActivity.unseenCounter);
-                if(MainActivity.followCounter>0)
-                    mainActivity.initnotif(MainActivity.BOTTOM_NAVIGATION_FAV,MainActivity.followCounter);
+                mainActivity.removeMarked(markList);
+//                if(MainActivity.unseenCounter>0)
+//                    mainActivity.initnotif(MainActivity.BOTTOM_NAVIGATION_HOME,MainActivity.unseenCounter);
+//                if(MainActivity.followCounter>0)
+//                    mainActivity.initnotif(MainActivity.BOTTOM_NAVIGATION_FAV,MainActivity.followCounter);
             }
             else{
                 recyclerView.setVisibility(View.GONE);
@@ -446,6 +479,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             if(sqlHelper.getActionString().equals("home")) {
                 JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");
                 String response = jsonObject.getJSONObject("0").getString("response");
+
                 if (response.equals(context.getString(R.string.response_success))) {
                     initRecyclerView(jsonObject);
                 } else if (response.equals(context.getString(R.string.response_unsuccessful))) {
@@ -505,6 +539,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             emailHelper.sendEmail();
         }
     }
+
 
     @Override
     public void onResultReceived(String type, boolean resultCode, HashMap<String, String> extras) {

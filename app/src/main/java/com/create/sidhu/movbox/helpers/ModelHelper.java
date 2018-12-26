@@ -393,11 +393,11 @@ public class ModelHelper {
     }
     /***
      * Builds bundle required for corresponding fragment
-     * @param homeModel- HomeModel object
+     * @param favouritesModel- Favourites Model object
      * @param requestPath- Fragment path to which the bundle is to be attached
      * @return bundle
      */
-    public Bundle buildReviewModelBundle(HomeModel homeModel, String requestPath){
+    public Bundle buildReviewModelBundle(FavouritesModel favouritesModel, String requestPath){
         Bundle bundle = new Bundle();
         try{
             if(requestPath.equals("HomeFragment")) {
@@ -405,12 +405,24 @@ public class ModelHelper {
                 bundle.putString("user_id", MainActivity.currentUserModel.getUserId());
                 bundle.putString("user_name", MainActivity.currentUserModel.getName());
                 bundle.putString("user_image", MainActivity.currentUserModel.getImage());
-                bundle.putString("movie_id", homeModel.getFavourites().getMovie().getId());
-                bundle.putString("movie_name", homeModel.getFavourites().getMovie().getName());
-                bundle.putString("movie_genre", homeModel.getFavourites().getMovie().getGenre());
-                bundle.putString("movie_dimension", homeModel.getFavourites().getMovie().getDisplayDimension());
-                bundle.putString("movie_language", homeModel.getFavourites().getMovie().getLanguage());
+                bundle.putString("movie_id", favouritesModel.getMovie().getId());
+                bundle.putString("movie_name", favouritesModel.getMovie().getName());
+                bundle.putString("movie_genre", favouritesModel.getMovie().getGenre());
+                bundle.putString("movie_dimension", favouritesModel.getMovie().getDisplayDimension());
+                bundle.putString("movie_language", favouritesModel.getMovie().getLanguage());
             }
+            else if(requestPath.equals("c")) {
+                bundle.putString("type", "movie");
+                bundle.putString("user_id", favouritesModel.getUser().getUserId());
+                bundle.putString("user_name", favouritesModel.getUser().getName());
+                bundle.putString("user_image", favouritesModel.getUser().getImage());
+                bundle.putString("movie_id", favouritesModel.getMovie().getId());
+                bundle.putString("movie_name", favouritesModel.getMovie().getName());
+                bundle.putString("movie_genre", favouritesModel.getMovie().getGenre());
+                bundle.putString("movie_dimension", favouritesModel.getMovie().getDisplayDimension());
+                bundle.putString("movie_language", favouritesModel.getMovie().getLanguage());
+            }
+
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();

@@ -87,7 +87,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                 public void onClick(View view) {
                     int id = view.getId();
                     if (id == R.id.img_Review || id == R.id.containerReviews) {
-                        Bundle bundle = new ModelHelper(context).buildReviewModelBundle(homeModels.get(position), "HomeFragment");
+                        Bundle bundle = new ModelHelper(context).buildReviewModelBundle(homeModels.get(position).getFavourites(), "HomeFragment");
                         Intent intent = new Intent(context, ReviewsActivity.class);
                         intent.putExtra("bundle", bundle);
                         ReviewsActivity.currentFragment = HomeAdapter.this;
@@ -108,7 +108,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                             }
                             case "review_reminder":
                             case "review": {
-                                Bundle bundle = new ModelHelper(context).buildReviewModelBundle(homeModels.get(position), "HomeFragment");
+                                Bundle bundle = new ModelHelper(context).buildReviewModelBundle(homeModels.get(position).getFavourites(), "HomeFragment");
                                 Intent intent = new Intent(context, ReviewsActivity.class);
                                 intent.putExtra("bundle", bundle);
                                 context.startActivity(intent);

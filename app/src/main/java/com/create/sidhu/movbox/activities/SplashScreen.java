@@ -128,6 +128,8 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
                 if (response.equals(getString(R.string.response_success))) {
                     MainActivity.currentUserModel = new ModelHelper(SplashScreen.this).buildUserModel(jsonObject);
                     MainActivity.currentUserModel.setPreferences(jsonObject.getString("u_preference"));
+                    SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
+                    sharedPreferences.edit().putString("current_usermodel", StringHelper.convertObjectToString(MainActivity.currentUserModel)).commit();
                     scheduleJob(MainActivity.currentUserModel.getUserId());
                 } else if (response.equals(getString(R.string.exception))) {
                     startActivity(new Intent(SplashScreen.this, LoginActivity.class));
