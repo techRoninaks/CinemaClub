@@ -323,6 +323,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                         SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
                         sharedPreferences.edit().putString("username", currentUserModel.getEmail()).commit();
                         sharedPreferences.edit().putBoolean("login", true).commit();
+                        sharedPreferences.edit().putString("current_usermodel", StringHelper.convertObjectToString(MainActivity.currentUserModel)).commit();
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finish();
                     } else if (response.equals(getString(R.string.response_unsuccessful))) {

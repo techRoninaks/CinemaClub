@@ -8,15 +8,18 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.activities.LoginActivity;
 import com.create.sidhu.movbox.activities.MainActivity;
 import com.create.sidhu.movbox.fragments.FavouritesFragment;
 import com.create.sidhu.movbox.fragments.HomeFragment;
@@ -28,6 +31,7 @@ import com.create.sidhu.movbox.models.ActorModel;
 import com.create.sidhu.movbox.models.FavouritesModel;
 import com.create.sidhu.movbox.models.HomeModel;
 import com.create.sidhu.movbox.models.UpdatesModel;
+import com.create.sidhu.movbox.models.UserModel;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -36,6 +40,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class UserFeedJobService extends JobService implements SqlDelegate {
@@ -454,6 +460,11 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                         if(!favouritesModel.getRead()){
                             Bundle bundle = new Bundle();
                             ModelHelper modelHelper = new ModelHelper(UserFeedJobService.this);
+                            if(MainActivity.currentUserModel == null){
+                                SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
+                                MainActivity.currentUserModel = (UserModel) StringHelper.convertStringToObject(sharedPreferences.getString("current_usermodel",""));
+                            }
+
                             switch (subType){
                                 case "follow":{
                                     bundle = modelHelper.buildUserModelBundle(favouritesModel.getUser(), "ProfileFragment");
@@ -461,12 +472,12 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                                     break;
                                 }
                                 case "review_vote":{
-                                    bundle = modelHelper.buildReviewModelBundle(favouritesModel.getMovie(), "PostStatusFragment");
+                                    bundle = modelHelper.buildReviewModelBundle(favouritesModel, "Notification");
                                     bundle.putString("return_path", "ReviewsActivity");
                                     break;
                                 }
                                 case "review":{
-                                    bundle = modelHelper.buildReviewModelBundle(favouritesModel.getMovie(), "PostStatusFragment");
+                                    bundle = modelHelper.buildReviewModelBundle(favouritesModel, "Notification");
                                     bundle.putString("return_path", "ReviewsActivity");
                                     break;
                                 }
@@ -492,7 +503,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
         sqlHelper.setMethod("GET");
         sqlHelper.setExecutePath("mark-updates.php");
         ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+        params.add(new BasicNameValuePair("c_id", userId));
         params.add(new BasicNameValuePair("update_string", markAsRead));
         sqlHelper.setParams(params);
         sqlHelper.setService(true);
@@ -505,6 +516,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
             public void run() {
                 homeModels = new ArrayList<>();
                 MainActivity.unseenCounter= 0;
+                String markList="";
                 try{
                     int length = Integer.parseInt(jsonObject.getJSONObject("0").getString("length"));
                     if(length >= 0) {
@@ -524,36 +536,52 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                                 homeModels.add(homeModel);
                             }
                             if(jsonObject.getJSONObject("" + i).getString("type").equals("watchlist_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                                markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                                 MainActivity.unseenCounter+=1;
                             }
                             if(jsonObject.getJSONObject("" + i).getString("type").equals("review_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                                markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                                 MainActivity.unseenCounter+=1;
                             }
                             if (jsonObject.getJSONObject("" + i).getString("type").equals("review_watched")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                             {
+                                markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                                 MainActivity.unseenCounter+=1;
                             }
                             if (jsonObject.getJSONObject("" + i).getString("type").equals("watching_now")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                             {
+                                markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                                 MainActivity.unseenCounter+=1;
                             }
                             if (jsonObject.getJSONObject("" + i).getString("type").equals("watching")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                             {
+                                markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                                 MainActivity.unseenCounter+=1;
                             }
                             if (jsonObject.getJSONObject("" + i).getString("type").equals("rating")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                             {
+                                markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                                 MainActivity.unseenCounter+=1;
                             }
                             if (jsonObject.getJSONObject("" + i).getString("type").equals("review")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                             {
+                                markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                                 MainActivity.unseenCounter+=1;
                             }
                             if (jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
                             {
+                                markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
                                 MainActivity.unseenCounter+=1;
                             }
                         }
+                        if(markList.equals(""))
+                            markList = null;
+                        if(!(markList==null)){
+                            if (markList.substring(markList.length() - 1).equals(","))
+                                markList.replace(markList.substring(markList.length() - 1), "1");
+                            MainActivity.markList = markList.substring(0, markList.length() - 1);
+                        }
+
                         fetchActors(castString, true);
                     }
                 }catch (Exception e){

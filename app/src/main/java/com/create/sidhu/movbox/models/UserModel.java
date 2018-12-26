@@ -2,11 +2,13 @@ package com.create.sidhu.movbox.models;
 
 import com.create.sidhu.movbox.activities.MainActivity;
 
+import java.io.Serializable;
+
 /**
  * Holds User information
  */
 
-public class UserModel {
+public class UserModel implements Serializable {
     private String UserId;
     private String Name;
     private String Email;

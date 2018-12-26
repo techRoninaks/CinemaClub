@@ -64,15 +64,36 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             llContainerPlaceholder = rootview.findViewById(R.id.containerPlaceholder);
             if (favouritesList == null){
                 fetchUpdates();
+                markRead(favouritesList);
             }
             else {
                 arrayCheck();
+                markRead(favouritesList);
             }
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return rootview;
+    }
+
+    private void markRead(ArrayList<FavouritesModel> favouritesList) {
+        int length  = favouritesList.size();
+        String markList="";
+        for(int i= 0;i<length;i++){
+            if(!favouritesList.get(i).getRead()){
+                markList = markList + favouritesList.get(i).getId()+",";
+            }
+        }
+        MainActivity mainActivity = (MainActivity) context;
+        if(markList.equals(""))
+            markList = null;
+        if(!(markList==null)){
+            if (markList.substring(markList.length() - 1).equals(","))
+                markList.replace(markList.substring(markList.length() - 1), "1");
+            markList = markList.substring(0, markList.length() - 1);
+        }
+        mainActivity.removeMarked(markList);
     }
 
     private void arrayCheck() {

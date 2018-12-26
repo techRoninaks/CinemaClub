@@ -4,10 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.create.sidhu.movbox.models.UserModel;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
@@ -19,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.crypto.SecretKeyFactory;
@@ -193,6 +201,43 @@ public class StringHelper {
     }
 
     /***
+     * Serialize the object
+     *
+     */
+    public static String convertObjectToString(Object obj){
+        String serializedObject = "";
+        try {
+
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            ObjectOutputStream so = new ObjectOutputStream(bo);
+            so.writeObject(obj);
+            so.flush();
+            serializedObject = Base64.encodeToString(bo.toByteArray(),Base64.DEFAULT);
+        } catch (Exception e) {
+//            System.out.println(e);
+        }
+        return serializedObject;
+    }
+
+    /***
+     * Serialize the object
+     *
+     */
+    public static Object convertStringToObject(String serializedObject){
+
+        UserModel obj =new UserModel();
+        try {
+            byte b[] = Base64.decode(serializedObject.getBytes(),Base64.DEFAULT);
+            ByteArrayInputStream bi = new ByteArrayInputStream(b);
+            ObjectInputStream si = new ObjectInputStream(bi);
+            obj = (UserModel) si.readObject();
+        } catch (Exception e) {
+//            System.out.println(e);
+        }
+        return obj;
+    }
+
+    /***
      * Generates secure Salt
      * @return
      * @throws NoSuchAlgorithmException
@@ -245,4 +290,5 @@ public class StringHelper {
             return hex;
         }
     }
+
 }
