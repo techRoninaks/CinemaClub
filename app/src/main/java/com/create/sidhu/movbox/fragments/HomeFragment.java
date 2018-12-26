@@ -47,7 +47,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-//TODO: Three dots.
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -361,6 +360,14 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                                 break;
                             }
                             case "rating": {
+                                bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
+                                bundle.putString("type", "cast");
+                                bundle.putBoolean("isIdentity", false);
+                                bundle.putString("u_id", homeModel.getFavourites().getUser().getUserId());
+                                RatingsDialog ratingsDialog = new RatingsDialog();
+                                ratingsDialog.setCallbackDelegate(HomeFragment.this);
+                                ratingsDialog.setRated(homeModel.getFavourites().getMovie().getIsRated());
+                                mainActivity.initFragment(ratingsDialog, bundle);
                                 break;
                             }
                             case "watchlist_reminder": {
