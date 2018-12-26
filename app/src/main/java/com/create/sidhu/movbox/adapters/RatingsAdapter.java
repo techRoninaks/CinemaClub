@@ -36,10 +36,12 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
     private Context context;
     private View rootview;
     private String type;
+    private boolean isIdentity;
 
 
-    public RatingsAdapter(Context context, ArrayList<?> models, View rootview, String type) {
+    public RatingsAdapter(Context context, ArrayList<?> models, View rootview, String type, boolean isIdentity) {
         this.context = context;
+        this.isIdentity = isIdentity;
         if(type.equals("cast"))
             this.actorModels = (ArrayList<ActorModel>) models;
         else if(type.equals("list"))
@@ -77,6 +79,8 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
                 spannableStringBuilder.append(spannableString);
                 holder.tvTitle.setText(spannableStringBuilder);
                 holder.rbRating.setRating(actorModels.get(position).getRating());
+                if(!isIdentity)
+                    holder.rbRating.setIsIndicator(true);
                 holder.rbRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                     @Override
                     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
