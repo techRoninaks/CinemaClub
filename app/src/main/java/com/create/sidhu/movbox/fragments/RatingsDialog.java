@@ -136,6 +136,9 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
             stringBuilder.append(" votes");
             if (type.equals("cast")) {
                 tvUserRating.setText("0/10");
+                if(bundle.containsKey("isIdentity")){
+                    rbUserRating.setIsIndicator(true);
+                }
             } else if (type.equals("list")) {
                 tvUserRating.setVisibility(View.GONE);
                 llContainerTabs.setVisibility(View.VISIBLE);
@@ -253,6 +256,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         sqlHelper.setActionString(type.equals("cast") ? "get_cast_rating" : "get_all_rating");
         ArrayList<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+        params.add(new BasicNameValuePair("u_id", bundle.containsKey("isIdentity") ? bundle.getString("u_id") : MainActivity.currentUserModel.getUserId()));
         params.add(new BasicNameValuePair("m_id", bundle.getString("id")));
         params.add(new BasicNameValuePair("type", type));
         params.add(new BasicNameValuePair("cast", bundle.getString("cast")));
@@ -311,7 +315,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         try {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            RatingsAdapter ratingsAdapter = new RatingsAdapter(context, model, recyclerView, type);
+            RatingsAdapter ratingsAdapter = new RatingsAdapter(context, model, recyclerView, type, !bundle.containsKey("isIdentity"));
             recyclerView.setAdapter(ratingsAdapter);
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", StringHelper.convertStackTrace(e));

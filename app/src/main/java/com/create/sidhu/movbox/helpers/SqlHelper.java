@@ -131,6 +131,10 @@ public class SqlHelper {
         return Extras;
     }
 
+    public boolean isShowLoading(){
+        return showLoading;
+    }
+
     public boolean isService() {
         return isService;
     }

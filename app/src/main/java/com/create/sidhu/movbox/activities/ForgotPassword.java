@@ -72,24 +72,35 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
                 }
                 case R.id.buttonSubmitPassword:{
                     if(validate(3)){
-                        SqlHelper sqlHelper = new SqlHelper(ForgotPassword.this, ForgotPassword.this);
-                        sqlHelper.setMethod("GET");
-                        sqlHelper.setExecutePath("reset-password.php");
-                        sqlHelper.setActionString("stage:3");
-                        ArrayList<NameValuePair> params = new ArrayList<>();
-                        params.add(new BasicNameValuePair("email", email));
-                        params.add(new BasicNameValuePair("password", etPassword.getText().toString()));
-                        sqlHelper.setParams(params);
-                        sqlHelper.executeUrl(true);
+                        try {
+                            SqlHelper sqlHelper = new SqlHelper(ForgotPassword.this, ForgotPassword.this);
+                            sqlHelper.setMethod("GET");
+                            sqlHelper.setExecutePath("reset-password.php");
+                            sqlHelper.setActionString("stage:3");
+                            ArrayList<NameValuePair> params = new ArrayList<>();
+                            params.add(new BasicNameValuePair("email", email));
+                            params.add(new BasicNameValuePair("password", StringHelper.encryptPassword(etPassword.getText().toString())));
+                            sqlHelper.setParams(params);
+                            sqlHelper.executeUrl(true);
+                        }catch (Exception e) {
+                            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: PasswordReset - Stage 3", StringHelper.convertStackTrace(e));
+                            emailHelper.sendEmail();
+                        }
                     }
                     break;
                 }
                 case R.id.buttonSubmitOriginalPassword:{
-                    if(password.equals(etOriginalPassword.getText().toString())){
-                        llContainerOriginalPassword.setVisibility(View.GONE);
-                        llContainerPassword.setVisibility(View.VISIBLE);
-                    }else{
-                       etOriginalPassword.setError(getString(R.string.password_mismatch));
+                    try {
+                        String passwordInfo[] = password.split("!~");
+                        if (passwordInfo[0].equals(StringHelper.encryptPassword(etOriginalPassword.getText().toString(), StringHelper.convertSaltToByte(passwordInfo[1])))) {
+                            llContainerOriginalPassword.setVisibility(View.GONE);
+                            llContainerPassword.setVisibility(View.VISIBLE);
+                        } else {
+                            etOriginalPassword.setError(getString(R.string.password_mismatch));
+                        }
+                    }catch (Exception e){
+                        EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: PasswordReset", StringHelper.convertStackTrace(e));
+                        emailHelper.sendEmail();
                     }
                     break;
                 }

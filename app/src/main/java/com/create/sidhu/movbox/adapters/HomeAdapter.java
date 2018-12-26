@@ -86,7 +86,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                 @Override
                 public void onClick(View view) {
                     int id = view.getId();
-                    if (id == R.id.img_Review || id == R.id.containerReviews) {
+                    if (id == R.id.img_Review || id == R.id.containerReviews || (id == R.id.containerTypeDefinition && homeModels.get(position).getFavourites().getSubType().equals("review"))) {
                         Bundle bundle = new ModelHelper(context).buildReviewModelBundle(homeModels.get(position).getFavourites(), "HomeFragment");
                         Intent intent = new Intent(context, ReviewsActivity.class);
                         intent.putExtra("bundle", bundle);
@@ -456,6 +456,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
             holder.llContainerRating.setOnClickListener(onClickListener);
             holder.llContainerMaster.setOnClickListener(onClickListener);
             holder.llContainerMore.setOnClickListener(onClickListener);
+            holder.llContainerDefinition.setOnClickListener(onClickListener);
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeAdapter", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();

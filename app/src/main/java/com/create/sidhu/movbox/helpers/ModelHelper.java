@@ -69,7 +69,7 @@ public class ModelHelper {
             movieModel.setCensorRating(jsonObject.getString("censor"));
             movieModel.setDuration(Integer.parseInt(jsonObject.getString("duration")));
             movieModel.setRelease(jsonObject.getString("release"));
-            movieModel.setGenre(jsonObject.getString("genre"));
+            movieModel.setGenre(jsonObject.getString("genre").replace("!~", ","));
             movieModel.setStory(jsonObject.getString("story"));
             movieModel.setTotalWatched(Integer.parseInt(jsonObject.getString("total_watched")));
             movieModel.setTotalRatings(Integer.parseInt(jsonObject.getString("total_ratings")));
