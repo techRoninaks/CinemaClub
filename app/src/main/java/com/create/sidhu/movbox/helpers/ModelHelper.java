@@ -411,7 +411,7 @@ public class ModelHelper {
                 bundle.putString("movie_dimension", favouritesModel.getMovie().getDisplayDimension());
                 bundle.putString("movie_language", favouritesModel.getMovie().getLanguage());
             }
-            else if(requestPath.equals("c")) {
+            else if(requestPath.equals("Notification")) {
                 bundle.putString("type", "movie");
                 bundle.putString("user_id", favouritesModel.getUser().getUserId());
                 bundle.putString("user_name", favouritesModel.getUser().getName());

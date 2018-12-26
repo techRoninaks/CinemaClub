@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -25,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.crypto.SecretKeyFactory;
@@ -210,9 +212,9 @@ public class StringHelper {
             ObjectOutputStream so = new ObjectOutputStream(bo);
             so.writeObject(obj);
             so.flush();
-            serializedObject = bo.toString();
+            serializedObject = Base64.encodeToString(bo.toByteArray(),Base64.DEFAULT);
         } catch (Exception e) {
-            System.out.println(e);
+//            System.out.println(e);
         }
         return serializedObject;
     }
@@ -225,12 +227,12 @@ public class StringHelper {
 
         UserModel obj =new UserModel();
         try {
-            byte b[] = serializedObject.getBytes();
+            byte b[] = Base64.decode(serializedObject.getBytes(),Base64.DEFAULT);
             ByteArrayInputStream bi = new ByteArrayInputStream(b);
             ObjectInputStream si = new ObjectInputStream(bi);
             obj = (UserModel) si.readObject();
         } catch (Exception e) {
-            System.out.println(e);
+//            System.out.println(e);
         }
         return obj;
     }

@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
     private Badge xbadge,mbadge;
     public static  int unseenCounter = 0, followCounter = 0;
     public static String markList ="";
-    public  SharedPreferences sharedPreferences;
     int pauseFlag=0;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -185,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             StringHelper.changeToolbarFont(toolbar, MainActivity.this);
             isFirst = true;
-            sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
+            SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
             username = sharedPreferences.getString("username", "");
             LoginStatus = sharedPreferences.getBoolean("login", false);
             if (!username.isEmpty() && LoginStatus) {
@@ -193,6 +192,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                     getUserDetails();
                     updatesModels = new ArrayList<>();
                 } else {
+                    sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
+                    sharedPreferences.edit().putString("current_usermodel", StringHelper.convertObjectToString(MainActivity.currentUserModel)).commit();
                     scheduleJob();
                 }
                 masterParent = (ConstraintLayout) findViewById(R.id.containerMainParent);
