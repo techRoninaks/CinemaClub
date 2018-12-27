@@ -88,7 +88,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             if (homeModels == null)
             {
                 fetchUpdates("0",LOAD_INITIAL);
-                markRead(homeModels);
+               
             }
             else {
                 markRead(homeModels);

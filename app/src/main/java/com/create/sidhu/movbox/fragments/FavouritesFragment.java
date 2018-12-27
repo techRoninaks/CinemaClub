@@ -64,7 +64,6 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             llContainerPlaceholder = rootview.findViewById(R.id.containerPlaceholder);
             if (favouritesList == null){
                 fetchUpdates();
-                markRead(favouritesList);
             }
             else {
                 arrayCheck();
@@ -101,6 +100,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
 
                 recyclerView.setVisibility(View.GONE);
                 llContainerPlaceholder.setVisibility(View.VISIBLE);
+                return;
         }
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -134,6 +134,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                 favouritesList.add(favouritesModel);
             }
             arrayCheck();
+            markRead(favouritesList);
         }
         catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
