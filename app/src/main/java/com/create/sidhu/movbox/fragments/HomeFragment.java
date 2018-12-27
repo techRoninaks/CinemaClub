@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -52,13 +53,18 @@ import java.util.HashMap;
  */
 public class HomeFragment extends Fragment implements SqlDelegate, CallbackDelegate {
 
+    private final int LOAD_INITIAL = 0;
+    private final int LOAD_REFRESH = 1;
+    private final int LOAD_HISTORY = 2;
     View rootView;
     RecyclerView recyclerView;
     LinearLayout llContainerPlaceholder;
     HomeAdapter homeAdapter;
+    public static String seeker = "";
     public static ArrayList<HomeModel> homeModels;
     Context context;
     TransparentProgressDialog pDialog;
+    private SwipeRefreshLayout swipeContainer;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -75,12 +81,14 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             llContainerPlaceholder = rootView.findViewById(R.id.containerPlaceholder);
             Toolbar toolbar = ((MainActivity) context).findViewById(R.id.toolbar);
             toolbar.setTitle("");
+            swipeContainer = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
             ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
             imgTitle.setVisibility(View.VISIBLE);
             StringHelper.changeToolbarFont(toolbar, (MainActivity) context);
             if (homeModels == null)
             {
-                fetchUpdates();
+                fetchUpdates("0",LOAD_INITIAL);
+               
             }
             else {
                 markRead(homeModels);
@@ -90,11 +98,40 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 recyclerView.setAdapter(homeAdapter);
             }
             //initRecyclerView();
-        }catch (Exception e){
-            Toast.makeText(context, "Home fragment exception", Toast.LENGTH_SHORT).show();
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+
+                    if (!recyclerView.canScrollVertically(1)) {
+                        if(seeker.equals(""))
+                            Toast.makeText(context, "Explore Cinema Club more!!!", Toast.LENGTH_SHORT).show();
+                        else
+                            fetchUpdates(seeker,LOAD_HISTORY);
+
+                    }
+                }
+            });
+
+        }
+        catch (Exception e){
+//            Toast.makeText(context, "Home fragment exception", Toast.LENGTH_SHORT).show();
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+
+            public void onRefresh() {
+                fetchUpdates("0",LOAD_REFRESH);
+            }
+
+        }); // Configure the refreshing colors
+
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary,
+                R.color.colorTextPrimary
+                );
         return rootView;
     }
 
@@ -102,11 +139,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
         int length  = homeModels.size();
         String markList="";
         for(int i= 0;i<length;i++){
-            if(homeModels.get(i).getFavourites().getSubType().equals("new_releases") ||homeModels.get(i).getFavourites().getSubType().equals("recommendations"))
-            {
-
-            }
-            else if(!homeModels.get(i).getFavourites().getRead()){
+            if(!homeModels.get(i).getFavourites().getRead() && !(homeModels.get(i).getFavourites().getSubType().equals("new_releases") ||homeModels.get(i).getFavourites().getSubType().equals("recommendations"))){
                 markList = markList + homeModels.get(i).getFavourites().getId()+",";
             }
         }
@@ -124,25 +157,26 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
     /***
          * Fetches the user updates from server
      */
-    private void fetchUpdates(){
+    private void fetchUpdates(String seeker,int loadType){
         SqlHelper sqlHelper = new SqlHelper(context, HomeFragment.this);
         sqlHelper.setExecutePath("get-updates.php");
         sqlHelper.setMethod("GET");
-        sqlHelper.setActionString("home");
+        sqlHelper.setActionString("home:"+loadType);
         ArrayList<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("seeker", "0"));
+        params.add(new BasicNameValuePair("seeker", seeker));
         params.add(new BasicNameValuePair("fragment", "home"));
         sqlHelper.setParams(params);
-        sqlHelper.executeUrl(true);
+        sqlHelper.executeUrl(loadType == LOAD_INITIAL || loadType == LOAD_HISTORY);
 
     }
 
 
 
-    private void initRecyclerView(JSONObject jsonObject){
+    private void initRecyclerView(JSONObject jsonObject,int loadType){
         MainActivity mainActivity = (MainActivity) context;
-        homeModels = new ArrayList<>();
+        if (loadType == LOAD_INITIAL || loadType == LOAD_REFRESH)
+            homeModels = new ArrayList<>();
         String markList="";
         MainActivity.unseenCounter = 0;
         MainActivity.followCounter = 0;
@@ -202,10 +236,12 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                         }
                     }
                 }
-                pDialog = new TransparentProgressDialog(context);
-                pDialog.setCancelable(false);
-                pDialog.show();
-                fetchActors(castString, true);
+                if(loadType == LOAD_INITIAL ){
+                    pDialog = new TransparentProgressDialog(context);
+                    pDialog.setCancelable(false);
+                    pDialog.show();
+                }
+                fetchActors(castString, true, loadType);
                 markRead(homeModels);
 //                if(MainActivity.unseenCounter>0)
 //                    mainActivity.initnotif(MainActivity.BOTTOM_NAVIGATION_HOME,MainActivity.unseenCounter);
@@ -222,7 +258,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
         }
     }
 
-    private void fetchActors(String castString, boolean start){
+    private void fetchActors(String castString, boolean start, int loadType){
         if(start) {
             SqlHelper sqlHelper = new SqlHelper(context, HomeFragment.this);
             ArrayList<NameValuePair> params = new ArrayList<>();
@@ -230,16 +266,27 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             params.add(new BasicNameValuePair("m_id", ""));
             sqlHelper.setExecutePath("get-cast.php");
             sqlHelper.setParams(params);
+            HashMap<String, String> extras = new HashMap<>();
+            extras.put("load_type", "" + loadType);
+            sqlHelper.setExtras(extras);
             sqlHelper.setActionString("cast");
             sqlHelper.setMethod("GET");
             sqlHelper.executeUrl(false);
         }else{
             try {
-                LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-                recyclerView.setLayoutManager(layoutManager);
-                homeAdapter = new HomeAdapter(context, homeModels, rootView, HomeFragment.this);
-                recyclerView.setAdapter(homeAdapter);
-                pDialog.dismiss();
+                if(loadType == LOAD_INITIAL) {
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+                    recyclerView.setLayoutManager(layoutManager);
+                    homeAdapter = new HomeAdapter(context, homeModels, rootView, HomeFragment.this);
+                    recyclerView.setAdapter(homeAdapter);
+                    pDialog.dismiss();
+                }
+                else
+                {
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                    if (loadType == LOAD_REFRESH)
+                        swipeContainer.setRefreshing(false);
+                }
             }catch (Exception e){
                 EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
                 emailHelper.sendEmail();
@@ -247,7 +294,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
         }
     }
 
-    private void addCastData(JSONArray jsonArray){
+    private void addCastData(JSONArray jsonArray, int loadType){
         int length = jsonArray.length();
         for(int i = 1; i < length; i++){
             ModelHelper modelHelper = new ModelHelper(context);
@@ -268,7 +315,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             }
 
         }
-        fetchActors("", false);
+        fetchActors("", false, loadType);
     }
 
     private void updateDataset(String type, HashMap<String, String> extras){
@@ -478,12 +525,13 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
     @Override
     public void onResponse(SqlHelper sqlHelper) {
         try {
-            if(sqlHelper.getActionString().equals("home")) {
+            if(sqlHelper.getActionString().contains("home")) {
                 JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");
                 String response = jsonObject.getJSONObject("0").getString("response");
 
                 if (response.equals(context.getString(R.string.response_success))) {
-                    initRecyclerView(jsonObject);
+                    seeker = jsonObject.getJSONObject("0").getString("new_seeker");
+                    initRecyclerView(jsonObject, Integer.parseInt(sqlHelper.getActionString().split(":")[1]));
                 } else if (response.equals(context.getString(R.string.response_unsuccessful))) {
                     recyclerView.setVisibility(View.GONE);
                     llContainerPlaceholder.setVisibility(View.VISIBLE);
@@ -527,7 +575,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                 String response = jsonObject.getString("response");
                 if(response.equals(context.getString(R.string.response_success))){
-                    addCastData(jsonArray);
+                    addCastData(jsonArray, Integer.parseInt(sqlHelper.getExtras().get("load_type")));
                 }else if(response.equals(context.getString(R.string.response_unsuccessful))){
 
                 }else if(response.equals(context.getString(R.string.unexpected))){

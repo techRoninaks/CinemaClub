@@ -120,6 +120,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                 JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");
                 String response = jsonObject.getJSONObject("0").getString("response");
                 if (response.equals(context.getString(R.string.response_success))) {
+                    HomeFragment.seeker = jsonObject.getJSONObject("0").getString("new_seeker");
                     initializeHomeModel(jsonObject);
                 } else if (response.equals(context.getString(R.string.response_unsuccessful))) {
                     Log.e(TAG, context.getString(R.string.response_unsuccessful));
