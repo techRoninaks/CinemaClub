@@ -189,7 +189,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
 
     private void initRecyclerView(JSONObject jsonObject,int loadType){
         MainActivity mainActivity = (MainActivity) context;
-        if (loadType == LOAD_INITIAL || loadType == LOAD_HISTORY)
+        if (loadType == LOAD_INITIAL || loadType == LOAD_REFRESH)
             homeModels = new ArrayList<>();
         String markList="";
         MainActivity.unseenCounter = 0;
@@ -261,7 +261,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                         MainActivity.unseenCounter+=1;
                     }
                 }
-                if(loadType == LOAD_INITIAL || loadType == LOAD_HISTORY){
+                if(loadType == LOAD_INITIAL ){
                     pDialog = new TransparentProgressDialog(context);
                     pDialog.setCancelable(false);
                     pDialog.show();
@@ -300,7 +300,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             sqlHelper.executeUrl(false);
         }else{
             try {
-                if(loadType == LOAD_INITIAL || loadType == LOAD_HISTORY) {
+                if(loadType == LOAD_INITIAL) {
                     LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
                     recyclerView.setLayoutManager(layoutManager);
                     homeAdapter = new HomeAdapter(context, homeModels, rootView, HomeFragment.this);
