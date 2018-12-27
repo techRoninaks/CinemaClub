@@ -124,7 +124,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             @Override
 
             public void onRefresh() {
-               fetchTimelineAsync(0);
+                fetchUpdates("0",LOAD_REFRESH);
             }
 
         }); // Configure the refreshing colors
@@ -134,26 +134,12 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 );
         return rootView;
     }
-    public void fetchTimelineAsync(int page) {
-
-        // Send the network request to fetch the updated data
-
-        // `client` here is an instance of Android Async HTTP
-
-        // getHomeTimeline is an example endpoint.
-        fetchUpdates("0",LOAD_REFRESH);
-
-    }
 
     private void markRead(ArrayList<HomeModel> homeModels) {
         int length  = homeModels.size();
         String markList="";
         for(int i= 0;i<length;i++){
-            if(homeModels.get(i).getFavourites().getSubType().equals("new_releases") ||homeModels.get(i).getFavourites().getSubType().equals("recommendations"))
-            {
-
-            }
-            else if(!homeModels.get(i).getFavourites().getRead()){
+            if(!homeModels.get(i).getFavourites().getRead() && !(homeModels.get(i).getFavourites().getSubType().equals("new_releases") ||homeModels.get(i).getFavourites().getSubType().equals("recommendations"))){
                 markList = markList + homeModels.get(i).getFavourites().getId()+",";
             }
         }
@@ -178,7 +164,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
         sqlHelper.setActionString("home:"+loadType);
         ArrayList<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("seeker", ""+ seeker));
+        params.add(new BasicNameValuePair("seeker", seeker));
         params.add(new BasicNameValuePair("fragment", "home"));
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(loadType == LOAD_INITIAL || loadType == LOAD_HISTORY);
@@ -212,63 +198,51 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                         castString = castString.concat(homeModel.getFavourites().getMovie().getId() + "!@" + homeModels.size() + "!@" + homeModel.getFavourites().getMovie().getCast());
                         homeModels.add(homeModel);
                     }
-
                     // Notification counter code HomeFragment
-                    if(jsonObject.getJSONObject("" + i).getString("type").equals("watchlist_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
-                        markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                        MainActivity.unseenCounter+=1;
-                    }
-                    if(jsonObject.getJSONObject("" + i).getString("type").equals("review_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
-                        markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                        MainActivity.unseenCounter+=1;
-                    }
-                    if(jsonObject.getJSONObject("" + i).getString("type").equals("follow")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
-                        markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                        MainActivity.followCounter+=1;
-                    }
-                    if (jsonObject.getJSONObject("" + i).getString("type").equals("watching")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                    {
-                        markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                        MainActivity.followCounter+=1;
-                        MainActivity.unseenCounter+=1;
-                    }
-                    if (jsonObject.getJSONObject("" + i).getString("type").equals("rating")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                    {
-                        markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                        MainActivity.followCounter+=1;
-                        MainActivity.unseenCounter+=1;
-                    }
-                    if (jsonObject.getJSONObject("" + i).getString("type").equals("review")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                    {
-                        markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                        MainActivity.followCounter+=1;
-                        MainActivity.unseenCounter+=1;
-                    }
-                    if (jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                    {
-                        markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                        MainActivity.followCounter+=1;
-                        MainActivity.unseenCounter+=1;
-                    }
-                    if (jsonObject.getJSONObject("" + i).getString("type").equals("review_watched")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                    {
-                        markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                        MainActivity.unseenCounter+=1;
-                    }
-                    if (jsonObject.getJSONObject("" + i).getString("type").equals("watching_now")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                    {
-                        markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                        MainActivity.unseenCounter+=1;
+                    if(jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                        switch (jsonObject.getJSONObject("" + i).getString("type")){
+                            case "watchlist_reminder":
+                            case "review_reminder":
+                            case "review_watched":
+                            case "watching_now":{
+                                MainActivity.unseenCounter += 1;
+                                break;
+                            }
+                            case "watching":{
+                                MainActivity.followCounter+=1;
+                                MainActivity.unseenCounter+=1;
+                                break;
+                            }
+                            case "rating":{
+                                MainActivity.followCounter+=1;
+                                MainActivity.unseenCounter+=1;
+                                break;
+                            }
+                            case "review":{
+                                MainActivity.followCounter+=1;
+                                MainActivity.unseenCounter+=1;
+                                break;
+                            }
+                            case "review_vote":{
+                                MainActivity.followCounter+=1;
+                                MainActivity.unseenCounter+=1;
+                                break;
+                            }
+                            case "follow":{
+                                MainActivity.followCounter+=1;
+                                break;
+                            }
+
+                        }
                     }
                 }
                 if(loadType == LOAD_INITIAL ){
                     pDialog = new TransparentProgressDialog(context);
                     pDialog.setCancelable(false);
                     pDialog.show();
-                    recyclerView.getAdapter().notifyDataSetChanged();
                 }
                 fetchActors(castString, true, loadType);
-                mainActivity.removeMarked(markList);
+                markRead(homeModels);
 //                if(MainActivity.unseenCounter>0)
 //                    mainActivity.initnotif(MainActivity.BOTTOM_NAVIGATION_HOME,MainActivity.unseenCounter);
 //                if(MainActivity.followCounter>0)
@@ -341,7 +315,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             }
 
         }
-        fetchActors("", false,loadType);
+        fetchActors("", false, loadType);
     }
 
     private void updateDataset(String type, HashMap<String, String> extras){
@@ -548,7 +522,6 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
 
     }
 
-
     @Override
     public void onResponse(SqlHelper sqlHelper) {
         try {
@@ -565,8 +538,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 } else if (response.equals(context.getString(R.string.unexpected))) {
                     Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                 }
-            }
-                else if(sqlHelper.getActionString().contains("watching")){
+            }else if(sqlHelper.getActionString().contains("watching")){
                 recyclerView = rootView.findViewById(R.id.recyclerView);
                 String response = sqlHelper.getJSONResponse().getJSONObject("data").getString("response");
                 int position = Integer.parseInt(sqlHelper.getActionString().split(":")[1]);
@@ -616,8 +588,8 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
-
     }
+
 
     @Override
     public void onResultReceived(String type, boolean resultCode, HashMap<String, String> extras) {
