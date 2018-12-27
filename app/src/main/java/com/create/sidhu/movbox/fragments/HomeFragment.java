@@ -81,7 +81,6 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             if (homeModels == null)
             {
                 fetchUpdates();
-                markRead(homeModels);
             }
             else {
                 markRead(homeModels);
@@ -165,60 +164,49 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                         castString = castString.concat(homeModel.getFavourites().getMovie().getId() + "!@" + homeModels.size() + "!@" + homeModel.getFavourites().getMovie().getCast());
                         homeModels.add(homeModel);
                     }
-
                     // Notification counter code HomeFragment
-                        if(jsonObject.getJSONObject("" + i).getString("type").equals("watchlist_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
-                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                            MainActivity.unseenCounter+=1;
-                        }
-                        if(jsonObject.getJSONObject("" + i).getString("type").equals("review_reminder")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
-                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                            MainActivity.unseenCounter+=1;
-                        }
-                        if(jsonObject.getJSONObject("" + i).getString("type").equals("follow")&&jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
-                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                            MainActivity.followCounter+=1;
-                        }
-                        if (jsonObject.getJSONObject("" + i).getString("type").equals("watching")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                        {
-                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                            MainActivity.followCounter+=1;
-                            MainActivity.unseenCounter+=1;
-                        }
-                        if (jsonObject.getJSONObject("" + i).getString("type").equals("rating")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                        {
-                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                            MainActivity.followCounter+=1;
-                            MainActivity.unseenCounter+=1;
-                        }
-                        if (jsonObject.getJSONObject("" + i).getString("type").equals("review")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                        {
-                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                            MainActivity.followCounter+=1;
-                            MainActivity.unseenCounter+=1;
-                        }
-                        if (jsonObject.getJSONObject("" + i).getString("type").equals("review_vote")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                        {
-                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                            MainActivity.followCounter+=1;
-                            MainActivity.unseenCounter+=1;
-                        }
-                        if (jsonObject.getJSONObject("" + i).getString("type").equals("review_watched")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                        {
-                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                            MainActivity.unseenCounter+=1;
-                        }
-                        if (jsonObject.getJSONObject("" + i).getString("type").equals("watching_now")&& jsonObject.getJSONObject(""+ i).getString("has_seen").equals("0"))
-                        {
-                            markList = markList+jsonObject.getJSONObject("" + i).getString("id")+",";
-                            MainActivity.unseenCounter+=1;
+                    if(jsonObject.getJSONObject("" + i).getString("has_seen").equals("0")){
+                        switch (jsonObject.getJSONObject("" + i).getString("type")){
+                            case "watchlist_reminder":
+                            case "review_reminder":
+                            case "review_watched":
+                            case "watching_now":{
+                                MainActivity.unseenCounter += 1;
+                                break;
+                            }
+                            case "watching":{
+                                MainActivity.followCounter+=1;
+                                MainActivity.unseenCounter+=1;
+                                break;
+                            }
+                            case "rating":{
+                                MainActivity.followCounter+=1;
+                                MainActivity.unseenCounter+=1;
+                                break;
+                            }
+                            case "review":{
+                                MainActivity.followCounter+=1;
+                                MainActivity.unseenCounter+=1;
+                                break;
+                            }
+                            case "review_vote":{
+                                MainActivity.followCounter+=1;
+                                MainActivity.unseenCounter+=1;
+                                break;
+                            }
+                            case "follow":{
+                                MainActivity.followCounter+=1;
+                                break;
+                            }
+
                         }
                     }
+                }
                 pDialog = new TransparentProgressDialog(context);
                 pDialog.setCancelable(false);
                 pDialog.show();
                 fetchActors(castString, true);
-                mainActivity.removeMarked(markList);
+                markRead(homeModels);
 //                if(MainActivity.unseenCounter>0)
 //                    mainActivity.initnotif(MainActivity.BOTTOM_NAVIGATION_HOME,MainActivity.unseenCounter);
 //                if(MainActivity.followCounter>0)
