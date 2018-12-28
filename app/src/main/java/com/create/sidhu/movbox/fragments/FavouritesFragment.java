@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -39,7 +40,12 @@ import java.util.ArrayList;
  */
 public class FavouritesFragment extends Fragment implements SqlDelegate {
 
+    private final int LOAD_INITIAL = 0;
+    private final int LOAD_REFRESH = 1;
+    private final int LOAD_HISTORY = 2;
+    String seeker = "";
     public static ArrayList<FavouritesModel> favouritesList;
+    private SwipeRefreshLayout swipeContainer; //Swipe down refresh
 
     RecyclerView recyclerView;
     LinearLayout llContainerPlaceholder;
@@ -59,12 +65,13 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             Toolbar toolbar = ((MainActivity) context).findViewById(R.id.toolbar);
             toolbar.setTitle(StringHelper.toTitleCase(context.getString(R.string.title_favourites)));
             StringHelper.changeToolbarFont(toolbar, (MainActivity) context);
+            swipeContainer = (SwipeRefreshLayout) rootview.findViewById(R.id.swipeRefresh);
             ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
             imgTitle.setVisibility(View.GONE);
             recyclerView = (RecyclerView) rootview.findViewById(R.id.recyclerView_Favourites);
             llContainerPlaceholder = rootview.findViewById(R.id.containerPlaceholder);
             if (favouritesList == null){
-                fetchUpdates();
+                fetchUpdates("0",LOAD_INITIAL);
             }
             else {
                 arrayCheck();
@@ -74,6 +81,33 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+
+            public void onRefresh() {
+                fetchUpdates("0",LOAD_REFRESH);
+            }
+
+        }); // Configure the refreshing colors
+
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary,
+                R.color.colorTextPrimary
+        );
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    if(seeker.equals("")) {
+                        Toast.makeText(context, "Explore Cinema Club more!!!", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                        fetchUpdates(seeker,LOAD_HISTORY);
+                }
+            }
+        });
         return rootview;
     }
 
@@ -113,20 +147,23 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
     /***
      * Fetches the user updates from server
      */
-    private void fetchUpdates(){
+    private void fetchUpdates(String seeker,int loadType){
         SqlHelper sqlHelper = new SqlHelper(context, FavouritesFragment.this);
         sqlHelper.setExecutePath("get-updates.php");
         sqlHelper.setMethod("GET");
+        sqlHelper.setActionString("favourites:"+loadType);
         ContentValues params = new ContentValues();
         params.put("u_id", MainActivity.currentUserModel.getUserId());
-        params.put("seeker", "0");
+        params.put("seeker", seeker);
         params.put("fragment", "favourites");
         sqlHelper.setParams(params);
-        sqlHelper.executeUrl(true);
+        sqlHelper.executeUrl(loadType == LOAD_INITIAL || loadType == LOAD_HISTORY);
+
     }
 
-    public void populateList(JSONObject jsonObject){
-        favouritesList = new ArrayList<>();
+    public void populateList(JSONObject jsonObject, int loadType){
+        if(loadType == LOAD_INITIAL || loadType == LOAD_REFRESH)
+            favouritesList = new ArrayList<>();
         try{
             int length = Integer.parseInt(jsonObject.getJSONObject("0").getString("length"));
             ModelHelper modelHelper = new ModelHelper(context);
@@ -134,6 +171,8 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                 FavouritesModel favouritesModel = modelHelper.buildFavouritesModel(jsonObject.getJSONObject("" + i), "favourites");
                 favouritesList.add(favouritesModel);
             }
+            if(loadType == LOAD_REFRESH)
+                swipeContainer.setRefreshing(false);
             arrayCheck();
             markRead(favouritesList);
         }
@@ -204,7 +243,8 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");
             String response = jsonObject.getJSONObject("0").getString("response");
             if(response.equals(context.getString(R.string.response_success))){
-                populateList(jsonObject);
+                seeker = jsonObject.getJSONObject("0").getString("new_seeker");
+                populateList(jsonObject, Integer.parseInt(sqlHelper.getActionString().split(":")[1]));
             }else if(response.equals(context.getString(R.string.response_unsuccessful))){
                 recyclerView.setVisibility(View.GONE);
                 llContainerPlaceholder.setVisibility(View.VISIBLE);
