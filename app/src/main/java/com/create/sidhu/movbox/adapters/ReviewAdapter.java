@@ -209,11 +209,16 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             CharSequence ago = DateUtils.getRelativeTimeSpanString(time, now, DateUtils.MINUTE_IN_MILLIS);
             holder.tvTime.setText(ago);
             holder.tvLike.setText(reviewModels.get(position).getLikes() + " Likes");
-            holder.imgLike.setImageDrawable(reviewModels.get(position).getLiked() ? context.getDrawable(R.drawable.ic_heart_filled) : context.getDrawable(R.drawable.ic_heart));
+            if(reviewModels.get(position).getType().equals("user"))
+                holder.imgLike.setVisibility(View.GONE);
+            else
+                holder.imgLike.setImageDrawable(reviewModels.get(position).getLiked() ? context.getDrawable(R.drawable.ic_heart_filled) : context.getDrawable(R.drawable.ic_heart));
             String replies = reviewModels.get(position).getReplies();
             if(replies.startsWith("#")){
-                holder.tvReplyView.setVisibility(View.VISIBLE);
-                holder.tvReplyView.setText(context.getString(R.string.review_reply_view).replace("!#!",reviewModels.get(position).getReplies().substring(1)));
+                if(!reviewModels.get(position).getType().equals("user")) {
+                    holder.tvReplyView.setVisibility(View.VISIBLE);
+                    holder.tvReplyView.setText(context.getString(R.string.review_reply_view).replace("!#!", reviewModels.get(position).getReplies().substring(1)));
+                }
                 reviewsActivity.attachAdapter(holder.recyclerView, reviewModels.get(position).getRepliesList());
             }
             if(reviewModels.get(position).getUserPrivacy().charAt(0) == '0'){
