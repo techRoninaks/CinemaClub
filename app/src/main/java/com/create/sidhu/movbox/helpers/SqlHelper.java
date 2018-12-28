@@ -1,6 +1,7 @@
 package com.create.sidhu.movbox.helpers;
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -20,12 +21,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -34,6 +39,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by nihalpradeep on 10/08/18.
@@ -47,12 +53,13 @@ public class SqlHelper {
     private String StringResponse;
     private String ActionString;
     private SqlDelegate sqlDelegate;
-    private ArrayList<NameValuePair> params;
+    private ContentValues params;
     private String Method;
     private boolean showLoading;
     private boolean isService;
     private String UploadFilePath;
     private HashMap<String, String> Extras;
+
     //Constructors
     public SqlHelper(Context context){
         MasterUrl = context.getString(R.string.master_url);
@@ -65,7 +72,7 @@ public class SqlHelper {
         MasterUrl = context.getString(R.string.master_url);
         isService = false;
     }
-        public SqlHelper(Context context, SqlDelegate sqlDelegate, String executePath){
+    public SqlHelper(Context context, SqlDelegate sqlDelegate, String executePath){
         this.MasterUrl = context.getString(R.string.master_url);
         this.context = context;
         this.ExecutePath = executePath;
@@ -79,9 +86,8 @@ public class SqlHelper {
         this.ExecutePath = executePath;
         isService = false;
     }
+
     //Getters
-
-
     public android.content.Context getContext() {
         return context;
     }
@@ -115,7 +121,7 @@ public class SqlHelper {
         return sqlDelegate;
     }
 
-    public ArrayList<NameValuePair> getParams() {
+    public ContentValues getParams() {
         return params;
     }
 
@@ -140,8 +146,6 @@ public class SqlHelper {
     }
 
     //Setters
-
-
     public void setSqlDelegate(SqlDelegate sqlDelegate) {
         this.sqlDelegate = sqlDelegate;
     }
@@ -170,7 +174,7 @@ public class SqlHelper {
         StringResponse = stringResponse;
     }
 
-    public void setParams(ArrayList<NameValuePair> params) {
+    public void setParams(ContentValues params) {
         this.params = params;
     }
 
@@ -189,22 +193,57 @@ public class SqlHelper {
     public void setService(boolean isService){
         this.isService = isService;
     }
-    //Public methods
 
+
+    //Public methods
     public void executeUrl(Boolean showLoading){
         this.showLoading = showLoading;
         LoadResponse loadResponse = new LoadResponse();
         loadResponse.execute();
     }
 
-    public void uploadFile(Boolean showLoading){
-        this.showLoading = showLoading;
-        UploadFile uploadFile = new UploadFile();
-        uploadFile.execute();
+    //Private methods
+    private Boolean isOnline() {
+        try {
+            Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.com");
+            int returnVal = p1.waitFor();
+            boolean reachable = (returnVal==0);
+            return reachable;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private Boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    }
+
+    private String getQuery(ContentValues parameters) {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for(Map.Entry<String,Object> entry : parameters.valueSet()){
+            if (first)
+                first = false;
+            else
+                result.append("&");
+            try {
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue().toString(),"UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
+        }
+        return result.toString();
     }
 
     //Async Tasks
-
     public class LoadResponse extends AsyncTask<Void, Void, Void>{
         TransparentProgressDialog pDialog;
         JSONParser jParser = new JSONParser();
@@ -212,19 +251,73 @@ public class SqlHelper {
 
         @Override
         protected Void doInBackground(Void... voids) {
+//            try {
+//                if(!(isNetworkAvailable() && isOnline())){
+//                    canceled = true;
+//                }else {
+//                    JSONObject jsonObject = null;
+//                    if (Method.equals("GET"))
+//                        jsonObject = jParser.makeHttpRequest(MasterUrl + ExecutePath, "GET", params);
+//                    else if (Method.equals("POST"))
+//                        jsonObject = jParser.makeHttpRequest(MasterUrl + ExecutePath, "POST", params);
+//                    JSONResponse = jsonObject;
+//                }
+//            }catch (Exception e){
+//                Log.e("SqlHelper:Background", e.getMessage());
+//            }
+//            return null;
+            HttpURLConnection httpURLConnection = null;
+            InputStream IS = null;
+            int temp;
             try {
-                if(!(isNetworkAvailable() && isOnline())){
-                    canceled = true;
-                }else {
-                    JSONObject jsonObject = null;
-                    if (Method.equals("GET"))
-                        jsonObject = jParser.makeHttpRequest(MasterUrl + ExecutePath, "GET", params);
-                    else if (Method.equals("POST"))
-                        jsonObject = jParser.makeHttpRequest(MasterUrl + ExecutePath, "POST", params);
-                    JSONResponse = jsonObject;
+                URL url = null;
+                if(Method.equals("GET")){
+                    url = new URL(MasterUrl + ExecutePath + "?" + getQuery(params));
+                    httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setDoOutput(false);
+                    httpURLConnection.setRequestMethod(Method);
+                    httpURLConnection.setConnectTimeout(10000);
+                    httpURLConnection.setReadTimeout(10000);
+                    httpURLConnection.setDoInput(true);
+                    httpURLConnection.connect();
+                }else if(Method.equals("POST")){
+                    url = new URL(MasterUrl + ExecutePath);
+                    httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setRequestMethod(Method);
+                    httpURLConnection.setConnectTimeout(10000);
+                    httpURLConnection.setReadTimeout(10000);
+                    httpURLConnection.setDoInput(true);
+                    httpURLConnection.connect();
+                    OutputStream OS = httpURLConnection.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS, "UTF-8"));
+                    String data = getQuery(params);
+                    bufferedWriter.write(data);
+                    bufferedWriter.flush();
+                    bufferedWriter.close();
+                    OS.close();
                 }
-            }catch (Exception e){
-                Log.e("SqlHelper:Background", e.getMessage());
+                IS = httpURLConnection.getInputStream();
+                String response = "";
+                while ((temp = IS.read()) != -1) {
+                    response += (char) temp;
+                }
+                JSONResponse = new JSONObject(response);
+                return null;
+            } catch (Exception e){
+                String s = new String();
+            } finally {
+                if (httpURLConnection != null)
+                {
+                    httpURLConnection.disconnect();
+                }
+                try {
+                    if (IS != null) {
+                        IS.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
@@ -255,145 +348,4 @@ public class SqlHelper {
         }
 
     }
-
-    public class UploadFile extends AsyncTask<Void, Void, Void>{
-        ProgressDialog pDialog;
-        HttpURLConnection conn = null;
-        DataOutputStream dos = null;
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary = "*****";
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1 * 1024 * 1024;
-        int serverResponseCode = 0;
-        File sourceFile = new File(getUploadFilePath());
-        @Override
-        protected Void doInBackground(Void... voids) {
-            try{
-                FileInputStream fileInputStream = new FileInputStream(sourceFile);
-                URL url = new URL(getMasterUrl() + getExecutePath());
-
-                // Open a HTTP  connection to  the URL
-                conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestProperty("Connection", "Keep-Alive");
-                conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
-                conn.setRequestProperty("uploaded_file", UploadFilePath);
-                conn.setRequestMethod("POST");
-                conn.setDoInput(true);
-                conn.setDoOutput(true);
-                conn.setUseCaches(false); // Don't use a Cached Copy
-
-                dos = new DataOutputStream(conn.getOutputStream());
-                dos.writeBytes(getQuery(params));
-                dos.writeBytes(twoHyphens + boundary + lineEnd);
-                dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""
-                                + UploadFilePath + "\"" + lineEnd);
-
-                        dos.writeBytes(lineEnd);
-
-                // create a buffer of  maximum size
-                bytesAvailable = fileInputStream.available();
-
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                buffer = new byte[bufferSize];
-
-                // read file and write it into form...
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-                while (bytesRead > 0) {
-
-                    dos.write(buffer, 0, bufferSize);
-                    bytesAvailable = fileInputStream.available();
-                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-
-                }
-
-                // send multipart form data necesssary after file data...
-                dos.writeBytes(lineEnd);
-                dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-
-                // Responses from the server (code and message)
-                DataInputStream inputStream = new DataInputStream(conn.getInputStream());
-                serverResponseCode = conn.getResponseCode();
-                String serverResponseMessage = conn.getResponseMessage();
-
-                Log.i("uploadFile", "HTTP Response is : "
-                        + serverResponseMessage + ": " + serverResponseCode);
-                if(serverResponseCode == 200)
-                    setStringResponse(serverResponseMessage);
-                else
-                    setStringResponse(context.getString(R.string.unexpected));
-                fileInputStream.close();
-                dos.flush();
-                dos.close();
-            }catch (Exception e){
-                Log.e("SqlH: Upload", e.getMessage());
-                setStringResponse(context.getString(R.string.unexpected));
-            }
-            return null;
-        }
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if(showLoading) {
-                pDialog = new ProgressDialog(context);
-                pDialog.setMessage("Uploading file");
-                pDialog.setIndeterminate(false);
-                pDialog.setCancelable(false);
-                pDialog.show();
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if(showLoading)
-                pDialog.dismiss();
-            sqlDelegate.onResponse(SqlHelper.this);
-        }
-
-        private String getQuery(ArrayList<NameValuePair> params) throws UnsupportedEncodingException
-        {
-            StringBuilder result = new StringBuilder();
-            boolean first = true;
-
-            for (NameValuePair pair : params)
-            {
-                if (first)
-                    first = false;
-                else
-                    result.append("&");
-
-                result.append(URLEncoder.encode(pair.getName(), "UTF-8"));
-                result.append("=");
-                result.append(URLEncoder.encode(pair.getValue(), "UTF-8"));
-            }
-
-            return result.toString();
-        }
-
-    }
-
-
-    private Boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-    }
-
-    public Boolean isOnline() {
-        try {
-            Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.com");
-            int returnVal = p1.waitFor();
-            boolean reachable = (returnVal==0);
-            return reachable;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 }

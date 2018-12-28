@@ -3,6 +3,7 @@ package com.create.sidhu.movbox.activities;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -146,8 +147,8 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
         SqlHelper sqlHelper = new SqlHelper(SplashScreen.this, SplashScreen.this);
         sqlHelper.setExecutePath("get-user.php");
         sqlHelper.setActionString("get_user");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("username", username));
+        ContentValues params = new ContentValues();
+        params.put("username", username);
         sqlHelper.setMethod(getString(R.string.method_get));
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(false);

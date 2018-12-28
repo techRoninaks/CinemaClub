@@ -470,6 +470,7 @@ public class ModelHelper {
             updatesModel.setReviewId(reviewId);
             updatesModel.setMovieId(movieId);
             updatesModel.setType(type);
+            updatesModel.setUpdated(false);
             if (MainActivity.updatesModels == null)
                 MainActivity.updatesModels = new ArrayList<>();
             MainActivity.updatesModels.add(updatesModel);

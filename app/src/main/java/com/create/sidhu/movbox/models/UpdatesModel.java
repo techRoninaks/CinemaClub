@@ -6,6 +6,7 @@ public class UpdatesModel {
     private String ReviewId;
     private String Type;
     private String Id;
+    private boolean IsUpdated;
 
 
     //Setters
@@ -29,6 +30,9 @@ public class UpdatesModel {
         Id = id;
     }
 
+    public void setUpdated(boolean updated) {
+        IsUpdated = updated;
+    }
 
     //Getters
     public String getType() {
@@ -49,5 +53,9 @@ public class UpdatesModel {
 
     public String getId() {
         return Id;
+    }
+
+    public boolean isUpdated() {
+        return IsUpdated;
     }
 }

@@ -1,6 +1,7 @@
 package com.create.sidhu.movbox.activities;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -160,13 +161,13 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
             sqlHelper.setExecutePath("registration.php");
             sqlHelper.setActionString("register");
             sqlHelper.setMethod(getString(R.string.method_post));
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("name", name));
-            params.add(new BasicNameValuePair("username", username));
-            params.add(new BasicNameValuePair("password", password_type.equals("app") ? password : ""));
-            params.add(new BasicNameValuePair("fb_password", password_type.equals("fb") ? password : ""));
-            params.add(new BasicNameValuePair("g_password", password_type.equals("google") ? password : ""));
-            params.add(new BasicNameValuePair("type", password_type));
+            ContentValues params = new ContentValues();
+            params.put("name", name);
+            params.put("username", username);
+            params.put("password", password_type.equals("app") ? password : "");
+            params.put("fb_password", password_type.equals("fb") ? password : "");
+            params.put("g_password", password_type.equals("google") ? password : "");
+            params.put("type", password_type);
 //        params.add(new BasicNameValuePair("country", spinnerCountry.getSelectedItem().toString()));
 //        params.add(new BasicNameValuePair("phone", editTextPhone.getText().toString()));
             sqlHelper.setParams(params);
@@ -183,7 +184,7 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
         SqlHelper sqlHelper = new SqlHelper(RegisterActivity.this, RegisterActivity.this);
         sqlHelper.setExecutePath("country.php");
         sqlHelper.setActionString("country");
-        sqlHelper.setParams(new ArrayList<NameValuePair>());
+        sqlHelper.setParams(new ContentValues());
         sqlHelper.setMethod(getString(R.string.method_get));
         sqlHelper.executeUrl(true);
     }
@@ -267,7 +268,7 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
                     } else if(response.equals(getString(R.string.response_success))){
                         Toast.makeText(RegisterActivity.this, getString(R.string.success_register) + ". " + getString(R.string.continue_login), Toast.LENGTH_SHORT).show();
                         SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
-                        sharedPreferences.edit().putString("username", sqlHelper.getParams().get(1).getValue()).commit();
+                        sharedPreferences.edit().putString("username", sqlHelper.getParams().getAsString("username")).commit();
                         sharedPreferences.edit().putBoolean("login", true).commit();
                         startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                     }

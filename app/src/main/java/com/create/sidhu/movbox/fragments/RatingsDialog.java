@@ -3,6 +3,7 @@ package com.create.sidhu.movbox.fragments;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -254,12 +255,12 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         sqlHelper.setMethod("GET");
         sqlHelper.setExecutePath("get-rating.php");
         sqlHelper.setActionString(type.equals("cast") ? "get_cast_rating" : "get_all_rating");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("u_id", bundle.containsKey("isIdentity") ? bundle.getString("u_id") : MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("m_id", bundle.getString("id")));
-        params.add(new BasicNameValuePair("type", type));
-        params.add(new BasicNameValuePair("cast", bundle.getString("cast")));
+        ContentValues params = new ContentValues();
+        params.put("c_id", MainActivity.currentUserModel.getUserId());
+        params.put("u_id", bundle.containsKey("isIdentity") ? bundle.getString("u_id") : MainActivity.currentUserModel.getUserId());
+        params.put("m_id", bundle.getString("id"));
+        params.put("type", type);
+        params.put("cast", bundle.getString("cast"));
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(true);
     }
@@ -332,12 +333,12 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         sqlHelper.setExecutePath("update-rating.php");
         sqlHelper.setActionString("update_rating");
         sqlHelper.setMethod("GET");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("m_id", bundle.getString("id")));
-        params.add(new BasicNameValuePair("m_rating", "" + rbUserRating.getRating()));
-        params.add(new BasicNameValuePair("cast_rating", castRating));
-        params.add(new BasicNameValuePair("type", type));
+        ContentValues params = new ContentValues();
+        params.put("c_id", MainActivity.currentUserModel.getUserId());
+        params.put("m_id", bundle.getString("id"));
+        params.put("m_rating", "" + rbUserRating.getRating());
+        params.put("cast_rating", castRating);
+        params.put("type", type);
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(false);
     }

@@ -1,6 +1,7 @@
 package com.create.sidhu.movbox.fragments;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -116,10 +117,10 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
         SqlHelper sqlHelper = new SqlHelper(context, FavouritesFragment.this);
         sqlHelper.setExecutePath("get-updates.php");
         sqlHelper.setMethod("GET");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("seeker", "0"));
-        params.add(new BasicNameValuePair("fragment", "favourites"));
+        ContentValues params = new ContentValues();
+        params.put("u_id", MainActivity.currentUserModel.getUserId());
+        params.put("seeker", "0");
+        params.put("fragment", "favourites");
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(true);
     }

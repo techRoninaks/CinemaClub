@@ -1,5 +1,6 @@
 package com.create.sidhu.movbox.helpers;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.provider.ContactsContract;
 
@@ -102,13 +103,13 @@ public class EmailHelper {
         SqlHelper sqlHelper = new SqlHelper(context);
         sqlHelper.setMethod("POST");
         sqlHelper.setExecutePath("send-mail.php");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("sender", sender));
-        params.add(new BasicNameValuePair("recepient", recepient));
-        params.add(new BasicNameValuePair("body", body));
-        params.add(new BasicNameValuePair("subject", subject));
-        params.add(new BasicNameValuePair("bcc", bcc));
-        params.add(new BasicNameValuePair("cc", cc));
+        ContentValues params = new ContentValues();
+        params.put("sender", sender);
+        params.put("recepient", recepient);
+        params.put("body", body);
+        params.put("subject", subject);
+        params.put("bcc", bcc);
+        params.put("cc", cc);
         sqlHelper.setParams(params);
         sqlHelper.setService(true);
         sqlHelper.executeUrl(false);

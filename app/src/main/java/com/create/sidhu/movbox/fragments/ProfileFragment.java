@@ -3,6 +3,7 @@ package com.create.sidhu.movbox.fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -419,10 +420,10 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                             sqlHelper.setExecutePath("update-following.php");
                             sqlHelper.setActionString("follow");
                             sqlHelper.setMethod("GET");
-                            ArrayList<NameValuePair> params = new ArrayList<>();
-                            params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-                            params.add(new BasicNameValuePair("u_id", id));
-                            params.add(new BasicNameValuePair("is_following", isFollowing.toString()));
+                            ContentValues params = new ContentValues();
+                            params.put("c_id", MainActivity.currentUserModel.getUserId());
+                            params.put("u_id", id);
+                            params.put("is_following", isFollowing.toString());
                             sqlHelper.setParams(params);
                             sqlHelper.executeUrl(true);
                         }
@@ -431,10 +432,10 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                         sqlHelper.setExecutePath("update-watching.php");
                         sqlHelper.setActionString("watching");
                         sqlHelper.setMethod("GET");
-                        ArrayList<NameValuePair> params = new ArrayList<>();
-                        params.add(new BasicNameValuePair("m_id", id));
-                        params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-                        params.add(new BasicNameValuePair("is_watched", isWatched.toString()));
+                        ContentValues params = new ContentValues();
+                        params.put("m_id", id);
+                        params.put("u_id", MainActivity.currentUserModel.getUserId());
+                        params.put("is_watched", isWatched.toString());
                         sqlHelper.setParams(params);
                         sqlHelper.executeUrl(true);
 
@@ -450,10 +451,10 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                     sqlHelper.setExecutePath("update-watchlist.php");
                     sqlHelper.setActionString("watchlist");
                     sqlHelper.setMethod("GET");
-                    ArrayList<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("m_id", id));
-                    params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-                    params.add(new BasicNameValuePair("is_watchlist", isAddedToWatchlist.toString()));
+                    ContentValues params = new ContentValues();
+                    params.put("m_id", id);
+                    params.put("u_id", MainActivity.currentUserModel.getUserId());
+                    params.put("is_watchlist", isAddedToWatchlist.toString());
                     sqlHelper.setParams(params);
                     sqlHelper.executeUrl(true);
                 }
@@ -493,10 +494,10 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                     sqlHelper.setExecutePath("update-watching.php");
                     sqlHelper.setActionString("watching");
                     sqlHelper.setMethod("GET");
-                    ArrayList<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("m_id", id));
-                    params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-                    params.add(new BasicNameValuePair("is_watched", isWatched.toString()));
+                    ContentValues params = new ContentValues();
+                    params.put("m_id", id);
+                    params.put("u_id", MainActivity.currentUserModel.getUserId());
+                    params.put("is_watched", isWatched.toString());
                     sqlHelper.setParams(params);
                     sqlHelper.executeUrl(true);
                     imgWatched.setImageDrawable(isWatched ? context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
@@ -522,10 +523,10 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                     sqlHelper.setExecutePath("update-watchlist.php");
                     sqlHelper.setActionString("watchlist");
                     sqlHelper.setMethod("GET");
-                    ArrayList<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("m_id", id));
-                    params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-                    params.add(new BasicNameValuePair("is_watchlist", isAddedToWatchlist.toString()));
+                    ContentValues params = new ContentValues();
+                    params.put("m_id", id);
+                    params.put("u_id", MainActivity.currentUserModel.getUserId());
+                    params.put("is_watchlist", isAddedToWatchlist.toString());
                     sqlHelper.setParams(params);
                     sqlHelper.executeUrl(true);
                 }
@@ -628,8 +629,8 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                     movieModels = currentUserWatchlist;
                     initRecyclerView();
                 } else {
-                    ArrayList<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("u_id", id));
+                    ContentValues params = new ContentValues();
+                    params.put("u_id", id);
                     populateWatchlist("get-watchlist.php", params);
                 }
             } else if (type.equals(context.getString(R.string.profile_movies))) {
@@ -685,9 +686,9 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
 //            btnWatchlist.setText(isAddedToWatchlist ? context.getString(R.string.follow_button_watchlist_remove) : context.getString(R.string.follow_button_watchlist_add));
                 //btnWatchlist.setBackground(isAddedToWatchlist ? context.getDrawable(R.drawable.custom_button_white) : context.getDrawable(R.drawable.custom_button_yellow));
 
-                ArrayList<NameValuePair> params = new ArrayList<>();
-                params.add(new BasicNameValuePair("cast", cast));
-                params.add(new BasicNameValuePair("m_id", id));
+                ContentValues params = new ContentValues();
+                params.put("cast", cast);
+                params.put("m_id", id);
                 populateWatchlist("get-cast.php", params);
             } else if (type.equals(context.getString(R.string.profile_cast))) {
                 GlideApp.with(context)
@@ -706,9 +707,9 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 llReviews.setVisibility(View.GONE);
                 statSeparator2.setVisibility(View.GONE);
                 button_img.setVisibility(View.GONE);
-                ArrayList<NameValuePair> params = new ArrayList<>();
-                params.add(new BasicNameValuePair("id", id));
-                params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+                ContentValues params = new ContentValues();
+                params.put("id", id);
+                params.put("c_id", MainActivity.currentUserModel.getUserId());
                 populateWatchlist("get-cast-movies.php", params);
             }
         }catch (Exception e){
@@ -722,7 +723,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
      * @param executePath - The API file to execute
      * @param params - The parameters in the API call
      */
-    private void populateWatchlist(String executePath, ArrayList<NameValuePair> params){
+    private void populateWatchlist(String executePath, ContentValues params){
         SqlHelper sqlHelper = new SqlHelper(context, ProfileFragment.this);
         sqlHelper.setExecutePath(executePath);
         sqlHelper.setParams(params);

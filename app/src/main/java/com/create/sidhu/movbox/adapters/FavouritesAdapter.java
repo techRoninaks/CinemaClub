@@ -5,6 +5,7 @@ package com.create.sidhu.movbox.adapters;
  */
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -341,10 +342,10 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                                     sqlHelper.setExecutePath("update-following.php");
                                     sqlHelper.setActionString("follow");
                                     sqlHelper.setMethod("GET");
-                                    ArrayList<NameValuePair> params = new ArrayList<>();
-                                    params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-                                    params.add(new BasicNameValuePair("u_id", favouritesList.get(position).getUser().getUserId()));
-                                    params.add(new BasicNameValuePair("is_following", "" + favouritesList.get(position).getUser().getIsFollowing()));
+                                    ContentValues params = new ContentValues();
+                                    params.put("c_id", MainActivity.currentUserModel.getUserId());
+                                    params.put("u_id", favouritesList.get(position).getUser().getUserId());
+                                    params.put("is_following", "" + favouritesList.get(position).getUser().getIsFollowing());
                                     sqlHelper.setParams(params);
                                     HashMap<String, String> extras = new HashMap<>();
                                     extras.put("position", "" + position);

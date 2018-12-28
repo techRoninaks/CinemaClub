@@ -2,6 +2,7 @@ package com.create.sidhu.movbox.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -162,10 +163,10 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
         sqlHelper.setExecutePath("get-updates.php");
         sqlHelper.setMethod("GET");
         sqlHelper.setActionString("home:"+loadType);
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("seeker", seeker));
-        params.add(new BasicNameValuePair("fragment", "home"));
+        ContentValues params = new ContentValues();
+        params.put("u_id", MainActivity.currentUserModel.getUserId());
+        params.put("seeker", seeker);
+        params.put("fragment", "home");
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(loadType == LOAD_INITIAL || loadType == LOAD_HISTORY);
 
@@ -261,9 +262,9 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
     private void fetchActors(String castString, boolean start, int loadType){
         if(start) {
             SqlHelper sqlHelper = new SqlHelper(context, HomeFragment.this);
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("cast", castString));
-            params.add(new BasicNameValuePair("m_id", ""));
+            ContentValues params = new ContentValues();
+            params.put("cast", castString);
+            params.put("m_id", "");
             sqlHelper.setExecutePath("get-cast.php");
             sqlHelper.setParams(params);
             HashMap<String, String> extras = new HashMap<>();
@@ -348,9 +349,9 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
         sqlHelper.setExecutePath("remove-update.php");
         sqlHelper.setMethod("GET");
         sqlHelper.setActionString("remove_notification");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("n_id", id));
+        ContentValues params = new ContentValues();
+        params.put("c_id", MainActivity.currentUserModel.getUserId());
+        params.put("n_id", id);
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(false);
     }
@@ -467,10 +468,10 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                         HashMap<String, String> extras = new HashMap<>();
                         extras.put("view_id", "" + R.id.img_Watched);
                         sqlHelper.setMethod("GET");
-                        ArrayList<NameValuePair> params = new ArrayList<>();
-                        params.add(new BasicNameValuePair("m_id", homeModel.getFavourites().getMovie().getId()));
-                        params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-                        params.add(new BasicNameValuePair("is_watched", "" + homeModel.getFavourites().getMovie().getIsWatched()));
+                        ContentValues params = new ContentValues();
+                        params.put("m_id", homeModel.getFavourites().getMovie().getId());
+                        params.put("u_id", MainActivity.currentUserModel.getUserId());
+                        params.put("is_watched", "" + homeModel.getFavourites().getMovie().getIsWatched());
                         sqlHelper.setParams(params);
                         sqlHelper.setExtras(extras);
                         sqlHelper.executeUrl(true);

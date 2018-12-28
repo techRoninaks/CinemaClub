@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.job.JobScheduler;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -425,7 +426,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
         SqlHelper sqlHelper = new SqlHelper(SettingsActivity.this, SettingsActivity.this);
         sqlHelper.setExecutePath("country.php");
         sqlHelper.setActionString("country");
-        sqlHelper.setParams(new ArrayList<NameValuePair>());
+        sqlHelper.setParams(new ContentValues());
         sqlHelper.setMethod(getString(R.string.method_get));
         sqlHelper.executeUrl(false);
     }
@@ -434,7 +435,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
         SqlHelper sqlHelper = new SqlHelper(SettingsActivity.this, SettingsActivity.this);
         sqlHelper.setExecutePath("get-languages.php");
         sqlHelper.setActionString("language");
-        sqlHelper.setParams(new ArrayList<NameValuePair>());
+        sqlHelper.setParams(new ContentValues());
         sqlHelper.setMethod(getString(R.string.method_get));
         sqlHelper.executeUrl(false);
     }
@@ -443,7 +444,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
         SqlHelper sqlHelper = new SqlHelper(SettingsActivity.this, SettingsActivity.this);
         sqlHelper.setExecutePath("get-genres.php");
         sqlHelper.setActionString("genre");
-        sqlHelper.setParams(new ArrayList<NameValuePair>());
+        sqlHelper.setParams(new ContentValues());
         sqlHelper.setMethod(getString(R.string.method_get));
         sqlHelper.executeUrl(false);
     }
@@ -596,13 +597,13 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
                         sqlHelper.setExecutePath("update-profile.php");
                         sqlHelper.setMethod("GET");
                         sqlHelper.setActionString("edit_profile");
-                        ArrayList<NameValuePair> params = new ArrayList<>();
-                        params.add(new BasicNameValuePair("name", etName.getText().toString()));
-                        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-                        params.add(new BasicNameValuePair("phone", etPhone.getText().toString()));
-                        params.add(new BasicNameValuePair("country", etCountry.getText().toString()));
-                        params.add(new BasicNameValuePair("city", etCity.getText().toString()));
-                        params.add(new BasicNameValuePair("dob", etDob.getText().toString()));
+                        ContentValues params = new ContentValues();
+                        params.put("name", etName.getText().toString());
+                        params.put("c_id", MainActivity.currentUserModel.getUserId());
+                        params.put("phone", etPhone.getText().toString());
+                        params.put("country", etCountry.getText().toString());
+                        params.put("city", etCity.getText().toString());
+                        params.put("dob", etDob.getText().toString());
                         sqlHelper.setParams(params);
                         sqlHelper.executeUrl(true);
                     }
@@ -642,9 +643,9 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
         sqlHelper.setMethod("GET");
         sqlHelper.setActionString(privacyType);
         sqlHelper.setExecutePath("update-privacy.php");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("value", "" + value));
+        ContentValues params = new ContentValues();
+        params.put("c_id", MainActivity.currentUserModel.getUserId());
+        params.put("value", "" + value);
         sqlHelper.setParams(params);
         HashMap<String, String> extras = new HashMap<>();
         extras.put("privacy_value", "" + value);
@@ -679,9 +680,9 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
         sqlHelper.setMethod("GET");
         sqlHelper.setExecutePath("update-preference.php");
         sqlHelper.setActionString("update_preference");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("preference", preference));
+        ContentValues params = new ContentValues();
+        params.put("c_id", MainActivity.currentUserModel.getUserId());
+        params.put("preference", preference);
         sqlHelper.setParams(params);
         HashMap<String, String> extras = new HashMap<>();
         extras.put("language", languagePreference);

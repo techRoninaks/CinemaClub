@@ -1,6 +1,7 @@
 package com.create.sidhu.movbox.activities;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -50,8 +51,8 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
                         sqlHelper.setMethod("GET");
                         sqlHelper.setExecutePath("forgot-password.php");
                         sqlHelper.setActionString("stage:1");
-                        ArrayList<NameValuePair> params = new ArrayList<>();
-                        params.add(new BasicNameValuePair("email", email));
+                        ContentValues params = new ContentValues();
+                        params.put("email", email);
                         sqlHelper.setParams(params);
                         sqlHelper.executeUrl(true);
                     }
@@ -77,9 +78,9 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
                             sqlHelper.setMethod("GET");
                             sqlHelper.setExecutePath("reset-password.php");
                             sqlHelper.setActionString("stage:3");
-                            ArrayList<NameValuePair> params = new ArrayList<>();
-                            params.add(new BasicNameValuePair("email", email));
-                            params.add(new BasicNameValuePair("password", StringHelper.encryptPassword(etPassword.getText().toString())));
+                            ContentValues params = new ContentValues();
+                            params.put("email", email);
+                            params.put("password", StringHelper.encryptPassword(etPassword.getText().toString()));
                             sqlHelper.setParams(params);
                             sqlHelper.executeUrl(true);
                         }catch (Exception e) {
@@ -371,8 +372,8 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
             sqlHelper.setMethod("GET");
             sqlHelper.setExecutePath("get-password.php");
             sqlHelper.setActionString("get_password");
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+            ContentValues params = new ContentValues();
+            params.put("c_id", MainActivity.currentUserModel.getUserId());
             sqlHelper.setParams(params);
             sqlHelper.executeUrl(false);
         }catch (Exception e){
