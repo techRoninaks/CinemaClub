@@ -48,6 +48,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+
+import es.dmoral.toasty.Toasty;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,13 +69,15 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
     Context context;
     TransparentProgressDialog pDialog;
     private SwipeRefreshLayout swipeContainer;
+    long currentTime =0;
+    long previousTime =0;
     public HomeFragment() {
         // Required empty public constructor
     }
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         context = getActivity();
@@ -105,8 +110,17 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                     super.onScrollStateChanged(recyclerView, newState);
 
                     if (!recyclerView.canScrollVertically(1)) {
-                        if(seeker.equals(""))
-                            Toast.makeText(context, "Explore Cinema Club more!!!", Toast.LENGTH_SHORT).show();
+                        if(seeker.equals("")) {
+                            currentTime = System.currentTimeMillis();
+                            if (previousTime == 0) {
+                                previousTime = currentTime;
+                            }
+                            if(currentTime - previousTime < 1000)
+                                Toast.makeText(context, "ExploreCinema Club more!!!", Toast.LENGTH_SHORT).show();
+                            else if(currentTime - previousTime >10000) {
+                                previousTime = 0;
+                            }
+                        }
                         else
                             fetchUpdates(seeker,LOAD_HISTORY);
 

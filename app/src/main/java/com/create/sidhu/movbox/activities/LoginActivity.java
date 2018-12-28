@@ -8,8 +8,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AndroidException;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -51,6 +54,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import es.dmoral.toasty.Toasty;
 
 
 public class LoginActivity extends AppCompatActivity implements SqlDelegate {
@@ -191,7 +196,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
 //                editTextUsername.setError(getString(R.string.invalid_email));
                 editTextPassword.setText("");
                 editTextUsername.setText("");
-                customToast(R.string.invalid_cred);
+                Toasty.error(LoginActivity.this, R.string.invalid_cred, Toast.LENGTH_SHORT, false).show();
                 signIn = false;
             }
             if(!isValidPassword(password)){
@@ -199,7 +204,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
 
                 editTextPassword.setText("");
                 editTextUsername.setText("");
-                customToast(R.string.invalid_cred);
+                Toasty.error(LoginActivity.this, R.string.invalid_cred, Toast.LENGTH_SHORT, false).show();
                 signIn = false;
             }
         }
@@ -208,17 +213,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
 
         return signIn;
     }
-
-    private void customToast(int incorrect_password_or_username) {
-        Toast toast = Toast.makeText(this   , incorrect_password_or_username, Toast.LENGTH_LONG);
-        View view = toast.getView();
-//            view.setBackgroundResource(R.color.colorPrimary);
-        TextView text = (TextView) view.findViewById(android.R.id.message);
-        /*Here you can do anything with above textview like text.setTextColor(Color.parseColor("#000000"));*/
-        text.setTextColor(getResources().getColor(R.color.colorTextError));
-        toast.show();
-    }
-
+    
 
     public static boolean isValidEmail(String email){
         boolean isValid = false;
@@ -332,7 +327,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
 //                editTextUsername.setError(getString(R.string.invalid_cred));
                         editTextPassword.setText("");
                         editTextUsername.setText("");
-                        customToast(R.string.invalid_cred);
+                        Toasty.error(LoginActivity.this, R.string.invalid_cred, Toast.LENGTH_SHORT, false).show();
                         if (errorCount % ERROR_THRESHOLD == 0) {
                             DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                                 @Override
@@ -357,7 +352,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                             errorCount++;
                         } else {
                             errorCount++;
-                            customToast(R.string.invalid_cred);
+                            Toasty.error(LoginActivity.this, R.string.invalid_cred, Toast.LENGTH_SHORT, false).show();
                         }
                     } else if (response.equals(getString(R.string.exception))) {
                         Toast.makeText(LoginActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
@@ -371,7 +366,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                     if(response.equals(getString(R.string.response_success))){
                         attemptLogin(getString(R.string.default_signin), editTextUsername.getText().toString(), StringHelper.encryptPassword(editTextPassword.getText().toString(), StringHelper.convertSaltToByte(jsonObject.getString("extra"))));
                     }else if(response.equals(getString(R.string.response_unsuccessful))){
-                        customToast(R.string.invalid_cred);
+                        Toasty.error(LoginActivity.this, R.string.invalid_cred, Toast.LENGTH_SHORT, false).show();
                     }else if(response.equals(getString(R.string.unexpected))){
                         Toast.makeText(LoginActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                     }
