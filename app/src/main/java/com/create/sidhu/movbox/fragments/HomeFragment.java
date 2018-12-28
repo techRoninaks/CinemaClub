@@ -69,7 +69,6 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
     TransparentProgressDialog pDialog;
     private SwipeRefreshLayout swipeContainer;
     long currentTime =0;
-    long previousTime =0;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -90,6 +89,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             ImageView imgTitle = (ImageView) toolbar.findViewById(R.id.imgToolbarImage);
             imgTitle.setVisibility(View.VISIBLE);
             StringHelper.changeToolbarFont(toolbar, (MainActivity) context);
+            currentTime = System.currentTimeMillis();
             if (homeModels == null)
             {
                 fetchUpdates("0",LOAD_INITIAL);
@@ -110,15 +110,9 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
 
                     if (!recyclerView.canScrollVertically(1)) {
                         if(seeker.equals("")) {
-                            currentTime = System.currentTimeMillis();
-                            if (previousTime == 0) {
-                                previousTime = currentTime;
-                            }
-                            if(currentTime - previousTime < 1000)
+                            if(System.currentTimeMillis() - currentTime > 5000)
                                 Toast.makeText(context, "ExploreCinema Club more!!!", Toast.LENGTH_SHORT).show();
-                            else if(currentTime - previousTime >10000) {
-                                previousTime = 0;
-                            }
+                            currentTime = System.currentTimeMillis();
                         }
                         else
                             fetchUpdates(seeker,LOAD_HISTORY);

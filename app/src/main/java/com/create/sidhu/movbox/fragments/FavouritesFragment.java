@@ -51,6 +51,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
     LinearLayout llContainerPlaceholder;
     Context context;
     String subTypes[] = {"follow", "watching", "review", "rating", "review_vote"};
+    long currentTime =0;
 
     public FavouritesFragment() {
         // Required empty public constructor
@@ -70,6 +71,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             imgTitle.setVisibility(View.GONE);
             recyclerView = (RecyclerView) rootview.findViewById(R.id.recyclerView_Favourites);
             llContainerPlaceholder = rootview.findViewById(R.id.containerPlaceholder);
+            currentTime = System.currentTimeMillis();
             if (favouritesList == null){
                 fetchUpdates("0",LOAD_INITIAL);
             }
@@ -101,7 +103,9 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
 
                 if (!recyclerView.canScrollVertically(1)) {
                     if(seeker.equals("")) {
-                        Toast.makeText(context, "Explore Cinema Club more!!!", Toast.LENGTH_SHORT).show();
+                        if(System.currentTimeMillis() - currentTime > 5000)
+                            Toast.makeText(context, "ExploreCinema Club more!!!", Toast.LENGTH_SHORT).show();
+                        currentTime = System.currentTimeMillis();
                     }
                     else
                         fetchUpdates(seeker,LOAD_HISTORY);
