@@ -397,6 +397,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                 sqlHelper.setParams(params);
                 HashMap<String, String> extras = new HashMap<>();
                 extras.put("counter", "" + position);
+                sqlHelper.setExtras(extras);
                 sqlHelper.executeUrl(false);
             }else{
                 popUpdate(position);
