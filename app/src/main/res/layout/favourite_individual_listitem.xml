@@ -157,7 +157,7 @@
             android:visibility="gone">
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/list_image"
                 android:text="@string/follow_button_follow"
                 android:textSize="@dimen/list_subtext"
                 android:background="@drawable/custom_button_yellow"

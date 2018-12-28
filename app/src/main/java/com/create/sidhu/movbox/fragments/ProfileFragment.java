@@ -264,7 +264,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 }
             });
             // onClickListener for Review count
-            textViewReviews.setOnClickListener(new View.OnClickListener() {
+            llReviews.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (type.equals("movie")) {
@@ -312,7 +312,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
             });
 
             // onClickListener for Followers
-            textViewFollowers.setOnClickListener(new View.OnClickListener() {
+            llFollowers.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (type.equals(context.getString(R.string.profile_user))) {
@@ -341,7 +341,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
             });
 
             // onClickListener for Followers
-            textViewFollowing.setOnClickListener(new View.OnClickListener() {
+            llFollowing.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     bundle.putString("return_path", "ProfileFragment");
