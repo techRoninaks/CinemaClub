@@ -96,9 +96,10 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
                     break;
                 }
                 case R.id.btn_ReviewSubmit:{
-                    if(!etReviewText.getText().toString().isEmpty())
+                    if(!etReviewText.getText().toString().isEmpty()){
                         btnReviewSubmit.setEnabled(false);
                         submitReview("original", "", etReviewText.getText().toString());
+                    }
                     break;
                 }
             }
