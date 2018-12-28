@@ -263,9 +263,11 @@ public class StringHelper {
 
     public static byte[] convertSaltToByte(String saltString){
         byte[] salt = new byte[16];
-        String saltStringArray[] = saltString.split("!@");
-        for(int i = 0; i < 16; i++){
-            salt[i] = Byte.parseByte(saltStringArray[i]);
+        if(!saltString.isEmpty()) {
+            String saltStringArray[] = saltString.split("!@");
+            for (int i = 0; i < 16; i++) {
+                salt[i] = Byte.parseByte(saltStringArray[i]);
+            }
         }
         return salt;
     }

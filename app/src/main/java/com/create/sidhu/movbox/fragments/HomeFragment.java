@@ -50,7 +50,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 
-import es.dmoral.toasty.Toasty;
 
 /**
  * A simple {@link Fragment} subclass.
