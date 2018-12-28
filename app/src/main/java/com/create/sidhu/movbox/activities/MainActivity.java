@@ -466,7 +466,10 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         fragment.setArguments(args);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
-        fragmentTransaction.addToBackStack(null);
+        if(!isFirst)
+            fragmentTransaction.addToBackStack(null);
+        else
+            isFirst = false;
         fragmentTransaction.commit();
         searchItem.collapseActionView();
     }
