@@ -1,5 +1,6 @@
 package com.create.sidhu.movbox.activities;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -110,14 +111,14 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
     private void setLayout(String type){
         try {
             SqlHelper sqlHelper = new SqlHelper(FollowReviewActivity.this, FollowReviewActivity.this);
-            ArrayList<NameValuePair> params = new ArrayList<>();
+            ContentValues params = new ContentValues();
             switch (type) {
                 case "review":
                     sqlHelper.setMethod("GET");
                     sqlHelper.setActionString("review");
                     sqlHelper.setExecutePath("get-review.php");
-                    params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
-                    params.add(new BasicNameValuePair("type", getString(R.string.profile_user)));
+                    params.put("u_id", bundle.getString("id"));;
+                    params.put("type", getString(R.string.profile_user));
                     sqlHelper.setParams(params);
                     sqlHelper.executeUrl(true);
                     break;
@@ -126,17 +127,17 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                         sqlHelper.setMethod("GET");
                         sqlHelper.setActionString("followers");
                         sqlHelper.setExecutePath("follow.php");
-                        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-                        params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
-                        params.add(new BasicNameValuePair("type", getString(R.string.followers).toLowerCase()));
+                        params.put("c_id", MainActivity.currentUserModel.getUserId());
+                        params.put("u_id", bundle.getString("id"));
+                        params.put("type", getString(R.string.followers).toLowerCase());
                         sqlHelper.setParams(params);
                         sqlHelper.executeUrl(true);
                     } else if (profileType.equals(getString(R.string.profile_movies))) {
                         sqlHelper.setMethod("GET");
                         sqlHelper.setActionString("followers");
                         sqlHelper.setExecutePath("get-users-watched.php");
-                        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-                        params.add(new BasicNameValuePair("m_id", bundle.getString("id")));
+                        params.put("c_id", MainActivity.currentUserModel.getUserId());
+                        params.put("m_id", bundle.getString("id"));
                         sqlHelper.setParams(params);
                         sqlHelper.executeUrl(true);
                     }
@@ -146,9 +147,9 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                         sqlHelper.setMethod("GET");
                         sqlHelper.setActionString("following");
                         sqlHelper.setExecutePath("follow.php");
-                        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-                        params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
-                        params.add(new BasicNameValuePair("type", getString(R.string.following).toLowerCase()));
+                        params.put("c_id", MainActivity.currentUserModel.getUserId());
+                        params.put("u_id", bundle.getString("id"));
+                        params.put("type", getString(R.string.following).toLowerCase());
                         sqlHelper.setParams(params);
                         sqlHelper.executeUrl(true);
                         break;
@@ -169,9 +170,9 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
             sqlHelper.setMethod("GET");
             sqlHelper.setActionString("get_watched");
             sqlHelper.setExecutePath("get-watched.php");
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-            params.add(new BasicNameValuePair("u_id", bundle.getString("id")));
+            ContentValues params = new ContentValues();
+            params.put("c_id", MainActivity.currentUserModel.getUserId());
+            params.put("u_id", bundle.getString("id"));
             sqlHelper.setParams(params);
             sqlHelper.executeUrl(true);
         }catch (Exception e){
@@ -185,10 +186,10 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
         sqlHelper.setMethod("GET");
         sqlHelper.setActionString("get_watched");
         sqlHelper.setExecutePath("fetch-movie.php");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("m_id", ""));
-        params.add(new BasicNameValuePair("group_type", type));
+        ContentValues params = new ContentValues();
+        params.put("c_id", MainActivity.currentUserModel.getUserId());
+        params.put("m_id", "");
+        params.put("group_type", type);
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(true);
     }
@@ -244,9 +245,9 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
             SqlHelper sqlHelper = new SqlHelper(FollowReviewActivity.this, FollowReviewActivity.this);
             sqlHelper.setExecutePath("fetch-user.php");
             sqlHelper.setActionString("get_user");
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("u_id", userId));
-            params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
+            ContentValues params = new ContentValues();
+            params.put("u_id", userId);
+            params.put("c_id", MainActivity.currentUserModel.getUserId());
             sqlHelper.setMethod(getString(R.string.method_get));
             sqlHelper.setParams(params);
             sqlHelper.executeUrl(true);

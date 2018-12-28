@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -154,6 +155,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                 int counter = Integer.parseInt(sqlHelper.getExtras().get("counter"));
                 if(response.equals(context.getString(R.string.response_success))){
                     retryCounter = 0;
+                    updatesModels.get(counter).setUpdated(true);
                     pushUpdates( counter + 1);
                 }else if(response.equals(context.getString(R.string.response_unsuccessful))){
                     if(retryCounter < 3){
@@ -161,7 +163,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                         pushUpdates(counter);
                     }else{
                         retryCounter = 0;
-                        pushUpdates(counter + 1);
+                        popUpdate(counter);
                     }
                 }
             }
@@ -342,10 +344,10 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
             sqlHelper.setMethod("GET");
             sqlHelper.setActionString("home");
             sqlHelper.setService(true);
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("u_id", userId));
-            params.add(new BasicNameValuePair("seeker", "0"));
-            params.add(new BasicNameValuePair("fragment", "home"));
+            ContentValues params = new ContentValues();
+            params.put("u_id", userId);
+            params.put("seeker", "0");
+            params.put("fragment", "home");
             sqlHelper.setParams(params);
             sqlHelper.executeUrl(false);
         }catch (Exception e){
@@ -361,10 +363,10 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
             sqlHelper.setMethod("GET");
             sqlHelper.setActionString("favourites");
             sqlHelper.setService(true);
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("u_id", userId));
-            params.add(new BasicNameValuePair("seeker", "0"));
-            params.add(new BasicNameValuePair("fragment", "favourites"));
+            ContentValues params = new ContentValues();
+            params.put("u_id", userId);
+            params.put("seeker", "0");
+            params.put("fragment", "favourites");
             sqlHelper.setParams(params);
             sqlHelper.executeUrl(false);
         }catch (Exception e){
@@ -381,25 +383,35 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
     private void pushUpdates(int position){
         if(position < updatesModels.size()) {
             UpdatesModel updatesModel = updatesModels.get(position);
-            SqlHelper sqlHelper = new SqlHelper(UserFeedJobService.this, UserFeedJobService.this);
-            sqlHelper.setExecutePath("publish-updates.php");
-            sqlHelper.setMethod("GET");
-            sqlHelper.setActionString("push_updates");
-            sqlHelper.setService(true);
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("type", updatesModel.getType()));
-            params.add(new BasicNameValuePair("u_id", updatesModel.getUserId()));
-            params.add(new BasicNameValuePair("m_id", updatesModel.getMovieId()));
-            params.add(new BasicNameValuePair("r_id", updatesModel.getReviewId()));
-            sqlHelper.setParams(params);
-            HashMap<String, String> extras = new HashMap<>();
-            extras.put("counter", "" + position);
-            sqlHelper.executeUrl(false);
+            if(!updatesModel.isUpdated()) {
+                SqlHelper sqlHelper = new SqlHelper(UserFeedJobService.this, UserFeedJobService.this);
+                sqlHelper.setExecutePath("publish-updates.php");
+                sqlHelper.setMethod("GET");
+                sqlHelper.setActionString("push_updates");
+                sqlHelper.setService(true);
+                ContentValues params = new ContentValues();
+                params.put("type", updatesModel.getType());
+                params.put("u_id", updatesModel.getUserId());
+                params.put("m_id", updatesModel.getMovieId());
+                params.put("r_id", updatesModel.getReviewId());
+                sqlHelper.setParams(params);
+                HashMap<String, String> extras = new HashMap<>();
+                extras.put("counter", "" + position);
+                sqlHelper.setExtras(extras);
+                sqlHelper.executeUrl(false);
+            }else{
+                popUpdate(position);
+            }
         }else{
             MainActivity.updatesModels = new ArrayList<>();
             updatesJob = true;
             checkToFinish();
         }
+    }
+
+    private void popUpdate(int position){
+        updatesModels.remove(position);
+        pushUpdates(position);
     }
 
     private void initializeFavouritesModel(final JSONObject jsonObject){
@@ -503,9 +515,9 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
         sqlHelper.setActionString("mark_as_read");
         sqlHelper.setMethod("GET");
         sqlHelper.setExecutePath("mark-updates.php");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", userId));
-        params.add(new BasicNameValuePair("update_string", markAsRead));
+        ContentValues params = new ContentValues();
+        params.put("c_id", userId);
+        params.put("update_string", markAsRead);
         sqlHelper.setParams(params);
         sqlHelper.setService(true);
         sqlHelper.executeUrl(false);
@@ -596,9 +608,9 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
     private void fetchActors(String castString, boolean start){
         if(start) {
             SqlHelper sqlHelper = new SqlHelper(context, UserFeedJobService.this);
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("cast", castString));
-            params.add(new BasicNameValuePair("m_id", ""));
+            ContentValues params = new ContentValues();
+            params.put("cast", castString);
+            params.put("m_id", "");
             sqlHelper.setExecutePath("get-cast.php");
             sqlHelper.setParams(params);
             sqlHelper.setActionString("cast");

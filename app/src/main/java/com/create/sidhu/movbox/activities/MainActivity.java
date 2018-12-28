@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -259,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                             }
                         }
                     }
-
+                    init();
                 } catch (Exception e) {
                     Log.e("Main:onCreate", e.getMessage());
                 }
@@ -271,7 +272,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
-        init();
 
     }
 
@@ -324,10 +324,10 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                     sqlHelper.setExecutePath("search.php");
                     sqlHelper.setMethod("GET");
                     sqlHelper.setActionString("search");
-                    ArrayList<NameValuePair> params = new ArrayList<>();
-                    params.add(new BasicNameValuePair("u_id", currentUserModel.getUserId()));
-                    params.add(new BasicNameValuePair("srch_key", s));
-                    params.add(new BasicNameValuePair("mask", ""));
+                    ContentValues params = new ContentValues();
+                    params.put("u_id", currentUserModel.getUserId());
+                    params.put("srch_key", s);
+                    params.put("mask", "");
                     sqlHelper.setParams(params);
                     sqlHelper.executeUrl(true);
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -466,7 +466,10 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         fragment.setArguments(args);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
-        fragmentTransaction.addToBackStack(null);
+        if(!isFirst)
+            fragmentTransaction.addToBackStack(null);
+        else
+            isFirst = false;
         fragmentTransaction.commit();
         searchItem.collapseActionView();
     }
@@ -537,9 +540,9 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 sqlHelper.setActionString("mark_as_read");
                 sqlHelper.setMethod("GET");
                 sqlHelper.setExecutePath("mark-updates.php");
-                ArrayList<NameValuePair> params = new ArrayList<>();
-                params.add(new BasicNameValuePair("c_id", currentUserModel.getUserId()));
-                params.add(new BasicNameValuePair("update_string", markList));
+                ContentValues params = new ContentValues();
+                params.put("c_id", currentUserModel.getUserId());
+                params.put("update_string", markList);
                 sqlHelper.setParams(params);
                 sqlHelper.executeUrl(false);
             }
@@ -593,8 +596,8 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         SqlHelper sqlHelper = new SqlHelper(MainActivity.this, MainActivity.this);
         sqlHelper.setExecutePath("get-user.php");
         sqlHelper.setActionString("get_user");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("username", username));
+        ContentValues params = new ContentValues();
+        params.put("username", username);
         sqlHelper.setMethod(getString(R.string.method_get));
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(true);

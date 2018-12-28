@@ -2,6 +2,7 @@ package com.create.sidhu.movbox.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -250,11 +251,11 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                 SqlHelper sqlHelper = new SqlHelper(LoginActivity.this, LoginActivity.this);
                 sqlHelper.setExecutePath("login.php");
                 sqlHelper.setActionString("login");
-                ArrayList<NameValuePair> params = new ArrayList<>();
-                params.add(new BasicNameValuePair("username", username));
-                params.add(new BasicNameValuePair("password", password));
-                sqlHelper.setParams(params);
-                sqlHelper.setMethod(getString(R.string.method_get));
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("username", username);
+                contentValues.put("password", password);
+                sqlHelper.setParams(contentValues);
+                sqlHelper.setMethod(getString(R.string.method_post));
                 sqlHelper.executeUrl(true);
             } else if (type.equals(getString(R.string.google_signin))) {
                 Intent signInIntent = googleSignInClient.getSignInIntent();
@@ -273,8 +274,8 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
             SqlHelper sqlHelper = new SqlHelper(LoginActivity.this, LoginActivity.this);
             sqlHelper.setExecutePath("fetch-extra.php");
             sqlHelper.setActionString("fetch_extra");
-            ArrayList<NameValuePair> params = new ArrayList<>();
-            params.add(new BasicNameValuePair("username", username));
+            ContentValues params = new ContentValues();
+            params.put("username", username);
             sqlHelper.setParams(params);
             sqlHelper.setMethod(getString(R.string.method_get));
             sqlHelper.executeUrl(true);

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -311,8 +312,8 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
         sqlHelper.setMethod("GET");
         sqlHelper.setExecutePath("get-movies.php");
         sqlHelper.setActionString("get_movies");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
+        ContentValues params = new ContentValues();
+        params.put("u_id", MainActivity.currentUserModel.getUserId());
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(true);
     }
@@ -766,7 +767,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                 SqlHelper sqlHelper = new SqlHelper(context, MoviesFragment.this);
                 sqlHelper.setExecutePath("get-languages.php");
                 sqlHelper.setActionString("language");
-                sqlHelper.setParams(new ArrayList<NameValuePair>());
+                sqlHelper.setParams(new ContentValues());
                 sqlHelper.setMethod("GET");
                 sqlHelper.executeUrl(false);
                 break;
@@ -774,7 +775,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                 SqlHelper sqlHelper = new SqlHelper(context, MoviesFragment.this);
                 sqlHelper.setExecutePath("get-genres.php");
                 sqlHelper.setActionString("genre");
-                sqlHelper.setParams(new ArrayList<NameValuePair>());
+                sqlHelper.setParams(new ContentValues());
                 sqlHelper.setMethod("GET");
                 sqlHelper.executeUrl(false);
                 break;

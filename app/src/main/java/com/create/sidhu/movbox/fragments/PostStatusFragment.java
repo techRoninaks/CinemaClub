@@ -3,6 +3,7 @@ package com.create.sidhu.movbox.fragments;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -211,10 +212,10 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
         sqlHelper.setExecutePath("fetch-movie.php");
         sqlHelper.setMethod("GET");
         sqlHelper.setActionString("fetch_movies");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("m_id", ""));
-        params.add(new BasicNameValuePair("group_type", "new_releases"));
+        ContentValues params = new ContentValues();
+        params.put("c_id", MainActivity.currentUserModel.getUserId());
+        params.put("m_id", "");
+        params.put("group_type", "new_releases");
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(false);
     }
@@ -224,10 +225,10 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
         sqlHelper.setExecutePath("search.php");
         sqlHelper.setMethod("GET");
         sqlHelper.setActionString("search");
-        ArrayList<NameValuePair> params = new ArrayList<>();
-        params.add(new BasicNameValuePair("u_id", MainActivity.currentUserModel.getUserId()));
-        params.add(new BasicNameValuePair("srch_key", searchKey));
-        params.add(new BasicNameValuePair("mask", "user"));
+        ContentValues params = new ContentValues();
+        params.put("u_id", MainActivity.currentUserModel.getUserId());
+        params.put("srch_key", searchKey);
+        params.put("mask", "user");
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(false);
     }
@@ -342,10 +343,10 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
                                     sqlHelper.setMethod("GET");
                                     sqlHelper.setActionString("update_watching");
                                     sqlHelper.setExecutePath("add-now-watching.php");
-                                    ArrayList<NameValuePair> params = new ArrayList<>();
-                                    params.add(new BasicNameValuePair("c_id", MainActivity.currentUserModel.getUserId()));
-                                    params.add(new BasicNameValuePair("m_id", movieModels.get(position).getId()));
-                                    params.add(new BasicNameValuePair("is_watched", "" + movieModels.get(position).getIsWatched()));
+                                    ContentValues params = new ContentValues();
+                                    params.put("c_id", MainActivity.currentUserModel.getUserId());
+                                    params.put("m_id", movieModels.get(position).getId());
+                                    params.put("is_watched", "" + movieModels.get(position).getIsWatched());
                                     sqlHelper.setParams(params);
                                     sqlHelper.executeUrl(false);
                                     Toast.makeText(context, "Movie has been marked as now watching", Toast.LENGTH_SHORT).show();
