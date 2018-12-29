@@ -430,6 +430,12 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
         }
     }
 
+    public void updateList(ArrayList<FavouritesModel> favouritesList){
+        this.favouritesList = favouritesList;
+        dateStatus = "";
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         CircleImageView list_img;
         TextView title;

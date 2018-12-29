@@ -133,7 +133,7 @@
                         <ImageView
                             android:layout_width="@dimen/profile_favourites_size"
                             android:layout_height="@dimen/profile_favourites_size"
-                            android:src="@drawable/ic_heart"
+                            android:src="@drawable/ic_bookmark"
                             android:layout_gravity="center_vertical"
                             android:id="@+id/img_Favourites"/>
                     </LinearLayout>

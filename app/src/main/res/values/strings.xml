@@ -18,6 +18,7 @@
     <string name="logout">Logout</string>
     <string name="continue_login">Please login to continue</string>
     <string name="follow_button_edit">Edit Profile</string>
+    <string name="profile_watchlist_text">Favourites</string>
     <string name="follow_button_follow">Follow</string>
     <string name="follow_button_following">Unfollow</string>
     <string name="follow_button_watching">Add to Watching</string>

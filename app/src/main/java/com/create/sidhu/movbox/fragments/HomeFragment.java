@@ -93,7 +93,6 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             if (homeModels == null)
             {
                 fetchUpdates("0",LOAD_INITIAL);
-               
             }
             else {
                 markRead(homeModels);
@@ -107,16 +106,14 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                     super.onScrollStateChanged(recyclerView, newState);
-
                     if (!recyclerView.canScrollVertically(1)) {
-                        if(seeker.equals("")) {
-                            if(System.currentTimeMillis() - currentTime > 5000)
+                        if(System.currentTimeMillis() - currentTime > 5000) {
+                            if (seeker.equals(""))
                                 Toast.makeText(context, "ExploreCinema Club more!!!", Toast.LENGTH_SHORT).show();
-                            currentTime = System.currentTimeMillis();
+                            else
+                                fetchUpdates(seeker, LOAD_HISTORY);
                         }
-                        else
-                            fetchUpdates(seeker,LOAD_HISTORY);
-
+                        currentTime = System.currentTimeMillis();
                     }
                 }
             });
@@ -128,15 +125,12 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             emailHelper.sendEmail();
         }
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-
             @Override
-
             public void onRefresh() {
                 fetchUpdates("0",LOAD_REFRESH);
             }
 
         }); // Configure the refreshing colors
-
         swipeContainer.setColorSchemeResources(R.color.colorPrimary,
                 R.color.colorTextPrimary
                 );
@@ -176,7 +170,6 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
         params.put("fragment", "home");
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(loadType == LOAD_INITIAL || loadType == LOAD_HISTORY);
-
     }
 
 
@@ -244,7 +237,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                         }
                     }
                 }
-                if(loadType == LOAD_INITIAL ){
+                if(loadType == LOAD_INITIAL || loadType == LOAD_HISTORY){
                     pDialog = new TransparentProgressDialog(context);
                     pDialog.setCancelable(false);
                     pDialog.show();
@@ -291,9 +284,11 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 }
                 else
                 {
-                    recyclerView.getAdapter().notifyDataSetChanged();
+                    if(loadType == LOAD_HISTORY)
+                        pDialog.dismiss();
                     if (loadType == LOAD_REFRESH)
                         swipeContainer.setRefreshing(false);
+                    ((HomeAdapter)recyclerView.getAdapter()).updateList(homeModels);
                 }
             }catch (Exception e){
                 EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
@@ -536,7 +531,6 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
             if(sqlHelper.getActionString().contains("home")) {
                 JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");
                 String response = jsonObject.getJSONObject("0").getString("response");
-
                 if (response.equals(context.getString(R.string.response_success))) {
                     seeker = jsonObject.getJSONObject("0").getString("new_seeker");
                     initRecyclerView(jsonObject, Integer.parseInt(sqlHelper.getActionString().split(":")[1]));
@@ -551,6 +545,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 String response = sqlHelper.getJSONResponse().getJSONObject("data").getString("response");
                 int position = Integer.parseInt(sqlHelper.getActionString().split(":")[1]);
                 if(response.equals(context.getString(R.string.response_success))){
+                    ProfileFragment.currentUserWatchlist = null;
                     if(homeModels.get(position).getFavourites().getMovie().getIsWatched()){
                         homeModels.get(position).getFavourites().getMovie().setWatched(false);
                         homeModels.get(position).getFavourites().getMovie().setTotalWatched(homeModels.get(position).getFavourites().getMovie().getTotalWatched() - 1);

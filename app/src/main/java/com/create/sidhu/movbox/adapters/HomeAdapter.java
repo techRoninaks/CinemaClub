@@ -486,6 +486,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
         }
     }
 
+    public void updateList(ArrayList<HomeModel> homeModels){
+        this.homeModels = homeModels;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imgMore;
         ImageView imgMasterPoster;

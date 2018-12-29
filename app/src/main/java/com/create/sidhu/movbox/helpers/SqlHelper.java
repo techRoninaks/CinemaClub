@@ -316,7 +316,6 @@ public class SqlHelper {
                         IS.close();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
             return null;
