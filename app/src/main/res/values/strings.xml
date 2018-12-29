@@ -34,6 +34,7 @@
 
     <!-- Permission Resource Strings -->
     <string name="permission_camera_denied">Please allow camera permission to take picture.</string>
+    <string name="permission_external_denied">Please allow access to external sd card.</string>
 
     <!-- View Resource Strings -->
     <string name="profile_user">user</string>
@@ -126,9 +127,10 @@
     <string name="review_remove">Delete</string>
 
 
-    <!-- Review Title Strings -->
+    <!-- Ratings Title Strings -->
     <string name="ratings_submit">Submit</string>
     <string name="ratings_cancel">Cancel</string>
+    <string name="ratings_menu_share">Share</string>
 
     <!-- Recovery Title Strings -->
     <string name="recover_password_title">Enter your registered email</string>

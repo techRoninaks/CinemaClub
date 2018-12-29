@@ -5,19 +5,26 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,26 +33,27 @@ import com.create.sidhu.movbox.Interfaces.CallbackDelegate;
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.MainActivity;
-import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.adapters.RatingsAdapter;
-import com.create.sidhu.movbox.adapters.ReviewAdapter;
 import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
+import com.create.sidhu.movbox.helpers.PermissionsHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.ActorModel;
+import com.create.sidhu.movbox.models.FilterModel;
 import com.create.sidhu.movbox.models.RatingsModel;
-import com.create.sidhu.movbox.models.ReviewModel;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
+
+import static android.app.Activity.RESULT_OK;
 
 public class RatingsDialog extends DialogFragment implements SqlDelegate {
     Context context;
@@ -56,6 +64,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
     RatingBar rbUserRating;
     LinearLayout llRecyclerView, llPlaceholder, llContainerTabs;
     Button btnSubmit, btnCancel;
+    ImageView imgMore;
     ArrayList<ActorModel> actorModels;
     ArrayList<RatingsModel> ratingsModels, ratingsModelsTop, ratingsModelsFollowing;
     Bundle bundle;
@@ -93,6 +102,22 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                     attachAdapter(recyclerView, ratingsModelsFollowing);
                     break;
                 }
+                case R.id.img_More:{
+                    PopupMenu popupMenu = new PopupMenu(context, imgMore);
+                    popupMenu.getMenuInflater().inflate(R.menu.ratings_dialog_menu, popupMenu.getMenu());
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            int id = item.getItemId();
+                            if(id == R.id.menu_share){
+                                takeScreenshot();
+                            }
+                            return true;
+                        }
+                    });
+                    popupMenu.show();
+                    break;
+                }
             }
         }
     };
@@ -124,6 +149,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
             tvTabTop = view.findViewById(R.id.textView_TabTop);
             btnSubmit = view.findViewById(R.id.btnSubmit);
             btnCancel = view.findViewById(R.id.btnCancel);
+            imgMore = view.findViewById(R.id.img_More);
             tvTitle.setText(bundle.getString("name") + "(" + bundle.getString("language") + ") (" + bundle.getString("display_dimension") + ")");
             tvSubtitle.setText(bundle.getString("genre"));
             rbUserRating.setRating(0.0f);
@@ -157,6 +183,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
             tvTabAll.setOnClickListener(onClickListener);
             tvTabFollowing.setOnClickListener(onClickListener);
             tvTabTop.setOnClickListener(onClickListener);
+            imgMore.setOnClickListener(onClickListener);
             rbUserRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
                 @Override
                 public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
@@ -241,6 +268,25 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PermissionsHelper.REQUEST_WRITE_EXTERNAL_STORAGE:{
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    takeScreenshot();
+                }else{
+                    Toast.makeText(context, context.getString(R.string.permission_external_denied), Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request.
+        }
+    }
+
     private void toggleTab(int id){
         tvTabTop.setTextColor(id == R.id.textView_TabTop ? getResources().getColor(R.color.colorTextPrimary) : getResources().getColor(R.color.colorTextSecondary));
         tvTabAll.setTextColor(id == R.id.textView_TabAll ? getResources().getColor(R.color.colorTextPrimary) : getResources().getColor(R.color.colorTextSecondary));
@@ -264,6 +310,65 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(true);
     }
+
+    private void takeScreenshot(){
+        if(new PermissionsHelper(context).requestPermissions(PermissionsHelper.REQUEST_WRITE_EXTERNAL_STORAGE)) {
+            Date now = new Date();
+            android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now);
+
+            try {
+                // image naming and path  to include sd card  appending name you choose for file
+                String mPath = Environment.getExternalStorageDirectory().toString() + "/" + now + ".jpg";
+
+                // create bitmap screen capture
+                View v1 = getDialog().getWindow().getDecorView().getRootView();
+                v1.setDrawingCacheEnabled(true);
+                Bitmap bitmap = Bitmap.createBitmap(v1.getDrawingCache());
+                v1.setDrawingCacheEnabled(false);
+
+                File imageFile = new File(mPath);
+
+                FileOutputStream outputStream = new FileOutputStream(imageFile);
+                int quality = 80;
+                bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream);
+                outputStream.flush();
+                outputStream.close();
+
+                sendScreenshotFile(imageFile);
+            } catch (Throwable e) {
+                // Several error may come out with file handling or DOM
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    private void sendScreenshotFile(File imageFile) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("image/jpeg");
+        String shareBody = "";
+        switch (type){
+            case "cast":{
+                if(bundle.containsKey("isIdentity")){
+                    shareBody = "Check out my friend's rating for " + bundle.getString("name");
+                }else{
+                    shareBody = "Check out my rating for " + bundle.getString("name");
+                }
+                break;
+            }
+            case "list":{
+                shareBody = "Find out who has rated " + bundle.getString("name");
+                break;
+            }
+        }
+        shareBody = shareBody.concat("\n\nGet diving into the world of Cinema.\n\nInstall Cinema Club now.\n\n" + context.getString(R.string.app_store_uri));
+        String shareSub = "Cinema Club Invitation";
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
+        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
+        startActivityForResult(Intent.createChooser(shareIntent, "Share using"), 0);
+    }
+
 
     public void initRecyclerView(JSONArray jsonArray){
         try{
