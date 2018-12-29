@@ -346,7 +346,22 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
     private void sendScreenshotFile(File imageFile) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("image/jpeg");
-        String shareBody = "Get diving into the world of Cinema.\n\nInstall Cinema Club now.\n\n" + context.getString(R.string.app_store_uri);
+        String shareBody = "";
+        switch (type){
+            case "cast":{
+                if(bundle.containsKey("isIdentity")){
+                    shareBody = "Check out my friend's rating for " + bundle.getString("name");
+                }else{
+                    shareBody = "Check out my rating for " + bundle.getString("name");
+                }
+                break;
+            }
+            case "list":{
+                shareBody = "Find out who has rated " + bundle.getString("name");
+                break;
+            }
+        }
+        shareBody = shareBody.concat("\n\nGet diving into the world of Cinema.\n\nInstall Cinema Club now.\n\n" + context.getString(R.string.app_store_uri));
         String shareSub = "Cinema Club Invitation";
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub);
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
