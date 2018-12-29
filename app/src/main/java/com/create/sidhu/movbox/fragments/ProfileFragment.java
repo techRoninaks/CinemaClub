@@ -529,6 +529,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                     params.put("is_watchlist", isAddedToWatchlist.toString());
                     sqlHelper.setParams(params);
                     sqlHelper.executeUrl(true);
+                    currentUserWatchlist = null;
                 }
             });
             llWatchedMovie.setOnClickListener(new View.OnClickListener() {
@@ -614,6 +615,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 textViewReviews.setText(formatTextCount(totalReviewed));
                 textViewFollowers.setText(formatTextCount(followers));
                 textViewFollowing.setText(formatTextCount(following));
+                textViewWatchlistText.setText(context.getString(R.string.profile_watchlist_text));
                 if (!isIdentity) {
                     btnEditProfile.setText(isFollowing ? context.getString(R.string.follow_button_following) : context.getString(R.string.follow_button_follow));
                     if (privacy.charAt(1) == '0' && !isFollowing) {
@@ -826,6 +828,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
             }else if(sqlHelper.getActionString().equals("watching")){
                 String response = sqlHelper.getJSONResponse().getJSONObject("data").getString("response");
                 if(response.equals(context.getString(R.string.response_success))){
+                    currentUserWatchlist = null;
                     if(isWatched){
                         isWatched = false;
                         Toast.makeText(context, "Movie has been marked as unwatched", Toast.LENGTH_SHORT).show();

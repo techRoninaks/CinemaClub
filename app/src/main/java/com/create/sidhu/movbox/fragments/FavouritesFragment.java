@@ -43,7 +43,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
     private final int LOAD_INITIAL = 0;
     private final int LOAD_REFRESH = 1;
     private final int LOAD_HISTORY = 2;
-    String seeker = "";
+    public static String seeker = "";
     public static ArrayList<FavouritesModel> favouritesList;
     private SwipeRefreshLayout swipeContainer; //Swipe down refresh
 
@@ -76,7 +76,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                 fetchUpdates("0",LOAD_INITIAL);
             }
             else {
-                arrayCheck();
+                arrayCheck(LOAD_INITIAL);
                 markRead(favouritesList);
             }
         }catch (Exception e){
@@ -102,13 +102,13 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (!recyclerView.canScrollVertically(1)) {
-                    if(seeker.equals("")) {
-                        if(System.currentTimeMillis() - currentTime > 5000)
+                    if(System.currentTimeMillis() - currentTime > 5000) {
+                        if (seeker.equals(""))
                             Toast.makeText(context, "ExploreCinema Club more!!!", Toast.LENGTH_SHORT).show();
-                        currentTime = System.currentTimeMillis();
+                        else
+                            fetchUpdates(seeker, LOAD_HISTORY);
                     }
-                    else
-                        fetchUpdates(seeker,LOAD_HISTORY);
+                    currentTime = System.currentTimeMillis();
                 }
             }
         });
@@ -134,17 +134,19 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
         mainActivity.removeMarked(markList);
     }
 
-    private void arrayCheck() {
+    private void arrayCheck(int loadType) {
         if(favouritesList.size()==0){
-
                 recyclerView.setVisibility(View.GONE);
                 llContainerPlaceholder.setVisibility(View.VISIBLE);
                 return;
         }
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        FavouritesAdapter favouritesAdapter = new FavouritesAdapter(context, favouritesList, recyclerView);
-        recyclerView.setAdapter(favouritesAdapter);
+        if(loadType == LOAD_INITIAL || loadType == LOAD_REFRESH) {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(layoutManager);
+            FavouritesAdapter favouritesAdapter = new FavouritesAdapter(context, favouritesList, recyclerView);
+            recyclerView.setAdapter(favouritesAdapter);
+        }else
+            ((FavouritesAdapter)recyclerView.getAdapter()).updateList(favouritesList);
 
     }
 
@@ -177,7 +179,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             }
             if(loadType == LOAD_REFRESH)
                 swipeContainer.setRefreshing(false);
-            arrayCheck();
+            arrayCheck(loadType);
             markRead(favouritesList);
         }
         catch (Exception e){
