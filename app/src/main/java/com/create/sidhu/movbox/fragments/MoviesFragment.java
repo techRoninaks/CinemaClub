@@ -651,11 +651,11 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
 
     private ArrayList<ArrayList<MovieModel>> applyRatingsFilter(ArrayList<ArrayList<MovieModel>> masterFilterList){
         try {
-            boolean check = false;
+            boolean check = true;
             int min = (int) sbRatings.getSelectedMinValue();
-            int max = (int) sbRatings.getAbsoluteMaxValue();
+            int max = (int) sbRatings.getSelectedMaxValue();
             if (min == 0 && max == 10)
-                check = true;
+                check = false;
             if (check) {
                 ArrayList<ArrayList<MovieModel>> outerList = new ArrayList<>();
                 int sizeOuter = masterFilterList.size();
