@@ -137,30 +137,37 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
             View.OnClickListener onButtonClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switch (view.getId()) {
-                        case R.id.buttonSignIn:
-                            if (validateSignIn())
-                                fetchSalt(editTextUsername.getText().toString());
-                            break;
-                        case R.id.textView_Register:
-                            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
-                            break;
-                        case R.id.img_GoogleSignIn:
-                            attemptLogin(getString(R.string.google_signin), "", "");
-                            break;
-                        case R.id.img_FbSignIn:
-                            attemptLogin(getString(R.string.fb_signin), "", "");
-                            break;
-                        case R.id.containerMaster:
-                            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-                            break;
-                        case R.id.textView_ForgotPassword: {
-                            Intent intent = new Intent(LoginActivity.this, ForgotPassword.class);
-                            intent.putExtra("type", "password_forgot");
-                            startActivity(intent);
-                            break;
+                    try {
+                        switch (view.getId()) {
+                            case R.id.buttonSignIn:
+                                if (validateSignIn())
+                                    fetchSalt(editTextUsername.getText().toString());
+                                break;
+                            case R.id.textView_Register:
+                                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                                break;
+                            case R.id.img_GoogleSignIn:
+                                attemptLogin(getString(R.string.google_signin), "", "");
+                                break;
+                            case R.id.img_FbSignIn:
+                                attemptLogin(getString(R.string.fb_signin), "", "");
+                                break;
+                            case R.id.containerMaster:
+                                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                                if(activity.getCurrentFocus() !=null)
+                                    imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+                                break;
+                            case R.id.textView_ForgotPassword: {
+                                Intent intent = new Intent(LoginActivity.this, ForgotPassword.class);
+                                intent.putExtra("type", "password_forgot");
+                                startActivity(intent);
+                                break;
+                            }
                         }
+                    }
+                    catch (Exception e){
+                        EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
+                        emailHelper.sendEmail();
                     }
                 }
             };
@@ -213,7 +220,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
 
         return signIn;
     }
-    
+
 
     public static boolean isValidEmail(String email){
         boolean isValid = false;

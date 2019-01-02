@@ -276,8 +276,8 @@ public class SqlHelper {
                     httpURLConnection = (HttpURLConnection) url.openConnection();
                     httpURLConnection.setDoOutput(false);
                     httpURLConnection.setRequestMethod(Method);
-                    httpURLConnection.setConnectTimeout(10000);
-                    httpURLConnection.setReadTimeout(10000);
+                    httpURLConnection.setConnectTimeout(20000);
+                    httpURLConnection.setReadTimeout(20000);
                     httpURLConnection.setDoInput(true);
                     httpURLConnection.connect();
                 }else if(Method.equals("POST")){
@@ -285,8 +285,8 @@ public class SqlHelper {
                     httpURLConnection = (HttpURLConnection) url.openConnection();
                     httpURLConnection.setDoOutput(true);
                     httpURLConnection.setRequestMethod(Method);
-                    httpURLConnection.setConnectTimeout(10000);
-                    httpURLConnection.setReadTimeout(10000);
+                    httpURLConnection.setConnectTimeout(20000);
+                    httpURLConnection.setReadTimeout(20000);
                     httpURLConnection.setDoInput(true);
                     httpURLConnection.connect();
                     OutputStream OS = httpURLConnection.getOutputStream();
