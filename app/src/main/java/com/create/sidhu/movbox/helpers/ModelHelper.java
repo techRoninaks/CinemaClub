@@ -76,7 +76,7 @@ public class ModelHelper {
             movieModel.setTotalReviews(Integer.parseInt(jsonObject.getString("total_reviews")));
             movieModel.setRating("" + (int)Float.parseFloat(jsonObject.getString("rating")));
             movieModel.setDisplayDimension(jsonObject.getString("dimension"));
-            movieModel.setCast(jsonObject.getString("director") + "!~" + jsonObject.getString("actor") + "!~" + jsonObject.getString("actress") + "!~" + jsonObject.getString("screenplay") + "!~" + jsonObject.getString("music"));
+            movieModel.setCast(buildCastString(jsonObject));
             movieModel.setWatched(jsonObject.getString("is_watched").equals("1"));
             movieModel.setAddedToWatchlist(jsonObject.getString("is_watchlist").equals("1"));
             movieModel.setRated(jsonObject.getString("is_rated").equals("1"));
@@ -478,6 +478,34 @@ public class ModelHelper {
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
+    }
+
+    /***
+     * Builds the cast string is the required format
+     * @param jsonObject
+     * @return cast string on success else empty string on error
+     */
+    private String buildCastString(JSONObject jsonObject){
+        String castString = "";
+        try {
+            if (!jsonObject.getString("director").isEmpty())
+                castString = castString.concat(jsonObject.getString("director") + "!~");
+            if(!jsonObject.getString("actor").isEmpty())
+                castString = castString.concat(jsonObject.getString("actor") + "!~");
+            if(!jsonObject.getString("actress").isEmpty())
+                castString = castString.concat(jsonObject.getString("actress") + "!~");
+            if(!jsonObject.getString("screenplay").isEmpty())
+                castString = castString.concat(jsonObject.getString("screenplay") + "!~");
+            if(!jsonObject.getString("music").isEmpty())
+                castString = castString.concat(jsonObject.getString("music") + "!~");
+
+            if(castString.endsWith("!~"))
+                castString = castString.substring(0, castString.length() - 2);
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+        return castString;
     }
 
 }
