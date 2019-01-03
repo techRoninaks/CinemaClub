@@ -3,30 +3,19 @@ package com.create.sidhu.movbox.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.MainActivity;
-import com.create.sidhu.movbox.fragments.HomeFragment;
 import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
-import com.create.sidhu.movbox.models.ActorModel;
 import com.create.sidhu.movbox.models.PreferenceModel;
 
 import java.util.ArrayList;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Adapter for Preference Recycler View

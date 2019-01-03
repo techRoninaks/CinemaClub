@@ -40,7 +40,6 @@ import com.create.sidhu.movbox.helpers.PermissionsHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.ActorModel;
-import com.create.sidhu.movbox.models.FilterModel;
 import com.create.sidhu.movbox.models.RatingsModel;
 
 import org.json.JSONArray;
@@ -52,8 +51,6 @@ import java.util.Date;
 import java.util.HashMap;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
-
-import static android.app.Activity.RESULT_OK;
 
 public class RatingsDialog extends DialogFragment implements SqlDelegate {
     Context context;

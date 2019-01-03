@@ -1,19 +1,16 @@
 package com.create.sidhu.movbox.activities;
 
-import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,9 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.Interfaces.CallbackDelegate;
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
-import com.create.sidhu.movbox.adapters.FavouritesAdapter;
 import com.create.sidhu.movbox.adapters.ReviewAdapter;
-import com.create.sidhu.movbox.fragments.ProfileFragment;
 import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
@@ -37,8 +32,6 @@ import com.create.sidhu.movbox.models.MovieModel;
 import com.create.sidhu.movbox.models.ReviewModel;
 import com.create.sidhu.movbox.models.UserModel;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

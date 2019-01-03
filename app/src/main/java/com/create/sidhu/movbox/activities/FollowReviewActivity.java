@@ -3,13 +3,12 @@ package com.create.sidhu.movbox.activities;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,8 +27,6 @@ import com.create.sidhu.movbox.models.FavouritesModel;
 import com.create.sidhu.movbox.models.MovieModel;
 import com.create.sidhu.movbox.models.UserModel;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

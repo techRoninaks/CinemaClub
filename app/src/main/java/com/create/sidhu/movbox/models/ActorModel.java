@@ -2,17 +2,6 @@ package com.create.sidhu.movbox.models;
 
 import android.content.Context;
 
-import com.create.sidhu.movbox.Interfaces.SqlDelegate;
-import com.create.sidhu.movbox.helpers.SqlHelper;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
 /**
  * Holds data for actors
  */

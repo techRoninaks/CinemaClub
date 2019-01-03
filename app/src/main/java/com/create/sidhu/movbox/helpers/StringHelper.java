@@ -1,11 +1,9 @@
 package com.create.sidhu.movbox.helpers;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,10 +21,8 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import javax.crypto.SecretKeyFactory;

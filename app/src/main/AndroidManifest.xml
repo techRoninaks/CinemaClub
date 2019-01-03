@@ -46,9 +46,6 @@
             android:name=".activities.ProfileImage"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.EditProfile"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ProfileFollowers"
             android:screenOrientation="portrait" />
         <activity

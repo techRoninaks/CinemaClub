@@ -2,14 +2,8 @@ package com.create.sidhu.movbox.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.provider.ContactsContract;
 
 import com.create.sidhu.movbox.R;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.util.ArrayList;
 
 public class EmailHelper {
     public static final String TECH_SUPPORT = "tech";

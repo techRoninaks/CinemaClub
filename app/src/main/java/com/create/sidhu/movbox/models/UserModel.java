@@ -1,7 +1,5 @@
 package com.create.sidhu.movbox.models;
 
-import com.create.sidhu.movbox.activities.MainActivity;
-
 import java.io.Serializable;
 
 /**

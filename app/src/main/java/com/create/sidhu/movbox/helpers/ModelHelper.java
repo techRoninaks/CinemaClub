@@ -2,7 +2,6 @@ package com.create.sidhu.movbox.helpers;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.MainActivity;
@@ -20,7 +19,6 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 
 /**

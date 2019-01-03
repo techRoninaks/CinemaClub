@@ -2,20 +2,15 @@ package com.create.sidhu.movbox.activities;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
@@ -23,13 +18,8 @@ import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
-import com.nostra13.universalimageloader.utils.L;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
 

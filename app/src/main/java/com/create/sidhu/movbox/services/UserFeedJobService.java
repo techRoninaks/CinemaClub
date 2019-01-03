@@ -16,11 +16,9 @@ import android.os.PersistableBundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
-import com.create.sidhu.movbox.activities.LoginActivity;
 import com.create.sidhu.movbox.activities.MainActivity;
 import com.create.sidhu.movbox.fragments.FavouritesFragment;
 import com.create.sidhu.movbox.fragments.HomeFragment;
@@ -34,15 +32,11 @@ import com.create.sidhu.movbox.models.HomeModel;
 import com.create.sidhu.movbox.models.UpdatesModel;
 import com.create.sidhu.movbox.models.UserModel;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 
 public class UserFeedJobService extends JobService implements SqlDelegate {

@@ -3,12 +3,9 @@ package com.create.sidhu.movbox.helpers;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;

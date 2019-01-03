@@ -9,8 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,12 +34,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.GlideApp;
 import com.create.sidhu.movbox.Interfaces.CallbackDelegate;
 import com.create.sidhu.movbox.Interfaces.SqlDelegate;
-import com.create.sidhu.movbox.activities.EditProfile;
-import com.create.sidhu.movbox.activities.LoginActivity;
-import com.create.sidhu.movbox.activities.ProfileImage;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.FollowReviewActivity;
 import com.create.sidhu.movbox.activities.MainActivity;
+import com.create.sidhu.movbox.activities.ProfileImage;
 import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.activities.SettingsActivity;
 import com.create.sidhu.movbox.adapters.ActorAdapter;
@@ -54,8 +49,6 @@ import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.ActorModel;
 import com.create.sidhu.movbox.models.MovieModel;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,7 +59,6 @@ import java.util.HashMap;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 
-import static android.support.constraint.Constraints.TAG;
 import static com.create.sidhu.movbox.helpers.StringHelper.formatTextCount;
 import static com.create.sidhu.movbox.helpers.StringHelper.toSentenceCase;
 
@@ -411,10 +403,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 public void onClick(View view) {
                     if (type.equals(context.getString(R.string.profile_user))) {
                         if (isIdentity) {
-                            Intent intent = new Intent(context, EditProfile.class);
-                            bundle.putString("return_path", "ProfileFragment");
-                            intent.putExtra("bundle", bundle);
-                            startActivity(intent);
+
                         } else {
                             SqlHelper sqlHelper = new SqlHelper(context, ProfileFragment.this);
                             sqlHelper.setExecutePath("update-following.php");

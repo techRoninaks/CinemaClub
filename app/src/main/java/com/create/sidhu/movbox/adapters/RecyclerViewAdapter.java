@@ -1,12 +1,7 @@
 package com.create.sidhu.movbox.adapters;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Movie;
-import android.graphics.Typeface;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,22 +15,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.FollowReviewActivity;
-import com.create.sidhu.movbox.activities.MainActivity;
-import com.create.sidhu.movbox.activities.ReviewsActivity;
 import com.create.sidhu.movbox.fragments.MoviesFragment;
 import com.create.sidhu.movbox.fragments.PostStatusFragment;
 import com.create.sidhu.movbox.fragments.ProfileFragment;
 import com.create.sidhu.movbox.helpers.EmailHelper;
-import com.create.sidhu.movbox.helpers.ModelHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.MovieModel;
 
-import org.w3c.dom.Text;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-import static android.media.CamcorderProfile.get;
 
 /**
  * Adapter for Movie Recycler View

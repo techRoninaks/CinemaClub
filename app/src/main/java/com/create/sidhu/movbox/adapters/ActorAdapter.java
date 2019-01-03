@@ -16,9 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.create.sidhu.movbox.GlideApp;
 import com.create.sidhu.movbox.R;
-import com.create.sidhu.movbox.activities.SplashScreen;
 import com.create.sidhu.movbox.fragments.HomeFragment;
 import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;

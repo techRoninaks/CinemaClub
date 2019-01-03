@@ -1,18 +1,15 @@
 package com.create.sidhu.movbox.fragments;
 
 
-import android.app.ProgressDialog;
+import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.telecom.Call;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +22,6 @@ import com.create.sidhu.movbox.Interfaces.SqlDelegate;
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.activities.FollowReviewActivity;
 import com.create.sidhu.movbox.activities.MainActivity;
-import com.create.sidhu.movbox.activities.ReviewsActivity;
-import com.create.sidhu.movbox.adapters.FavouritesAdapter;
 import com.create.sidhu.movbox.adapters.HomeAdapter;
 import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
@@ -34,21 +29,14 @@ import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.helpers.TransparentProgressDialog;
 import com.create.sidhu.movbox.models.ActorModel;
-import com.create.sidhu.movbox.models.FavouritesModel;
 import com.create.sidhu.movbox.models.HomeModel;
-import com.create.sidhu.movbox.models.MovieModel;
-import com.create.sidhu.movbox.models.UpdatesModel;
-import com.create.sidhu.movbox.models.UserModel;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Timer;
 
 
 /**
