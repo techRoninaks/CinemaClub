@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:id="@+id/containerMaster">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/containerMain">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/containerImage"
+            android:orientation="vertical">
+            <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/list_image"
+                android:layout_width="@dimen/list_image"
+                android:layout_height="@dimen/list_image"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:src="@drawable/profile_default"
+                app:civ_border_color="@color/colorPrimary"
+                app:civ_border_width="1dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:id="@+id/containerMainText"
+            android:layout_weight="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/list_padding"
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/list_titletext"
+                    android:text="Testing Title Text"
+                    android:textColor="@color/colorTextPrimary"
+                    android:id="@+id/textView_TitleText"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/list_subtext"
+                    android:text="Testing Sub Text"
+                    android:textColor="@color/colorTextSecondary"
+                    android:id="@+id/textView_SubText"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/containerOtherInfo"
+            android:orientation="vertical"
+            android:padding="@dimen/standard_gap"
+            android:layout_weight="1">
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/follow_button_follow"
+                android:background="@drawable/custom_button_yellow"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

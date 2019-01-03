@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+    android:background="@color/colorBlackTransparent"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <FrameLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_below="@+id/btn_exit"
+    android:layout_marginTop="@dimen/layout_top_margin"
+    android:id="@+id/containerImage">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="350dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            app:srcCompat="@drawable/profile_default"
+            android:padding="4dp"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/text_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="@string/change_profile_image"
+        android:textColor="@color/colorTextWhitePrimary"
+        android:textStyle="bold"
+        android:layout_below="@+id/containerImage"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/text_change"
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/standard_gap"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center_horizontal"
+        android:weightSum="2"
+        android:id="@+id/containerMainButtons">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Camera"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="@dimen/list_subtext"
+            android:visibility="gone"
+            android:id="@+id/btn_Camera"
+            android:background="@drawable/custom_button_yellow"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Choose"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="@dimen/list_subtext"
+            android:id="@+id/btn_Gallery"
+            android:background="@drawable/custom_button_yellow"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/text_change"
+        android:layout_centerHorizontal="true"
+        android:padding="@dimen/standard_gap"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center_horizontal"
+        android:weightSum="2"
+        android:visibility="gone"
+        android:id="@+id/containerConfirmButtons">
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Confirm"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="@dimen/list_subtext"
+            android:id="@+id/btn_Confirm"
+            android:background="@drawable/custom_button_yellow"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Discard"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="@dimen/list_subtext"
+            android:id="@+id/btn_Discard"
+            android:background="@drawable/custom_button_yellow"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_exit"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="15dp"
+        android:background="@android:drawable/ic_menu_close_clear_cancel" />
+</RelativeLayout>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ffc201</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#ffc201</color>
+
+    <color name="colorTextToolbar">#272623</color>
+    <color name="colorTextPrimary">#DE000000</color>
+    <color name="colorTextSecondary">#99000000</color>
+    <color name="colorTextHint">#61000000</color>
+    <color name="colorSeparationLines">#1F000000</color>
+    <color name="colorTextDisabled">#08000000</color>
+    <color name="colorTextReply">#3cdeff</color>
+    <color name="colorTextError">#ff0000</color>
+    <color name="colorTextWhitePrimary">#ffffffff</color>
+
+    <color name="colorBlackTransparent">#CC000000</color>
+</resources>

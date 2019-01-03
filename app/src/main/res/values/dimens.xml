@@ -1,0 +1,75 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="toolbar_title">24sp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="list_supertext">17sp</dimen>
+    <dimen name="list_titletext">15sp</dimen>
+    <dimen name="list_subtext">12sp</dimen>
+    <dimen name="list_othertext">11sp</dimen>
+    <dimen name="cast_image_identifier_size">14dp</dimen>
+    <dimen name="list_padding">@dimen/standard_touch_space</dimen>
+    <dimen name="list_interspace">2dp</dimen>
+    <dimen name="layout_top_margin">20dp</dimen>
+    <dimen name="layout_side_margin">10dp</dimen>
+    <dimen name="home_description_padding_top">@dimen/standard_gap</dimen>
+    <dimen name="home_description_padding_side">12dp</dimen>
+    <dimen name="home_poster_image_size">180dp</dimen>
+    <dimen name="login_side_margin">40dp</dimen>
+    <dimen name="login_text_size">15sp</dimen>
+    <dimen name="profile_image">96dp</dimen>
+    <dimen name="profile_image_padding">7dp</dimen>
+    <dimen name="profile_image_stroke">4dp</dimen>
+    <dimen name="profile_image_change_button">30dp</dimen>
+    <dimen name="grid_icon_size">15dp</dimen>
+    <dimen name="toolbar_image_size">80dp</dimen>
+    <dimen name="logo_gif_size">90dp</dimen>
+    <!-- ReviewActivity -->
+    <dimen name="review_title">15sp</dimen>
+    <dimen name="review_subtitle">13sp</dimen>
+    <dimen name="review_user_image">40dp</dimen>
+    <dimen name="review_text_size">12sp</dimen>
+    <dimen name="review_tab_padding">10dp</dimen>
+    <dimen name="review_tab_text_size">14sp</dimen>
+    <dimen name="review_close_button_size">18dp</dimen>
+    <dimen name="review_info_size">10sp</dimen>
+    <dimen name="review_like_button">15dp</dimen>
+    <!-- RatingsDialog -->
+    <dimen name="ratings_title_size">15sp</dimen>
+    <dimen name="ratings_subtitle">13sp</dimen>
+    <!-- Settings -->
+    <dimen name="settings_main_text">15sp</dimen>
+    <dimen name="settings_sub_text">13sp</dimen>
+    <!-- Profile -->
+    <dimen name="profile_settings_size">25dp</dimen>
+    <dimen name="profile_favourites_size">20dp</dimen>
+    <!-- Splash Screen -->
+    <dimen name="splashscreen_logo_size">120dp</dimen>
+    <dimen name="splashscreen_logo_text_size">100dp</dimen>
+    <!-- Login -->
+    <dimen name="login_social_icon_size">48dp</dimen>
+    <dimen name="login_logo_size">90dp</dimen>
+    <!-- Text Sizes -->
+    <dimen name="text_extra_small">10sp</dimen>
+    <dimen name="text_small">12sp</dimen>
+    <dimen name="text_medium">14sp</dimen>
+    <dimen name="text_large">16sp</dimen>
+    <dimen name="text_extra_large">18sp</dimen>
+    <dimen name="standard_gap">8dp</dimen>
+    <dimen name="standard_gap_small">6dp</dimen>
+    <dimen name="standard_gap_large">12dp</dimen>
+    <dimen name="standard_gap_extra_large">14dp</dimen>
+    <dimen name="standard_gap_ultra_large">16dp</dimen>
+    <dimen name="standard_touch_space">4dp</dimen>
+    <dimen name="standard_touch_space_small">2dp</dimen>
+    <!-- Home -->
+    <dimen name="home_action_image_size">24dp</dimen>
+    <dimen name="list_image">32dp</dimen>
+    <dimen name="master_star_size">20dp</dimen>
+    <!-- Movie -->
+    <dimen name="bottom_sheet_plus_margin">65dp</dimen>
+    <dimen name="movie_grid_icon">12dp</dimen>
+    <!-- Post Status-->
+    <dimen name="post_status_icon_size">25dp</dimen>
+    <dimen name="post_status_icon_small">16dp</dimen>
+</resources>

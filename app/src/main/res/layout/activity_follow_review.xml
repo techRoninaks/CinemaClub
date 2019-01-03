@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.create.sidhu.movbox.activities.FollowReviewActivity"
+    android:orientation="vertical">
+    <include layout="@layout/toolbar"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/containerMaster"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/standard_gap_large"
+        android:paddingLeft="@dimen/standard_gap_large">
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/containerPlaceholder"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_Placeholder"
+            android:text="@string/placeholder_show_nothing"
+            android:textColor="@color/colorTextSecondary"/>
+    </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recyclerView">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
+</LinearLayout>

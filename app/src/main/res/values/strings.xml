@@ -1,0 +1,236 @@
+<resources>
+    <string name="app_name">Cinema Club</string>
+    <string name="title_home">Home</string>
+    <string name="title_movies">Movies</string>
+    <string name="title_post_status">Post Status</string>
+    <string name="title_favourites">Favourites</string>
+    <string name="title_profile">Profile</string>
+    <string name="google_client_id">520975052224-crffh33cqo04dnk9c42s015ghlp3vrtu.apps.googleusercontent.com</string>
+    <string name="google_web_client_id">520975052224-hu15ocrsie7s0dfsh4fjhrshjti6q0fa.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">2567368729944839</string>
+    <string name="fb_login_protocol_scheme">fb2567368729944839</string>
+    <string name="hello_blank_fragment">Hello Home fragment</string>
+    <string name="app_store_uri">https://play.google.com/store/apps/details?id=com.roninaks.cinemaclub</string>
+    <string name="version_name">v1.0.0</string>
+
+    <!-- User Resource Strings -->
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="continue_login">Please login to continue</string>
+    <string name="follow_button_edit">Edit Profile</string>
+    <string name="profile_watchlist_text">Favourites</string>
+    <string name="follow_button_follow">Follow</string>
+    <string name="follow_button_following">Unfollow</string>
+    <string name="follow_button_watching">Add to Watching</string>
+    <string name="follow_button_watched">Watching</string>
+    <string name="follow_button_watchlist_add">Add to Watchlist</string>
+    <string name="follow_button_watchlist_remove">Remove from Watchlist</string>
+    <string name="country">Country</string>
+    <string name="phone">Phone No:</string>
+    <string name="email_tech_support">tech@roninaks.com</string>
+    <string name="email_admin">tech@roninaks.com</string>
+    <string name="email_all">tech@roninaks.com,nihalpradeep@roninaks.com</string>
+    <string name="email_sender">report@cinemaclub.com</string>
+
+    <!-- Permission Resource Strings -->
+    <string name="permission_camera_denied">Please allow camera permission to take picture.</string>
+    <string name="permission_external_denied">Please allow access to external sd card.</string>
+
+    <!-- View Resource Strings -->
+    <string name="profile_user">user</string>
+    <string name="profile_movies">movie</string>
+    <string name="profile_cast">cast</string>
+    <string name="bottom_dialog_post_status">post_status</string>
+    <string name="profile">profile</string>
+    <string name="watched">watched</string>
+
+
+    <!-- Error Resource Strings -->
+    <string name="required_field">This field is required</string>
+    <string name="invalid_email">Please enter a valid email</string>
+    <string name="invalid_password">Password should be atleast 6 characters long and have one uppercase character and one numeral</string>
+    <string name="invalid_cred">Username or Password is incorrect</string>
+    <string name="password_mismatch">The passwords do not match</string>
+    <string name="unexpected">Something went wrong. Please try again later</string>
+    <string name="exception">exception</string>
+    <string name="invalid_phone">Please enter a valid phone number</string>
+    <string name="invalid_date">Please enter date as yyyy-MM-dd</string>
+    <string name="private_account_message">This users profile is private. Follow him to view him profile.</string>
+    <string name="private_account_title">Private Account</string>
+
+
+
+    <!-- Success Resource Strings -->
+    <string name="success_register">Registration Successful</string>
+    <string name="success_login">Login Successful</string>
+    <string name="response_success">successful</string>
+    <string name="response_unsuccessful">unsuccessful</string>
+    <string name="has_seen">1</string>
+
+    <!-- DB Resource Strings -->
+    <string name="db_server"></string>
+    <string name="master_url">http://understandable-blin.hostingerapp.com/cinema-club/</string>
+    <string name="profile_image_url">users/images/profile/</string>
+    <string name="movie_image_portrait_url">movies/images/portrait/</string>
+    <string name="cast_image_url">cast/images/</string>
+    <string name="method_get">GET</string>
+    <string name="method_post">POST</string>
+
+    <!-- Favourites Title Strings -->
+    <string name="favourites_following">started following you</string>
+    <string name="favourites_watching">has watched</string>
+    <string name="favourites_rating">has rated</string>
+    <string name="favourites_review">wrote a review on</string>
+    <string name="favourites_vote">has liked your review for</string>
+    <string name="favourites_watching_now">is now watching</string>
+
+    <!-- Home Title Strings -->
+    <string name="home_new_releases">New Release!</string>
+    <string name="home_recommendation">Recommended for you</string>
+    <string name="home_review_reminder">Have you reviewed this movie yet?</string>
+    <string name="home_watchlist_reminder">Have you watched this movie yet?</string>
+    <string name="home_menu_hide">Hide</string>
+
+    <!-- Login Title Strings -->
+    <string name="logo">Logo</string>
+    <string name="logo_text">Logo text</string>
+    <string name="signin_with">Sign in with</string>
+    <string name="signin">Sign In</string>
+    <string name="username">Email</string>
+    <string name="password">Password</string>
+    <string name="password_forgot">Forgot password?</string>
+    <string name="login_register">Not a member? Register</string>
+    <string name="default_signin">default</string>
+    <string name="google_signin">google</string>
+    <string name="fb_signin">facebook</string>
+    <string name="new_user">New user?</string>
+    <string name="new_user_prompt">If you are a new user, tap yes to register.</string>
+
+    <!-- Register Title Strings -->
+    <string name="signup_with">Register with</string>
+    <string name="signup">Register</string>
+    <string name="password_confirm">Confirm Password</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+
+    <!-- Review Title Strings -->
+    <string name="review_hint">Add a review…</string>
+    <string name="review_tab_top">top</string>
+    <string name="review_tab_following">following</string>
+    <string name="review_tab_all">all</string>
+    <string name="review_reply">Reply</string>
+    <string name="review_like">Like</string>
+    <string name="review_submit">Submit</string>
+    <string name="review_reply_view">View all !#! replies</string>
+    <string name="review_reply_hide">Hide replies</string>
+    <string name="review_edit">Edit</string>
+    <string name="review_remove">Delete</string>
+
+
+    <!-- Ratings Title Strings -->
+    <string name="ratings_submit">Submit</string>
+    <string name="ratings_cancel">Cancel</string>
+    <string name="ratings_menu_share">Share</string>
+
+    <!-- Recovery Title Strings -->
+    <string name="recover_password_title">Enter your registered email</string>
+    <string name="recover_button">Recover</string>
+    <string name="recover_enter_otp">Enter OTP</string>
+    <string name="recover_button_otp">Verify</string>
+    <string name="new_password">Enter new password</string>
+    <string name="old_password">Enter old password</string>
+    <string name="recover_save_button">Save</string>
+    <string name="recover_confirm_button">Confirm</string>
+    <string name="recover_otp_send">An OTP has been sent to the given address</string>
+
+    <!-- Settings Title Strings -->
+    <string name="settings_edit_profile">Edit Profile</string>
+    <string name="settings_profile_image">Profile Image:</string>
+    <string name="settings_profile_image_change">Change profile image</string>
+    <string name="settings_profile_password">Password:</string>
+    <string name="settings_profile_password_change">Change password</string>
+    <string name="settings_profile_name">Name:</string>
+    <string name="settings_profile_email">Email:</string>
+    <string name="settings_profile_phone">Phone:</string>
+    <string name="settings_profile_dob">Date of Birth:</string>
+    <string name="settings_profile_country">Country:</string>
+    <string name="settings_profile_city">City:</string>
+    <string name="settings_privacy_settings">Privacy Settings</string>
+    <string name="settings_about">About</string>
+    <string name="settings_end_user_agreement">End User Agreement</string>
+    <string name="settings_privacy_reply">Allow commenting on your reviews</string>
+    <string name="settings_privacy_info">Allow public profile</string>
+    <string name="settings_profile_preference">Preferences</string>
+    <string name="settings_preference_language">Languages</string>
+    <string name="settings_preference_genre">Genres</string>
+    <string name="settings_about_detail_primary">Cinema Club is a social networking platform designed to enhance Movie experience by enabling users to make informed decisions based on interactive information from users they follow/trust. The platform aims at providing a new dimension to reviews by factoring in the psychology of trusting people you know personally. We are constantly pushing ourselves to make your experience satisfying and we are bringing in a whole lot of updates soon. Stay tuned. And happy Cinema-ing</string>
+    <string name="settings_design_detail">Designed and Developed by <a href="https://www.roninaks.com">Roninaks</a>.</string>
+    <string name="settings_eua_title">End-User License Agreement (&quot;Agreement&quot;)</string>
+    <string name="settings_eua_primary">Last updated: 08/11/2018\n\nPlease read this End-User License Agreement (&quot;Agreement&quot;) carefully before downloading or using Cinema Club("Application").\n\nBy downloading or using the Application, you are agreeing to be bound by the terms and conditions of this Agreement.\n\nIf you do not agree to the terms of this Agreement, do not download or use the Application.</string>
+    <string name="settings_eua_license_title">License</string>
+    <string name="settings_eua_license_content">Roninaks grants you a revocable, non-exclusive, non-transferable, limited license to download, install and use the Application solely for your personal, non-commercial purposes strictly in accordance with the terms of this Agreement.</string>
+    <string name="settings_eua_restrictions_title">Restrictions</string>
+    <string name="settings_eua_restrictions_content">You agree not to, and you will not permit others to:\n\na) license, sell, rent, lease, assign, distribute, transmit, host, outsource, disclose or otherwise commercially exploit the Application or make the Application available to any third party.\n\nb) reuse designs, remake or redesign the application under the same or any different name.</string>
+    <string name="settings_eua_modifications_title">Modifications to Application</string>
+    <string name="settings_eua_modifications_content">Cinema Club reserves the right to modify, suspend or discontinue, temporarily or permanently, the Application or any service to which it connects, with or without notice and without liability to you.</string>
+    <string name="settings_eua_term_title">Term and Termination</string>
+    <string name="settings_eua_term_content">This Agreement shall remain in effect until terminated by you or Roninaks.\n\nRoninaks may, in its sole discretion, at any time and for any or no reason, suspend or terminate this Agreement with or without prior notice.\n\nThis Agreement will terminate immediately, without prior notice from Roninaks, in the event that you fail to comply with any provision of this Agreement. You may also terminate this Agreement by deleting the Application and all copies thereof from your mobile device or from your desktop.\n\nUpon termination of this Agreement, you shall cease all use of the Application and delete all copies of the Application from your mobile device or from your desktop.</string>
+    <string name="settings_eua_severability_title">Severability</string>
+    <string name="settings_eua_severability_content">If any provision of this Agreement is held to be unenforceable or invalid, such provision will be changed and interpreted to accomplish the objectives of such provision to the greatest extent possible under applicable law and the remaining provisions will continue in full force and effect.</string>
+    <string name="settings_eua_amendments_title">Amendments to this Agreement</string>
+    <string name="settings_eua_amendments_content">Roninaks reserves the right, at its sole discretion, to modify or replace this Agreement at any time. If a revision is material we will provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</string>
+    <string name="settings_eua_contact_title">Contact Information</string>
+    <string name="settings_eua_contact_content">If you have any questions about this Agreement, please contact us.\n\nsupport@roninaks.com</string>
+
+    <!-- Movie Title Strings -->
+    <string name="movie_watched">Watched</string>
+    <string name="movie_ratings">Ratings</string>
+    <string name="movie_filters">Filters</string>
+    <string name="movie_filters_apply"><u>Apply</u></string>
+    <string name="movie_filters_remove"><u>Remove all</u></string>
+
+    <!-- Post Status Title Strings -->
+    <string name="post_status_review">Review</string>
+    <string name="post_status_rating">Rating</string>
+    <string name="post_status_watching">Watching</string>
+    <string name="post_status_search">Search</string>
+    <string name="post_status_type">post_status</string>
+    <string name="post_status_search_title">Search Results</string>
+    <string name="post_status_new_releases">New Releases</string>
+
+    <!-- Other Resource Strings -->
+
+    <string name="date_today">Today</string>
+    <string name="date_yesterday">Yesterday</string>
+    <string name="date_earlier">Earlier</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="new_releases">New Releases</string>
+    <string name="upcoming_movies">Upcoming</string>
+    <string name="change_profile_image">Change Profile Picture</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="reviews">Reviews</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="watchlist">My Watchlist</string>
+    <string name="home_image">Poster</string>
+    <string name="view_reviews">Tap to see all reviews</string>
+    <string name="write_reviews">Write a review…</string>
+    <string name="tab_watched">Watched</string>
+    <string name="placeholder_show_nothing">Nothing to show</string>
+    <string name="privacy_order">reply,info</string>
+    <string name="confirmation">Are you sure?</string>
+    <string name="confirmation_yes">Yes</string>
+    <string name="confirmation_no">No</string>
+    <string name="button_close">Close</string>
+    <string name="no_internet">No internet! Please check your network internet and try again.</string>
+    <string name="retry">Retry</string>
+    <string name="notification_ticker">Cinema Club - New notifications for you!</string>
+    <string name="channel_name">New notification</string>
+    <string name="channel_description">Shows you new application notifications</string>
+    <string name="notification_group_title_follow">You have a new follower</string>
+    <string name="notification_group_title_review">New Review!</string>
+    <string name="notification_group_title_review_vote">New Like!</string>
+    <string name="notification_group_title_watching_now">Now watching</string>
+
+</resources>

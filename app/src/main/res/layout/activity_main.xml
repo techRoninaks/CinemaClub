@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/containerMainParent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.create.sidhu.movbox.activities.MainActivity">
+
+    <!-- Toolbar -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:id="@+id/containerToolbar">
+        <include layout="@layout/toolbar"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:layout_constraintTop_toBottomOf="@+id/containerToolbar">
+        <!-- Fragment Container -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/content">
+        </FrameLayout>
+        <!-- Search Container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:id="@+id/containerSearchMaster"
+            android:orientation="vertical">
+            <!-- Search placeholder -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/containerSearchPlaceholder"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="@dimen/standard_gap"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView_SearchPlaceholder"
+                    android:text="@string/placeholder_show_nothing"/>
+            </LinearLayout>
+            <!-- Search results -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/containerSearchResults"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <!-- Search heading tab -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    android:paddingTop="@dimen/standard_gap"
+                    android:paddingBottom="@dimen/standard_gap"
+                    android:background="@drawable/shadow_bg">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Users"
+                        android:visibility="gone"
+                        android:id="@+id/textView_SearchUser"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/text_large"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Movies"
+                        android:visibility="gone"
+                        android:id="@+id/textView_SearchMovie"
+                        android:textAlignment="center"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="@dimen/text_large"/>
+                </LinearLayout>
+                <!-- Search movie results -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/containerSearchMovie"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:padding="@dimen/list_padding"
+                    android:layout_marginTop="@dimen/standard_gap">
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rv_SearchMovie">
+                    </android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+                <!-- Search user results -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/containerSearchUser"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:padding="@dimen/list_padding"
+                    android:layout_marginTop="@dimen/standard_gap">
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rv_SearchUser">
+                    </android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:padding="5dp"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/navigation"
+        app:itemBackground="@android:color/transparent"/>
+
+
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.FavouritesFragment"
+    android:orientation="vertical"
+    android:layout_marginBottom="?attr/actionBarSize"
+    android:layout_marginTop="@dimen/layout_top_margin"
+    android:layout_marginLeft="@dimen/layout_side_margin"
+    android:layout_marginRight="@dimen/layout_side_margin">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/containerPlaceholder"
+        android:orientation="vertical"
+        android:gravity="center_vertical|center_horizontal"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_nothing_notification" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/placeholder_show_nothing"/>
+    </LinearLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/swipeRefresh">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_Favourites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"></android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>
