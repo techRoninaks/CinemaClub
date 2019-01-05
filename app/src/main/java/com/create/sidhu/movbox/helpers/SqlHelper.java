@@ -255,40 +255,44 @@ public class SqlHelper {
             InputStream IS = null;
             int temp;
             try {
-                URL url = null;
-                if(Method.equals("GET")){
-                    url = new URL(MasterUrl + ExecutePath + "?" + getQuery(params));
-                    httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setDoOutput(false);
-                    httpURLConnection.setRequestMethod(Method);
-                    httpURLConnection.setConnectTimeout(20000);
-                    httpURLConnection.setReadTimeout(20000);
-                    httpURLConnection.setDoInput(true);
-                    httpURLConnection.connect();
-                }else if(Method.equals("POST")){
-                    url = new URL(MasterUrl + ExecutePath);
-                    httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setDoOutput(true);
-                    httpURLConnection.setRequestMethod(Method);
-                    httpURLConnection.setConnectTimeout(20000);
-                    httpURLConnection.setReadTimeout(20000);
-                    httpURLConnection.setDoInput(true);
-                    httpURLConnection.connect();
-                    OutputStream OS = httpURLConnection.getOutputStream();
-                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS, "UTF-8"));
-                    String data = getQuery(params);
-                    bufferedWriter.write(data);
-                    bufferedWriter.flush();
-                    bufferedWriter.close();
-                    OS.close();
+                if(!(isNetworkAvailable() && isOnline())){
+                    canceled = true;
+                }else {
+                    URL url = null;
+                    if (Method.equals("GET")) {
+                        url = new URL(MasterUrl + ExecutePath + "?" + getQuery(params));
+                        httpURLConnection = (HttpURLConnection) url.openConnection();
+                        httpURLConnection.setDoOutput(false);
+                        httpURLConnection.setRequestMethod(Method);
+                        httpURLConnection.setConnectTimeout(20000);
+                        httpURLConnection.setReadTimeout(20000);
+                        httpURLConnection.setDoInput(true);
+                        httpURLConnection.connect();
+                    } else if (Method.equals("POST")) {
+                        url = new URL(MasterUrl + ExecutePath);
+                        httpURLConnection = (HttpURLConnection) url.openConnection();
+                        httpURLConnection.setDoOutput(true);
+                        httpURLConnection.setRequestMethod(Method);
+                        httpURLConnection.setConnectTimeout(20000);
+                        httpURLConnection.setReadTimeout(20000);
+                        httpURLConnection.setDoInput(true);
+                        httpURLConnection.connect();
+                        OutputStream OS = httpURLConnection.getOutputStream();
+                        BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(OS, "UTF-8"));
+                        String data = getQuery(params);
+                        bufferedWriter.write(data);
+                        bufferedWriter.flush();
+                        bufferedWriter.close();
+                        OS.close();
+                    }
+                    IS = httpURLConnection.getInputStream();
+                    String response = "";
+                    while ((temp = IS.read()) != -1) {
+                        response += (char) temp;
+                    }
+                    JSONResponse = new JSONObject(response);
+                    return null;
                 }
-                IS = httpURLConnection.getInputStream();
-                String response = "";
-                while ((temp = IS.read()) != -1) {
-                    response += (char) temp;
-                }
-                JSONResponse = new JSONObject(response);
-                return null;
             } catch (Exception e){
                 String s = new String();
             } finally {
