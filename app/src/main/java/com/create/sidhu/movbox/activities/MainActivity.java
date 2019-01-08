@@ -280,9 +280,13 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
     public void initnotif( int pos, int notifications) {
         switch (pos){
             case  0:
+                if(xbadge != null)
+                    removeBadge(xbadge);
                 xbadge = addBadgeAt(pos, notifications);
                 break;
             case 3:
+                if(mbadge != null)
+                    removeBadge(mbadge);
                 mbadge = addBadgeAt(pos,notifications);
                 break;
             default:

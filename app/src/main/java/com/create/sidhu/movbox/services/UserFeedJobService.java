@@ -163,7 +163,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService for Action:" + sqlHelper.getActionString(), StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             if(isInitialRun)
                 HomeFragment.homeModels = new ArrayList<>();
