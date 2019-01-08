@@ -911,7 +911,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                     }
                     case "rating": {
                         totalRatings = extras.get("total_ratings");
-                        rating = extras.get("avg_rating");
+                        rating = extras.get("avg_ratings");
                         SpannableString spannableString = new SpannableString(StringHelper.formatTextCount(Integer.parseInt(totalRatings)));
                         spannableString.setSpan(new CalligraphyTypefaceSpan(tfSemibold), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(" from ");

@@ -38,6 +38,7 @@ public class ActorModel{
 
     public void setRating(float rating) {
         Rating = rating;
+        TempRating = rating;
     }
 
     public void setType(String type) {
