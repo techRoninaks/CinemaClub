@@ -41,7 +41,7 @@ public class UserJobService extends JobService implements SqlDelegate {
 
     @Override
     public void onResponse(SqlHelper sqlHelper) {
-        if(!(jobCancelled || sqlHelper == null)){
+        if(!(jobCancelled || sqlHelper == null || sqlHelper.getJSONResponse() == null)) {
             try {
                 if (sqlHelper.getActionString().equals("get_user")) {
                     JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("user_data");
