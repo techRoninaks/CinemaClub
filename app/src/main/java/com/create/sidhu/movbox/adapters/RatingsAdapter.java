@@ -69,8 +69,37 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
                         .asBitmap()
                         .load(actorModels.get(position).getImage())
                         .into(holder.imgCast);
-                holder.imgCastType.setImageDrawable(actorModels.get(position).getType().equalsIgnoreCase("director") ?
-                        context.getDrawable(R.drawable.ic_director) : context.getDrawable(R.drawable.ic_actor));
+                switch (actorModels.get(position).getType().toLowerCase()){
+                    case "director":{
+                        holder.imgCastType.setImageDrawable(context.getDrawable(R.drawable.ic_director));
+                        break;
+                    }
+                    case "screenplay":{
+                        holder.imgCastType.setImageDrawable(context.getDrawable(R.drawable.ic_screenplay));
+                        break;
+                    }
+                    case "music":{
+                        holder.imgCastType.setImageDrawable(context.getDrawable(R.drawable.ic_music));
+                        break;
+                    }
+                    case "editing":{
+                        break;
+                    }
+                    case "cinematography":{
+                        break;
+                    }
+                    case "producer":{
+                        break;
+                    }
+                    case "actor":
+                    case "actress":
+                        default:{
+                            holder.imgCastType.setImageDrawable(context.getDrawable(R.drawable.ic_actor));
+                            break;
+                        }
+
+
+                }
                 SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(actorModels.get(position).getName());
                 spannableStringBuilder.setSpan(new CalligraphyTypefaceSpan(holder.tfSemibold), 0, spannableStringBuilder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 SpannableString spannableString = new SpannableString(" (" + actorModels.get(position).getRating() + "/10)");

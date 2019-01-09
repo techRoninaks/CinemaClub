@@ -110,63 +110,65 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
 
     @Override
     public void onResponse(SqlHelper sqlHelper) {
-        try {
-            if(sqlHelper.getActionString().equals("home")){
-                JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");
-                String response = jsonObject.getJSONObject("0").getString("response");
-                if (response.equals(context.getString(R.string.response_success))) {
-                    HomeFragment.seeker = jsonObject.getJSONObject("0").getString("new_seeker");
-                    initializeHomeModel(jsonObject);
-                } else if (response.equals(context.getString(R.string.response_unsuccessful))) {
-                    Log.e(TAG, context.getString(R.string.response_unsuccessful));
-                    HomeFragment.homeModels = new ArrayList<>();
-                } else if (response.equals(context.getString(R.string.unexpected))) {
-                    Log.e(TAG, context.getString(R.string.unexpected));
-                }
-            }else if(sqlHelper.getActionString().contains("cast")){
-                JSONArray jsonArray = sqlHelper.getJSONResponse().getJSONArray("cast_data");
-                JSONObject jsonObject = jsonArray.getJSONObject(0);
-                String response = jsonObject.getString("response");
-                if(response.equals(context.getString(R.string.response_success))){
-                    addCastData(jsonArray);
-                }else if(response.equals(context.getString(R.string.response_unsuccessful))){
+        if(!(jobCancelled || sqlHelper == null)) {
+            try {
+                if (sqlHelper.getActionString().equals("home")) {
+                    JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");
+                    String response = jsonObject.getJSONObject("0").getString("response");
+                    if (response.equals(context.getString(R.string.response_success))) {
+                        HomeFragment.seeker = jsonObject.getJSONObject("0").getString("new_seeker");
+                        initializeHomeModel(jsonObject);
+                    } else if (response.equals(context.getString(R.string.response_unsuccessful))) {
+                        Log.e(TAG, context.getString(R.string.response_unsuccessful));
+                        HomeFragment.homeModels = new ArrayList<>();
+                    } else if (response.equals(context.getString(R.string.unexpected))) {
+                        Log.e(TAG, context.getString(R.string.unexpected));
+                    }
+                } else if (sqlHelper.getActionString().contains("cast")) {
+                    JSONArray jsonArray = sqlHelper.getJSONResponse().getJSONArray("cast_data");
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+                    String response = jsonObject.getString("response");
+                    if (response.equals(context.getString(R.string.response_success))) {
+                        addCastData(jsonArray);
+                    } else if (response.equals(context.getString(R.string.response_unsuccessful))) {
 
-                }else if(response.equals(context.getString(R.string.unexpected))){
-                    Log.e(TAG, context.getString(R.string.unexpected));
-                }
-            }else if(sqlHelper.getActionString().equals("favourites")){
-                JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");
-                String response = jsonObject.getJSONObject("0").getString("response");
-                if(response.equals(context.getString(R.string.response_success))){
-                    FavouritesFragment.seeker = jsonObject.getJSONObject("0").getString("new_seeker");
-                    initializeFavouritesModel(jsonObject);
-                }else if(response.equals(context.getString(R.string.response_unsuccessful))){
+                    } else if (response.equals(context.getString(R.string.unexpected))) {
+                        Log.e(TAG, context.getString(R.string.unexpected));
+                    }
+                } else if (sqlHelper.getActionString().equals("favourites")) {
+                    JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");
+                    String response = jsonObject.getJSONObject("0").getString("response");
+                    if (response.equals(context.getString(R.string.response_success))) {
+                        FavouritesFragment.seeker = jsonObject.getJSONObject("0").getString("new_seeker");
+                        initializeFavouritesModel(jsonObject);
+                    } else if (response.equals(context.getString(R.string.response_unsuccessful))) {
 
-                }else if(response.equals(context.getString(R.string.unexpected))){
-                    Log.e(TAG, context.getString(R.string.unexpected));
-                }
-            }else if(sqlHelper.getActionString().equals("push_updates")){
-                String response = sqlHelper.getJSONResponse().getJSONObject("data").getString("response");
-                int counter = Integer.parseInt(sqlHelper.getExtras().get("counter"));
-                if(response.equals(context.getString(R.string.response_success))){
-                    retryCounter = 0;
-                    updatesModels.get(counter).setUpdated(true);
-                    pushUpdates( counter + 1);
-                }else if(response.equals(context.getString(R.string.response_unsuccessful))){
-                    if(retryCounter < 3){
-                        retryCounter += 1;
-                        pushUpdates(counter);
-                    }else{
+                    } else if (response.equals(context.getString(R.string.unexpected))) {
+                        Log.e(TAG, context.getString(R.string.unexpected));
+                    }
+                } else if (sqlHelper.getActionString().equals("push_updates")) {
+                    String response = sqlHelper.getJSONResponse().getJSONObject("data").getString("response");
+                    int counter = Integer.parseInt(sqlHelper.getExtras().get("counter"));
+                    if (response.equals(context.getString(R.string.response_success))) {
                         retryCounter = 0;
-                        popUpdate(counter);
+                        updatesModels.get(counter).setUpdated(true);
+                        pushUpdates(counter + 1);
+                    } else if (response.equals(context.getString(R.string.response_unsuccessful))) {
+                        if (retryCounter < 3) {
+                            retryCounter += 1;
+                            pushUpdates(counter);
+                        } else {
+                            retryCounter = 0;
+                            popUpdate(counter);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService for Action:" + sqlHelper.getActionString(), StringHelper.convertStackTrace(e));
+                emailHelper.sendEmail();
+                if (isInitialRun)
+                    HomeFragment.homeModels = new ArrayList<>();
             }
-        }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService for Action:" + sqlHelper.getActionString(), StringHelper.convertStackTrace(e));
-            emailHelper.sendEmail();
-            if(isInitialRun)
-                HomeFragment.homeModels = new ArrayList<>();
         }
 
     }
@@ -223,7 +225,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                 }
             }
             //Intent for notification
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             notification.setContentIntent(pendingIntent);
 
             if (isAssigned) {

@@ -74,6 +74,9 @@
         <service
             android:name=".services.UserFeedJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".services.UserJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <activity android:name=".activities.ReviewsActivity" />
         <activity android:name=".activities.ForgotPassword" />
