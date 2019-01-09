@@ -94,7 +94,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
             createNotificationChannel();
             return true;
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             return false;
         }
@@ -164,7 +164,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                     }
                 }
             } catch (Exception e) {
-                EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService for Action:" + sqlHelper.getActionString(), StringHelper.convertStackTrace(e));
+                EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService for Action:" + sqlHelper.getActionString(), e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                 emailHelper.sendEmail();
                 if (isInitialRun)
                     HomeFragment.homeModels = new ArrayList<>();
@@ -235,7 +235,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                     updateSummaryNotification(type, group);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
 
@@ -315,7 +315,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -348,7 +348,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
             sqlHelper.setParams(params);
             sqlHelper.executeUrl(false);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -367,7 +367,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
             sqlHelper.setParams(params);
             sqlHelper.executeUrl(false);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -447,7 +447,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                createNotifications(favouritesModels, "favourites");
            checkToFinish();
        }catch (Exception e){
-           EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", StringHelper.convertStackTrace(e));
+           EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
            emailHelper.sendEmail();
        }
     }
@@ -595,7 +595,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                         fetchActors(castString, true);
                     }
                 }catch (Exception e){
-                    EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", StringHelper.convertStackTrace(e));
+                    EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                     emailHelper.sendEmail();
                 }
             }
@@ -640,7 +640,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
                         }
                         homeModels.get(position).setCast(actorModels);
                     } catch (JSONException e) {
-                        EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", StringHelper.convertStackTrace(e));
+                        EmailHelper emailHelper = new EmailHelper(UserFeedJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserFeedJobService", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                         emailHelper.sendEmail();
                     }
 

@@ -82,7 +82,7 @@ public class ModelHelper {
             movieModel.setReviewed(jsonObject.getString("is_reviewed").equals("1"));
             return movieModel;
         }catch(Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return new MovieModel();
@@ -104,7 +104,7 @@ public class ModelHelper {
             actorModel.setTotalMovies(Integer.parseInt(jsonObject.getString("total_movies")));
             return actorModel;
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return new ActorModel();
@@ -133,7 +133,7 @@ public class ModelHelper {
             userModel.setIsFollowing(jsonObject.getString("is_following").equals("1"));
             return userModel;
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return new UserModel();
@@ -228,7 +228,7 @@ public class ModelHelper {
             }
             return favouritesModel;
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return new FavouritesModel();
@@ -255,7 +255,7 @@ public class ModelHelper {
             reviewModel.setUserPrivacy(Integer.parseInt(jsonObject.getString("u_privacy")));
             return reviewModel;
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return new ReviewModel();
@@ -275,7 +275,7 @@ public class ModelHelper {
             ratingsModel.setFollowing(jsonObject.getString("is_following").equals("1"));
             return ratingsModel;
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return new RatingsModel();
@@ -293,7 +293,7 @@ public class ModelHelper {
             preferenceModel.setName(jsonObject.getString("name"));
             return preferenceModel;
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return new PreferenceModel();
@@ -331,7 +331,7 @@ public class ModelHelper {
                 bundle.putBoolean("is_reviewed", movieModel.getIsReviewed());
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return bundle;
@@ -359,7 +359,7 @@ public class ModelHelper {
                 bundle.putBoolean("is_following", userModel.getIsFollowing());
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return bundle;
@@ -384,7 +384,7 @@ public class ModelHelper {
                 bundle.putString("id", actorModel.getId());
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return bundle;
@@ -422,7 +422,7 @@ public class ModelHelper {
             }
 
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return bundle;
@@ -448,7 +448,7 @@ public class ModelHelper {
                 bundle.putString("movie_language", movieModel.getLanguage());
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return bundle;
@@ -473,7 +473,7 @@ public class ModelHelper {
                 MainActivity.updatesModels = new ArrayList<>();
             MainActivity.updatesModels.add(updatesModel);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -500,7 +500,7 @@ public class ModelHelper {
             if(castString.endsWith("!~"))
                 castString = castString.substring(0, castString.length() - 2);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ModelHelper", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return castString;

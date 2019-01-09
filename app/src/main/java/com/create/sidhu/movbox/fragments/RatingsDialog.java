@@ -188,7 +188,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                 }
             });
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return builder.create();
@@ -258,7 +258,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             dismiss();
@@ -394,7 +394,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                 attachAdapter(recyclerView, ratingsModelsTop);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             dismiss();
@@ -421,7 +421,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
             RatingsAdapter ratingsAdapter = new RatingsAdapter(context, model, recyclerView, type, !bundle.containsKey("isIdentity"));
             recyclerView.setAdapter(ratingsAdapter);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

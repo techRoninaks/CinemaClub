@@ -244,7 +244,7 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
                 initRecyclerView(recyclerView, movieModelsSearch);
         }catch (Exception e){
             Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -258,7 +258,7 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
             this.recyclerView.setVisibility(View.VISIBLE);
             llPlaceholder.setVisibility(View.GONE);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -302,7 +302,7 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
             }
         }catch (Exception e){
             Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -366,7 +366,7 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: PostStatusFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

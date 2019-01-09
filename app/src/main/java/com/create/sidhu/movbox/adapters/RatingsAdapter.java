@@ -135,7 +135,7 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
                 holder.llContainerUserRating.setVisibility(View.VISIBLE);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsAdapter", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsAdapter", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

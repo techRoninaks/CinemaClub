@@ -110,7 +110,7 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
             imgLogoOuter.startAnimation(animationOuter);
             imgLogoInner.startAnimation(animationInner);
         } catch (Resources.NotFoundException e) {
-            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -133,7 +133,7 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -171,7 +171,7 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
                 throw new Exception();
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             Toast.makeText(SplashScreen.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(SplashScreen.this, LoginActivity.class));
@@ -184,7 +184,7 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
             JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             scheduler.cancel(JOB_ID);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SplashScreen.this, EmailHelper.TECH_SUPPORT, "Error: SplashScreen", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

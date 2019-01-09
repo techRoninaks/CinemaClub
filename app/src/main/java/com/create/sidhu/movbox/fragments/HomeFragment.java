@@ -109,7 +109,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
         }
         catch (Exception e){
 //            Toast.makeText(context, "Home fragment exception", Toast.LENGTH_SHORT).show();
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -242,7 +242,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 llContainerPlaceholder.setVisibility(View.VISIBLE);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -279,7 +279,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                     ((HomeAdapter)recyclerView.getAdapter()).updateList(homeModels);
                 }
             }catch (Exception e){
-                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                 emailHelper.sendEmail();
             }
         }
@@ -301,7 +301,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 }
                 homeModels.get(position).setCast(actorModels);
             } catch (JSONException e) {
-                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                 emailHelper.sendEmail();
             }
 
@@ -329,7 +329,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -507,7 +507,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 mainActivity.initFragment(fragment, bundle);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
 
@@ -576,7 +576,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 
             }
         } catch (JSONException e) {
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

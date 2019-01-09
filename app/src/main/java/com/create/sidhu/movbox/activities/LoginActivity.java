@@ -155,7 +155,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                         }
                     }
                     catch (Exception e){
-                        EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
+                        EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                         emailHelper.sendEmail();
                     }
                 }
@@ -167,7 +167,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
             llContainerMaster.setOnClickListener(onButtonClickListener);
             tvForgotPassword.setOnClickListener(onButtonClickListener);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -255,7 +255,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                 loginButton.performClick();
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -271,7 +271,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
             sqlHelper.setMethod(getString(R.string.method_get));
             sqlHelper.executeUrl(true);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -370,7 +370,7 @@ public class LoginActivity extends AppCompatActivity implements SqlDelegate {
                 break;
             }
         } catch (Exception e) {
-            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(LoginActivity.this, EmailHelper.TECH_SUPPORT, "Error: LoginActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             Toast.makeText(LoginActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
         }

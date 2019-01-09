@@ -74,7 +74,7 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
                             sqlHelper.setParams(params);
                             sqlHelper.executeUrl(true);
                         }catch (Exception e) {
-                            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: PasswordReset - Stage 3", StringHelper.convertStackTrace(e));
+                            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: PasswordReset - Stage 3", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                             emailHelper.sendEmail();
                         }
                     }
@@ -90,7 +90,7 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
                             etOriginalPassword.setError(getString(R.string.password_mismatch));
                         }
                     }catch (Exception e){
-                        EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: PasswordReset", StringHelper.convertStackTrace(e));
+                        EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: PasswordReset", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                         emailHelper.sendEmail();
                     }
                     break;
@@ -259,7 +259,7 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
                 }
             });
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: ForgotPassword", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: ForgotPassword", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -298,7 +298,7 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
             }
         }catch (Exception e){
             Toast.makeText(ForgotPassword.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
-            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: ForgotPassword", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: ForgotPassword", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -367,7 +367,7 @@ public class ForgotPassword extends AppCompatActivity implements SqlDelegate {
             sqlHelper.setParams(params);
             sqlHelper.executeUrl(false);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: ForgotPassword", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ForgotPassword.this, EmailHelper.TECH_SUPPORT, "Error: ForgotPassword", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

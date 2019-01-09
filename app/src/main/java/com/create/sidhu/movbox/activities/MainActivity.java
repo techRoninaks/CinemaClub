@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 finish();
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
 
@@ -451,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 }
             }
         } catch (JSONException e) {
-            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -588,7 +588,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 }
             }
         } catch (JSONException e) {
-            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -633,7 +633,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 throw new Exception();
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -643,7 +643,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
             scheduler.cancel(id);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -670,7 +670,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 throw new Exception();
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             Toast.makeText(MainActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -696,7 +696,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 throw new Exception();
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -713,7 +713,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
