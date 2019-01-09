@@ -19,7 +19,8 @@
                  android:maxWidth="100dp"
                 android:src="@drawable/parava"
                  android:contentDescription="@string/movie_poster"
-                 android:layout_centerHorizontal="true"/>
+                 android:layout_centerHorizontal="true"
+                 android:padding="2dp"/>
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="wrap_content"
