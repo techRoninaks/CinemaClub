@@ -110,7 +110,7 @@ public class UserFeedJobService extends JobService implements SqlDelegate {
 
     @Override
     public void onResponse(SqlHelper sqlHelper) {
-        if(!(jobCancelled || sqlHelper == null)) {
+        if(!(jobCancelled || sqlHelper == null || sqlHelper.getJSONResponse() == null)) {
             try {
                 if (sqlHelper.getActionString().equals("home")) {
                     JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("data");

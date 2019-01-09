@@ -264,8 +264,8 @@ public class SqlHelper {
                         httpURLConnection = (HttpURLConnection) url.openConnection();
                         httpURLConnection.setDoOutput(false);
                         httpURLConnection.setRequestMethod(Method);
-                        httpURLConnection.setConnectTimeout(20000);
-                        httpURLConnection.setReadTimeout(20000);
+                        httpURLConnection.setConnectTimeout(30000);
+                        httpURLConnection.setReadTimeout(30000);
                         httpURLConnection.setDoInput(true);
                         httpURLConnection.connect();
                     } else if (Method.equals("POST")) {
@@ -273,8 +273,8 @@ public class SqlHelper {
                         httpURLConnection = (HttpURLConnection) url.openConnection();
                         httpURLConnection.setDoOutput(true);
                         httpURLConnection.setRequestMethod(Method);
-                        httpURLConnection.setConnectTimeout(20000);
-                        httpURLConnection.setReadTimeout(20000);
+                        httpURLConnection.setConnectTimeout(30000);
+                        httpURLConnection.setReadTimeout(30000);
                         httpURLConnection.setDoInput(true);
                         httpURLConnection.connect();
                         OutputStream OS = httpURLConnection.getOutputStream();
@@ -294,7 +294,8 @@ public class SqlHelper {
                     return null;
                 }
             } catch (Exception e){
-                String s = new String();
+                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: SqlHelper for Action:" + getActionString(), StringHelper.convertStackTrace(e));
+                emailHelper.sendEmail();
             } finally {
                 if (httpURLConnection != null)
                 {
@@ -305,6 +306,8 @@ public class SqlHelper {
                         IS.close();
                     }
                 } catch (IOException e) {
+                    EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: SqlHelper for Action:" + getActionString(), StringHelper.convertStackTrace(e));
+                    emailHelper.sendEmail();
                 }
             }
             return null;
