@@ -146,9 +146,9 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/btnSubmit"
-            android:text="@string/ratings_submit"
+            android:id="@+id/btnCancel"
             android:textAllCaps="false"
+            android:text="@string/ratings_cancel"
             android:layout_weight="1"
             android:background="@android:color/transparent"/>
         <View
@@ -158,9 +158,9 @@
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:id="@+id/btnCancel"
+            android:id="@+id/btnSubmit"
+            android:text="@string/ratings_submit"
             android:textAllCaps="false"
-            android:text="@string/ratings_cancel"
             android:layout_weight="1"
             android:background="@android:color/transparent"/>
     </LinearLayout>
