@@ -183,7 +183,7 @@ public class ProfileImage extends Activity implements SqlDelegate{
             });
             performChecks();
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -255,7 +255,7 @@ public class ProfileImage extends Activity implements SqlDelegate{
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -269,7 +269,7 @@ public class ProfileImage extends Activity implements SqlDelegate{
             String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
             return encodedImage;
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return "";
@@ -309,7 +309,7 @@ public class ProfileImage extends Activity implements SqlDelegate{
             }
 
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -330,7 +330,7 @@ public class ProfileImage extends Activity implements SqlDelegate{
             }
 
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -349,7 +349,7 @@ public class ProfileImage extends Activity implements SqlDelegate{
         try{
 
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ProfileImage.this, EmailHelper.TECH_SUPPORT, "Error: ProfileImage", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

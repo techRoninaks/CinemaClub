@@ -234,7 +234,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
             holder.btnReviewCancel.setOnClickListener(onClickListener);
             holder.btnReviewEdit.setOnClickListener(onClickListener);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ReviewAdapter", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ReviewAdapter", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

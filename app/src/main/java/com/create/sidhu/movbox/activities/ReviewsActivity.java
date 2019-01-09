@@ -156,7 +156,7 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
                 llContainerTab.setVisibility(View.GONE);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
 
@@ -263,7 +263,7 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             Toast.makeText(ReviewsActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             onBackPressed();
@@ -324,7 +324,7 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
             attachAdapter(recyclerView, type.equals("movie") ? reviewModelsTop : reviewModels);
             toggleTab(R.id.textView_TabTop);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -348,7 +348,7 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
             ReviewAdapter reviewAdapter = new ReviewAdapter(ReviewsActivity.this, model, recyclerView);
             recyclerView.setAdapter(reviewAdapter);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(ReviewsActivity.this, EmailHelper.TECH_SUPPORT, "Error: ReviewsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

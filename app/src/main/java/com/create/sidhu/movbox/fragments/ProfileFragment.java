@@ -563,7 +563,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 }
             });
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return rootview;
@@ -704,7 +704,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 populateWatchlist("get-cast-movies.php", params);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -741,7 +741,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                     actorModels.add(actorModel);
                 }
             } catch (JSONException e) {
-                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", StringHelper.convertStackTrace(e));
+                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                 emailHelper.sendEmail();
             }
 
@@ -778,7 +778,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -890,7 +890,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 }
             }
         } catch (Exception e) {
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -926,7 +926,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

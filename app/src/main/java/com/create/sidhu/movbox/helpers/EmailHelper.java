@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.models.UserModel;
 
 public class EmailHelper {
     public static final String TECH_SUPPORT = "tech";
@@ -97,7 +98,7 @@ public class EmailHelper {
             sender = context.getString(R.string.email_sender);
 
         SharedPreferences sharedPreferences = context.getSharedPreferences("CinemaClub", 0);
-        body = sharedPreferences.getString("current_usermodel","") + "\n\n" + body;
+        body = "User: " + sharedPreferences.getString("username", "") + "\n\n" + body;
         SqlHelper sqlHelper = new SqlHelper(context);
         sqlHelper.setMethod("POST");
         sqlHelper.setExecutePath("send-mail.php");

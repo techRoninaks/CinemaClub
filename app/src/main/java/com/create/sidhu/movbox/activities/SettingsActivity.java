@@ -287,7 +287,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
                 }
             });
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -408,7 +408,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
             }
         }catch (Exception e){
             Toast.makeText(SettingsActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
-            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -485,7 +485,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
             switchPrivacyReply.setChecked(privacy.charAt(0) == '1');
             switchPrivacyInfo.setChecked(privacy.charAt(1) == '1');
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -624,7 +624,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -661,7 +661,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
             preference += size + "!@" + Integer.parseInt(genrePreference, 2);
             savePreferenceInfo(preference, languagePreference, genrePreference);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -733,7 +733,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
             alertDialog.setNegativeButton(R.string.confirmation_no, dialogClickListener);
             alertDialog.show();
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
 
@@ -767,7 +767,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -781,7 +781,7 @@ public class SettingsActivity extends AppCompatActivity implements SqlDelegate {
                 recyclerView.setAdapter(preferenceAdapter);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(SettingsActivity.this, EmailHelper.TECH_SUPPORT, "Error: SettingsActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

@@ -145,7 +145,7 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
             llContainerMaster.setOnClickListener(onButtonClickListener);
 
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(RegisterActivity.this, EmailHelper.TECH_SUPPORT, "Error: RegisterActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(RegisterActivity.this, EmailHelper.TECH_SUPPORT, "Error: RegisterActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -232,7 +232,7 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             attemptSignUp(getString(R.string.default_signin), account.getDisplayName(),account.getEmail(), account.getIdToken().substring(0,30), "google");
         } catch (ApiException e) {
-            EmailHelper emailHelper = new EmailHelper(RegisterActivity.this, EmailHelper.TECH_SUPPORT, "Error: RegisterActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(RegisterActivity.this, EmailHelper.TECH_SUPPORT, "Error: RegisterActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             Toast.makeText(RegisterActivity.this, "Failed to register: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -295,7 +295,7 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
             }
         }catch (Exception e){
             Toast.makeText(RegisterActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
-            EmailHelper emailHelper = new EmailHelper(RegisterActivity.this, EmailHelper.TECH_SUPPORT, "Error: RegisterActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(RegisterActivity.this, EmailHelper.TECH_SUPPORT, "Error: RegisterActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

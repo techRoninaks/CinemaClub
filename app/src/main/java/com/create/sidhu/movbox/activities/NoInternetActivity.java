@@ -27,7 +27,7 @@ public class NoInternetActivity extends AppCompatActivity {
                 }
             });
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(NoInternetActivity.this, EmailHelper.TECH_SUPPORT, "Error: NoInternetActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(NoInternetActivity.this, EmailHelper.TECH_SUPPORT, "Error: NoInternetActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

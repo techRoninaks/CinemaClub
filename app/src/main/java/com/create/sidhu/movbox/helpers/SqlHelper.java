@@ -294,7 +294,7 @@ public class SqlHelper {
                     return null;
                 }
             } catch (Exception e){
-                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: SqlHelper for Action:" + getActionString(), StringHelper.convertStackTrace(e));
+                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: SqlHelper for Action:" + getActionString(), e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                 emailHelper.sendEmail();
             } finally {
                 if (httpURLConnection != null)
@@ -306,7 +306,7 @@ public class SqlHelper {
                         IS.close();
                     }
                 } catch (IOException e) {
-                    EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: SqlHelper for Action:" + getActionString(), StringHelper.convertStackTrace(e));
+                    EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: SqlHelper for Action:" + getActionString(), e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                     emailHelper.sendEmail();
                 }
             }

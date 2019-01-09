@@ -65,7 +65,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             setTitle(type);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -100,7 +100,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -156,7 +156,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                     return;
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -173,7 +173,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
             sqlHelper.setParams(params);
             sqlHelper.executeUrl(true);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -232,7 +232,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -249,7 +249,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
             sqlHelper.setParams(params);
             sqlHelper.executeUrl(true);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -340,7 +340,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             finish();
         }
@@ -363,7 +363,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
             }
         }catch (Exception e){
             Toast.makeText(this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
-            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
             finish();
         }
@@ -380,7 +380,7 @@ public class FollowReviewActivity extends AppCompatActivity implements SqlDelega
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(FollowReviewActivity.this, EmailHelper.TECH_SUPPORT, "Error: FollowReviewActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
