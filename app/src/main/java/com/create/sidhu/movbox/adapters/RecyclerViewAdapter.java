@@ -110,7 +110,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             });
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RecyclerViewAdapter", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RecyclerViewAdapter", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

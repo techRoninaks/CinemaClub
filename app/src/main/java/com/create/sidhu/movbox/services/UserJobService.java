@@ -57,7 +57,7 @@ public class UserJobService extends JobService implements SqlDelegate {
                     }
                 }
             }catch (Exception e){
-                EmailHelper emailHelper = new EmailHelper(UserJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserJobService for Action:" + sqlHelper.getActionString(), StringHelper.convertStackTrace(e));
+                EmailHelper emailHelper = new EmailHelper(UserJobService.this, EmailHelper.TECH_SUPPORT, "Error: UserJobService for Action:" + sqlHelper.getActionString(), e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                 emailHelper.sendEmail();
             }
         }

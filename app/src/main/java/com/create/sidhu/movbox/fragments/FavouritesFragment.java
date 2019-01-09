@@ -77,7 +77,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                 markRead(favouritesList);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", e.getMessage() + "\n" + e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -180,7 +180,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
             markRead(favouritesList);
         }
         catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -235,7 +235,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -255,7 +255,7 @@ public class FavouritesFragment extends Fragment implements SqlDelegate {
                 Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: FavouritesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

@@ -222,7 +222,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
             tvRemoveFilter.setOnClickListener(onClickListener);
             tvApplyFilter.setOnClickListener(onClickListener);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return rootview;
@@ -285,7 +285,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                 }
             }
         } catch (JSONException e) {
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -320,7 +320,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                 llPlaceholder.setVisibility(View.VISIBLE);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -390,7 +390,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
             linearLayout.addView(recyclerView);
             llMaster.addView(linearLayout);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -417,7 +417,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                 populateView(movieModels, type, i);
             }
         } catch (JSONException e) {
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -431,7 +431,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
             mainActivity.initFragment(fragment2, bundle);
             //Toast.makeText(context, "Inside Movies", Toast.LENGTH_SHORT).show();
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
 
@@ -506,7 +506,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
             toggleEditVisibility("filter", !viewState.get("filter"));
             viewState.put("filter", !viewState.get("filter"));
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -542,7 +542,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return masterFilterList;
@@ -583,7 +583,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                 }
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return masterFilterList;
@@ -626,7 +626,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                 masterFilterList = outerList;
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return masterFilterList;
@@ -657,7 +657,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                 masterFilterList = outerList;
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
         return masterFilterList;
@@ -686,7 +686,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
             llFilterLanguageSub.setVisibility(View.GONE);
             viewState.put("filter_language", false);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -707,7 +707,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
             llFilterGenreSub.setVisibility(View.GONE);
             viewState.put("filter_genre", false);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -723,7 +723,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
             llFilterWatchedSub.setVisibility(View.GONE);
             viewState.put("filter_watched", false);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -739,7 +739,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
             llFilterRatingSub.setVisibility(View.GONE);
             viewState.put("filter_rating", false);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
@@ -775,7 +775,7 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
                 recyclerView.setAdapter(preferenceAdapter);
             }
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: MoviesFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }

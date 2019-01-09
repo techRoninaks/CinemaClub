@@ -448,7 +448,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
             holder.llContainerMore.setOnClickListener(onClickListener);
             holder.llContainerDefinition.setOnClickListener(onClickListener);
         }catch (Exception e){
-            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeAdapter", StringHelper.convertStackTrace(e));
+            EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: HomeAdapter", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
         }
     }
