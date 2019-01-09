@@ -2,6 +2,7 @@ package com.create.sidhu.movbox.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.create.sidhu.movbox.R;
 
@@ -94,6 +95,9 @@ public class EmailHelper {
         }
         if(sender.isEmpty())
             sender = context.getString(R.string.email_sender);
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("CinemaClub", 0);
+        body = sharedPreferences.getString("current_usermodel","") + "\n\n" + body;
         SqlHelper sqlHelper = new SqlHelper(context);
         sqlHelper.setMethod("POST");
         sqlHelper.setExecutePath("send-mail.php");
