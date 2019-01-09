@@ -265,7 +265,9 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
                         SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
                         sharedPreferences.edit().putString("username", sqlHelper.getParams().getAsString("username")).commit();
                         sharedPreferences.edit().putBoolean("login", true).commit();
-                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                     }
                     finish();
                 }
