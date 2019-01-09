@@ -52,6 +52,7 @@ import com.create.sidhu.movbox.models.MovieModel;
 import com.create.sidhu.movbox.models.UpdatesModel;
 import com.create.sidhu.movbox.models.UserModel;
 import com.create.sidhu.movbox.services.UserFeedJobService;
+import com.create.sidhu.movbox.services.UserJobService;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import org.json.JSONArray;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
    //public static MainActivity mainActivity;
     private  static final int JOB_ID = 1000;
     private static final int JOB_ID_INSTANT = 1100;
+    private static final int JOB_ID_USER = 1200;
     public static final int BOTTOM_NAVIGATION_HOME = 0;
     public static final int BOTTOM_NAVIGATION_FAV = 3;
     public String username;
@@ -193,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                     sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
                     sharedPreferences.edit().putString("current_usermodel", StringHelper.convertObjectToString(MainActivity.currentUserModel)).commit();
                     scheduleJob();
+                    scheduleUserJob();
                 }
                 masterParent = (ConstraintLayout) findViewById(R.id.containerMainParent);
                 masterFrame = (FrameLayout) findViewById(R.id.content);
@@ -564,6 +567,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                     sharedPreferences.edit().putString("current_usermodel", StringHelper.convertObjectToString(MainActivity.currentUserModel)).commit();
                     navigation.setSelectedItemId(R.id.navigation_home);
                     scheduleJob();
+                    scheduleUserJob();
                 } else if (response.equals(getString(R.string.exception))) {
                     Toast.makeText(MainActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
@@ -671,6 +675,29 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             Toast.makeText(MainActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
+        }
+    }
+
+    public void scheduleUserJob(){
+        try {
+            PersistableBundle pBundle = new PersistableBundle();
+            pBundle.putString("username", username);
+            ComponentName componentName = new ComponentName(MainActivity.this, UserJobService.class);
+            JobInfo info = new JobInfo.Builder(JOB_ID_USER, componentName)
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setPersisted(true)
+                    .setPeriodic(3 * 60 * 1000)
+                    .setExtras(pBundle)
+                    .build();
+            JobScheduler scheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+            cancelJob(JOB_ID_USER);
+            int resultCode = scheduler.schedule(info);
+            if (resultCode == JobScheduler.RESULT_FAILURE) {
+                throw new Exception();
+            }
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
         }
     }
 
