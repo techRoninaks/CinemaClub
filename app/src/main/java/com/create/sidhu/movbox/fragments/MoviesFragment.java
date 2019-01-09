@@ -199,11 +199,12 @@ public class MoviesFragment extends Fragment implements SqlDelegate{
             imgTitle.setVisibility(View.GONE);
             toolbar.setTitle(StringHelper.toTitleCase(context.getString(R.string.title_movies)));
             StringHelper.changeToolbarFont(toolbar, (MainActivity) context);
-            if (masterMovieList == null && masterMovieTypeList == null) {
-                fetchData();
-            } else {
-                populateFragmentView(masterMovieList, masterMovieTypeList);
-            }
+//            if (masterMovieList == null && masterMovieTypeList == null) {
+//                fetchData();
+//            } else {
+//                populateFragmentView(masterMovieList, masterMovieTypeList);
+//            }
+            fetchData();
             if (filterModel == null)
                 filterModel = new FilterModel();
             viewState = new HashMap<>();
