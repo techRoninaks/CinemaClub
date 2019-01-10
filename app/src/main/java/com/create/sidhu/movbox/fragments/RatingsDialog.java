@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -332,9 +333,10 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                 outputStream.close();
 
                 sendScreenshotFile(imageFile);
-            } catch (Throwable e) {
-                // Several error may come out with file handling or DOM
-                e.printStackTrace();
+            } catch (Exception e) {
+                EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog: take screenshot", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
+                emailHelper.sendEmail();
+
             }
         }
 
@@ -362,7 +364,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         String shareSub = "Cinema Club Invitation";
         shareIntent.putExtra(Intent.EXTRA_SUBJECT, shareSub);
         shareIntent.putExtra(Intent.EXTRA_TEXT, shareBody);
-        shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(imageFile));
+        shareIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", imageFile));
         startActivityForResult(Intent.createChooser(shareIntent, "Share using"), 0);
     }
 
