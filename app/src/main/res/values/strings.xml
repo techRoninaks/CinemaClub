@@ -5,13 +5,13 @@
     <string name="title_post_status">Post Status</string>
     <string name="title_favourites">Favourites</string>
     <string name="title_profile">Profile</string>
-    <string name="google_client_id">520975052224-crffh33cqo04dnk9c42s015ghlp3vrtu.apps.googleusercontent.com</string>
+    <string name="google_client_id">520975052224-606l0upimj137tjjt0191a7k470507di.apps.googleusercontent.com</string>
     <string name="google_web_client_id">520975052224-hu15ocrsie7s0dfsh4fjhrshjti6q0fa.apps.googleusercontent.com</string>
     <string name="facebook_app_id">2567368729944839</string>
     <string name="fb_login_protocol_scheme">fb2567368729944839</string>
     <string name="hello_blank_fragment">Hello Home fragment</string>
     <string name="app_store_uri">https://play.google.com/store/apps/details?id=com.roninaks.cinemaclub</string>
-    <string name="version_name">v1.0.0</string>
+    <string name="version_name">v1.0.11</string>
 
     <!-- User Resource Strings -->
     <string name="settings">Settings</string>
@@ -69,7 +69,7 @@
 
     <!-- DB Resource Strings -->
     <string name="db_server"></string>
-    <string name="master_url">http://understandable-blin.hostingerapp.com/cinema-club/</string>
+    <string name="master_url">http://understandable-blin.hostingerapp.com/cinema-club-prod/</string>
     <string name="profile_image_url">users/images/profile/</string>
     <string name="movie_image_portrait_url">movies/images/portrait/</string>
     <string name="cast_image_url">cast/images/</string>
