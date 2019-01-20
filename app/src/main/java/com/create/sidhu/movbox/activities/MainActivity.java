@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
     private  static final int JOB_ID = 1000;
     private static final int JOB_ID_INSTANT = 1100;
     private static final int JOB_ID_USER = 1200;
+    private static final int EXIT_TIME_INTERVAL = 2000;
     public static final int BOTTOM_NAVIGATION_HOME = 0;
     public static final int BOTTOM_NAVIGATION_FAV = 3;
     public String username;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
     private MenuItem searchItem;
     private BottomNavigationViewEx navigation;
     private boolean isFirst;
+    private long exitBackPressed;
     private Badge xbadge,mbadge;
     public static  int unseenCounter = 0, followCounter = 0;
     public static String markList ="";
@@ -275,29 +277,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
 
     }
 
-    private void init() {
-            initnotif(BOTTOM_NAVIGATION_HOME, unseenCounter);
-            initnotif(BOTTOM_NAVIGATION_FAV, followCounter);
-    }
-
-    public void initnotif( int pos, int notifications) {
-        switch (pos){
-            case  0:
-                if(xbadge != null)
-                    removeBadge(xbadge);
-                xbadge = addBadgeAt(pos, notifications);
-                break;
-            case 3:
-                if(mbadge != null)
-                    removeBadge(mbadge);
-                mbadge = addBadgeAt(pos,notifications);
-                break;
-            default:
-                break;
-
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -366,6 +345,71 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
         return true;
+    }
+
+    @Override
+    public void onResponse(SqlHelper sqlHelper) {
+        try {
+            if(sqlHelper.getActionString().equals("get_user")) {
+                JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("user_data");
+                String response = jsonObject.getString("response");
+                if (response.equals(getString(R.string.response_success))) {
+                    currentUserModel = new ModelHelper(MainActivity.this).buildUserModel(jsonObject);
+                    currentUserModel.setPreferences(jsonObject.getString("u_preference"));
+                    SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
+                    sharedPreferences.edit().putString("current_usermodel", StringHelper.convertObjectToString(MainActivity.currentUserModel)).commit();
+                    navigation.setSelectedItemId(R.id.navigation_home);
+                    scheduleJob();
+                    scheduleUserJob();
+                } else if (response.equals(getString(R.string.exception))) {
+                    Toast.makeText(MainActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
+                }
+            }else if(sqlHelper.getActionString().equals("search")){
+                JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("search_data");
+                String response = jsonObject.getJSONObject("0").getString("response");
+                if(response.equals(getString(R.string.response_success))){
+                    llSearchResults.setVisibility(View.VISIBLE);
+                    llSearchPlaceholder.setVisibility(View.GONE);
+                    populateSearchResults(jsonObject);
+                }else if(response.equals(getString(R.string.response_unsuccessful))){
+                    llSearchResults.setVisibility(View.GONE);
+                    llSearchPlaceholder.setVisibility(View.VISIBLE);
+                }else if(response.equals(getString(R.string.unexpected))){
+                    Toast.makeText(MainActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (JSONException e) {
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    public void onBackPressed(){
+        try {
+            if (exitBackPressed + EXIT_TIME_INTERVAL > System.currentTimeMillis() || getFragmentManager().getBackStackEntryCount() != 0) {
+                super.onBackPressed();
+                return;
+            } else {
+                Toast.makeText(MainActivity.this, "Tap back again to exit", Toast.LENGTH_SHORT).show();
+            }
+            exitBackPressed = System.currentTimeMillis();
+        }catch (Exception e){
+            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity - onBackPressed", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
+            emailHelper.sendEmail();
+        }
+    }
+
+    private void init() {
+        initnotif(BOTTOM_NAVIGATION_HOME, unseenCounter);
+        initnotif(BOTTOM_NAVIGATION_FAV, followCounter);
     }
 
     private void setDefaultIcon(MenuItem menuItem){
@@ -456,6 +500,24 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         }
     }
 
+    public void initnotif( int pos, int notifications) {
+        switch (pos){
+            case  0:
+                if(xbadge != null)
+                    removeBadge(xbadge);
+                xbadge = addBadgeAt(pos, notifications);
+                break;
+            case 3:
+                if(mbadge != null)
+                    removeBadge(mbadge);
+                mbadge = addBadgeAt(pos,notifications);
+                break;
+            default:
+                break;
+
+        }
+    }
+
     public void initFragment(Fragment fragment){
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
@@ -466,6 +528,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         fragmentTransaction.commit();
         searchItem.collapseActionView();
     }
+
     public void initFragment(Fragment fragment, Bundle args){
         fragment.setArguments(args);
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -477,11 +540,13 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
         fragmentTransaction.commit();
         searchItem.collapseActionView();
     }
+
     public void initFragment(BottomSheetDialogFragment fragment, Bundle args){
         fragment.setArguments(args);
         fragment.show(getSupportFragmentManager(), "BottomSheet");
         searchItem.collapseActionView();
     }
+
     public void initFragment(RatingsDialog ratingsDialog, Bundle args){
         ratingsDialog.setArguments(args);
         ratingsDialog.show(getFragmentManager(), "RatingsFragment");
@@ -515,11 +580,10 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
 //                });
     }
 
-
-
     public   void removeBadge(Badge badge) {
         badge.hide(true);
     }
+
     public void removeBadge(Badge badge,String markList){
         badge.hide(true);
         if(markList.equals(""))
@@ -551,50 +615,6 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
                 sqlHelper.executeUrl(false);
             }
         }
-    }
-
-
-    @Override
-    public void onResponse(SqlHelper sqlHelper) {
-        try {
-            if(sqlHelper.getActionString().equals("get_user")) {
-                JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("user_data");
-                String response = jsonObject.getString("response");
-                if (response.equals(getString(R.string.response_success))) {
-                    currentUserModel = new ModelHelper(MainActivity.this).buildUserModel(jsonObject);
-                    currentUserModel.setPreferences(jsonObject.getString("u_preference"));
-                    SharedPreferences sharedPreferences = this.getSharedPreferences("CinemaClub", 0);
-                    sharedPreferences.edit().putString("current_usermodel", StringHelper.convertObjectToString(MainActivity.currentUserModel)).commit();
-                    navigation.setSelectedItemId(R.id.navigation_home);
-                    scheduleJob();
-                    scheduleUserJob();
-                } else if (response.equals(getString(R.string.exception))) {
-                    Toast.makeText(MainActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    finish();
-                }
-            }else if(sqlHelper.getActionString().equals("search")){
-                JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("search_data");
-                String response = jsonObject.getJSONObject("0").getString("response");
-                if(response.equals(getString(R.string.response_success))){
-                    llSearchResults.setVisibility(View.VISIBLE);
-                    llSearchPlaceholder.setVisibility(View.GONE);
-                    populateSearchResults(jsonObject);
-                }else if(response.equals(getString(R.string.response_unsuccessful))){
-                    llSearchResults.setVisibility(View.GONE);
-                    llSearchPlaceholder.setVisibility(View.VISIBLE);
-                }else if(response.equals(getString(R.string.unexpected))){
-                    Toast.makeText(MainActivity.this, getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
-                }
-            }
-        } catch (JSONException e) {
-            EmailHelper emailHelper = new EmailHelper(MainActivity.this, EmailHelper.TECH_SUPPORT, "Error: MainActivity", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
-            emailHelper.sendEmail();
-        }
-    }
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     public void getUserDetails(){
