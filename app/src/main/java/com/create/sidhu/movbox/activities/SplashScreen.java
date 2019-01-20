@@ -20,6 +20,7 @@ import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.fragments.HomeFragment;
 import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.ModelHelper;
+import com.create.sidhu.movbox.helpers.PermissionsHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.services.UserFeedJobService;
@@ -39,6 +40,11 @@ public class SplashScreen extends AppCompatActivity implements SqlDelegate {
             setContentView(R.layout.activity_splash_screen);
             imgLogoOuter = (ImageView) findViewById(R.id.img_LogoOuter);
             imgLogoInner = (ImageView) findViewById(R.id.img_LogoInner);
+            PermissionsHelper permissionsHelper = new PermissionsHelper(SplashScreen.this);
+            permissionsHelper.requestPermissions(PermissionsHelper.REQUEST_INTERNET_PERMISSION);
+            permissionsHelper.requestPermissions(PermissionsHelper.REQUEST_ACCESS_NETWORK_STATE);
+            permissionsHelper.requestPermissions(PermissionsHelper.REQUEST_ACCESS_COARSE_LOCATION);
+            permissionsHelper.requestPermissions(PermissionsHelper.REQUEST_ACCESS_FINE_LOCATION);
             Animation animationOuter = AnimationUtils.loadAnimation(SplashScreen.this, R.anim.rotate_logo_outer);
             animationOuter.setStartOffset(650);
             animationOuter.setAnimationListener(new Animation.AnimationListener() {
