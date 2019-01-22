@@ -3,6 +3,7 @@ package com.create.sidhu.movbox.helpers;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import com.create.sidhu.movbox.R;
 import com.create.sidhu.movbox.models.UserModel;
@@ -98,7 +99,13 @@ public class EmailHelper {
             sender = context.getString(R.string.email_sender);
 
         SharedPreferences sharedPreferences = context.getSharedPreferences("CinemaClub", 0);
-        body = "User: " + sharedPreferences.getString("username", "") + "\n\n" + body;
+        String prefix = "User: " + sharedPreferences.getString("username", "") + "\n\n";
+        try {
+            prefix += Build.MANUFACTURER + ": " + Build.DEVICE + "\n\n";
+        }catch (Exception e){
+
+        }
+        body = prefix + body;
         SqlHelper sqlHelper = new SqlHelper(context);
         sqlHelper.setMethod("POST");
         sqlHelper.setExecutePath("send-mail.php");
