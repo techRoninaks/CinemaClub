@@ -255,9 +255,9 @@ public class SqlHelper {
             InputStream IS = null;
             int temp;
             try {
-                if(!(isNetworkAvailable() && isOnline())){
-                    canceled = true;
-                }else {
+//                if(!(isNetworkAvailable() && isOnline())){
+//                    canceled = true;
+//                }else {
                     URL url = null;
                     if (Method.equals("GET")) {
                         url = new URL(MasterUrl + ExecutePath + "?" + getQuery(params));
@@ -292,10 +292,11 @@ public class SqlHelper {
                     }
                     JSONResponse = new JSONObject(response);
                     return null;
-                }
+//                }
             } catch (Exception e){
                 EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: SqlHelper for Action:" + getActionString(), e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
                 emailHelper.sendEmail();
+                canceled = true;
             } finally {
                 if (httpURLConnection != null)
                 {
