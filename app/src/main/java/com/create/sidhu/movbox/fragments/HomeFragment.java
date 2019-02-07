@@ -464,7 +464,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                         params.put("is_watched", "" + homeModel.getFavourites().getMovie().getIsWatched());
                         sqlHelper.setParams(params);
                         sqlHelper.setExtras(extras);
-                        sqlHelper.executeUrl(false);
+                        sqlHelper.executeUrl(true);
                         break;
                     }
                     case R.id.img_Rating: {
