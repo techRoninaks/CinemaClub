@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.content.FileProvider;
@@ -42,8 +41,10 @@ import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.ActorModel;
 import com.create.sidhu.movbox.models.RatingsModel;
+import com.create.sidhu.movbox.models.UserModel;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -70,8 +71,21 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
     boolean isRated = false;
     boolean initiallyRated = false;
     float currentRating;
+    int userfetchflag = 0;
 
     CallbackDelegate callbackDelegate;
+    public void fetchUserinfo(ArrayList<RatingsModel> ratingList,int position, Context context) {
+        userfetchflag = 1;
+        SqlHelper sqlHelper = new SqlHelper(context, RatingsDialog.this);
+        sqlHelper.setExecutePath("fetch-user.php");
+        sqlHelper.setActionString("get_user");
+        ContentValues params = new ContentValues();
+        params.put("u_id", ratingList.get(position).getUserId());
+        params.put("c_id", MainActivity.currentUserModel.getUserId());
+        sqlHelper.setMethod(getString(R.string.method_get));
+        sqlHelper.setParams(params);
+        sqlHelper.executeUrl(false);
+    }
 
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -124,7 +138,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
     public Dialog onCreateDialog(Bundle savedInstanceState){
         context = getActivity();
         bundle = getArguments();
-        type = bundle.getString("type");
+        type = bundle.getString("r_type");
         fetchRatings();
         tfSemibold = Typeface.createFromAsset(context.getAssets(), "fonts/MyriadPro-Semibold.otf");
         tfRegular = Typeface.createFromAsset(context.getAssets(), "fonts/myriadpro.otf");
@@ -215,6 +229,10 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                 extras.put("movie_id", bundle.getString("id"));
                 callbackDelegate.onResultReceived("rating", true, extras);
             }
+        }else if(type.equals("list")){
+            if (userfetchflag == 1){
+                callbackDelegate.onResultReceived("profile_nav", true, bundle.getBundle("r_bundle"));
+            }
         }
     }
 
@@ -235,6 +253,17 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                 }else if(response.equals(context.getString(R.string.unexpected))){
                     throw new Exception();
                 }
+            }else if(sqlHelper.getActionString().equals("get_user")){
+                JSONObject jsonObject = sqlHelper.getJSONResponse().getJSONObject("user_data");
+                String response = jsonObject.getString("response");
+                if(response.equals(getString(R.string.response_success))) {
+                    ModelHelper modelHelper = new ModelHelper(context);
+                    UserModel userModel = modelHelper.buildUserModel(jsonObject);
+                    Bundle rbundle = modelHelper.buildUserModelBundle(userModel, "ProfileFragment");
+                    bundle.putBundle("r_bundle", rbundle);
+                    dismiss();
+                }
+
             }else if(sqlHelper.getActionString().equals("get_all_rating")){
                 JSONArray jsonArray = sqlHelper.getJSONResponse().getJSONArray("ratings_data");
                 String response = jsonArray.getJSONObject(0).getString("response");
@@ -253,6 +282,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                     new ModelHelper(context).addToUpdatesModel(bundle.getString("id"), "", "rating");
                     isRated = true;
                     currentRating = Float.parseFloat(sqlHelper.getJSONResponse().getJSONObject("data").getString("avg_rating"));
+                    currentRating =  StringHelper.roundFloat(currentRating, 1);
                     dismiss();
                 }else if(response.equals(context.getString(R.string.response_unsuccessful)) || response.equals(context.getString(R.string.unexpected))){
                     Toast.makeText(context, context.getString(R.string.unexpected), Toast.LENGTH_SHORT).show();
@@ -420,7 +450,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         try {
             LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            RatingsAdapter ratingsAdapter = new RatingsAdapter(context, model, recyclerView, type, !bundle.containsKey("isIdentity"));
+            RatingsAdapter ratingsAdapter = new RatingsAdapter(context, model, recyclerView, type, !bundle.containsKey("isIdentity"), this);
             recyclerView.setAdapter(ratingsAdapter);
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsDialog", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));

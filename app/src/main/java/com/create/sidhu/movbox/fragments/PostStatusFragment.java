@@ -323,7 +323,7 @@ public class PostStatusFragment extends BottomSheetDialogFragment implements Sql
                 }
                 case "rating": {
                     bundle = new ModelHelper(context).buildMovieModelBundle(movieModels.get(position), "ProfileFragment");
-                    bundle.putString("type", "cast");
+                    bundle.putString("r_type", "cast");
                     RatingsDialog ratingsDialog = new RatingsDialog();
                     mainActivity.initFragment(ratingsDialog, bundle);
                     dismiss();
