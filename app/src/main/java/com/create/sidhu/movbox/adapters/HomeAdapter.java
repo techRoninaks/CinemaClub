@@ -168,8 +168,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                             .load(homeModels.get(position).getFavourites().getMovie().getImage().replace("portrait", "landscape"))
                             .into(holder.imgMasterPoster);
                     holder.textViewTitleName.setText(homeModels.get(position).getFavourites().getMovie().getName() + " (" +
-                            StringHelper.toTitleCase(homeModels.get(position).getFavourites().getMovie().getLanguage()) + ")");
-                    holder.textViewSubTextGenre.setText(homeModels.get(position).getFavourites().getMovie().getGenre());
+                                StringHelper.toTitleCase(homeModels.get(position).getFavourites().getMovie().getLanguage()) + ")");
+                        holder.textViewSubTextGenre.setText(homeModels.get(position).getFavourites().getMovie().getGenre());
                     holder.textViewSubTextDuration.setText("" + homeModels.get(position).getFavourites().getMovie().getDuration() + "min");
                     holder.textViewSubTextDimension.setText(homeModels.get(position).getFavourites().getMovie().getDisplayDimension());
                     holder.textViewWatched.setText(StringHelper.formatTextCount(homeModels.get(position).getFavourites().getMovie().getTotalWatched()));
@@ -474,6 +474,11 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                 }
             }
         }
+    }
+
+    @Override
+    public void onResultReceived(String type, boolean resultCode, Bundle extras) {
+
     }
 
     public void updateList(ArrayList<HomeModel> homeModels){

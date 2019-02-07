@@ -19,6 +19,7 @@ import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -68,7 +69,7 @@ import static com.create.sidhu.movbox.helpers.StringHelper.toSentenceCase;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDelegate {
+public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDelegate{
 
 
     public ProfileFragment() {
@@ -357,7 +358,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                             startActivity(intent);
                         }
                     } else if (type.equals(context.getString(R.string.profile_movies))) {
-                        bundle.putString("type", "list");
+                        bundle.putString("r_type", "list");
                         bundle.putString("rating", rating);
                         bundle.putString("total_ratings", totalRatings);
                         bundle.putBoolean("is_rated", isRated);
@@ -495,7 +496,7 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
             imgRating.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    bundle.putString("type", "cast");
+                    bundle.putString("r_type", "cast");
                     bundle.putString("rating", rating);
                     bundle.putString("total_ratings", totalRatings);
                     bundle.putBoolean("is_rated", isRated);
@@ -503,6 +504,20 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                     ratingsDialog.setRated(isRated);
                     ratingsDialog.setCallbackDelegate(ProfileFragment.this);
                     ((MainActivity) context).initFragment(ratingsDialog, bundle);
+                    if(!isWatched){
+                        SqlHelper sqlHelper = new SqlHelper(context, ProfileFragment.this);
+                        sqlHelper.setExecutePath("update-watching.php");
+                        sqlHelper.setActionString("watching");
+                        sqlHelper.setMethod("GET");
+                        ContentValues params = new ContentValues();
+                        params.put("m_id", id);
+                        params.put("u_id", MainActivity.currentUserModel.getUserId());
+                        params.put("is_watched", isWatched.toString());
+                        sqlHelper.setParams(params);
+                        sqlHelper.executeUrl(false);
+                        imgWatched.setImageDrawable(isWatched ? context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
+                    }
+
                 }
             });
             imgFavourites.setOnClickListener(new View.OnClickListener() {
@@ -554,11 +569,12 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
             llRatingMovie.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    bundle.putString("type", "list");
+                    bundle.putString("r_type", "list");
                     bundle.putString("rating", rating);
                     bundle.putString("total_ratings", totalRatings);
                     bundle.putBoolean("is_rated", isRated);
                     RatingsDialog ratingsDialog = new RatingsDialog();
+                    ratingsDialog.setCallbackDelegate(ProfileFragment.this);
                     ((MainActivity) context).initFragment(ratingsDialog, bundle);
                 }
             });
@@ -928,6 +944,17 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: ProfileFragment", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
             emailHelper.sendEmail();
+        }
+    }
+
+    @Override
+    public void onResultReceived(String type, boolean resultCode, Bundle extras) {
+        switch (type){
+            case "profile_nav":{
+                ProfileFragment fragment = new ProfileFragment();
+                ((MainActivity) context).initFragment(fragment, extras);
+                break;
+            }
         }
     }
 }
