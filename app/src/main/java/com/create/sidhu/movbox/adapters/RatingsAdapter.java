@@ -1,33 +1,25 @@
 package com.create.sidhu.movbox.adapters;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.R;
-import com.create.sidhu.movbox.activities.MainActivity;
-import com.create.sidhu.movbox.fragments.HomeFragment;
-import com.create.sidhu.movbox.fragments.ProfileImageFragment;
 import com.create.sidhu.movbox.fragments.RatingsDialog;
 import com.create.sidhu.movbox.helpers.EmailHelper;
-import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.ActorModel;
 import com.create.sidhu.movbox.models.RatingsModel;
@@ -35,7 +27,6 @@ import com.create.sidhu.movbox.models.RatingsModel;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import es.dmoral.toasty.Toasty;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 
 public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHolder>{
