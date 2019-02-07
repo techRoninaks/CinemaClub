@@ -420,7 +420,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                             }
                             case "rating": {
                                 bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
-                                bundle.putString("type", "cast");
+                                bundle.putString("r_type", "cast");
                                 bundle.putBoolean("isIdentity", false);
                                 bundle.putString("u_id", homeModel.getFavourites().getUser().getUserId());
                                 RatingsDialog ratingsDialog = new RatingsDialog();
@@ -469,11 +469,26 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                     }
                     case R.id.img_Rating: {
                         bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
-                        bundle.putString("type", "cast");
+                        bundle.putString("r_type", "cast");
                         RatingsDialog ratingsDialog = new RatingsDialog();
                         ratingsDialog.setCallbackDelegate(HomeFragment.this);
                         ratingsDialog.setRated(homeModel.getFavourites().getMovie().getIsRated());
                         mainActivity.initFragment(ratingsDialog, bundle);
+                        if(!homeModel.getFavourites().getMovie().getIsWatched()){
+                            SqlHelper sqlHelper = new SqlHelper(context, HomeFragment.this);
+                            sqlHelper.setExecutePath("update-watching.php");
+                            sqlHelper.setActionString("watching:" + position);
+                            HashMap<String, String> extras = new HashMap<>();
+                            extras.put("view_id", "" + R.id.img_Watched);
+                            sqlHelper.setMethod("GET");
+                            ContentValues params = new ContentValues();
+                            params.put("m_id", homeModel.getFavourites().getMovie().getId());
+                            params.put("u_id", MainActivity.currentUserModel.getUserId());
+                            params.put("is_watched", "" + homeModel.getFavourites().getMovie().getIsWatched());
+                            sqlHelper.setParams(params);
+                            sqlHelper.setExtras(extras);
+                            sqlHelper.executeUrl(false);
+                        }
                         break;
                     }
                     case R.id.img_Review: {
@@ -491,8 +506,9 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                     }
                     case R.id.containerRating: {
                         bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
-                        bundle.putString("type", "list");
+                        bundle.putString("r_type", "list");
                         RatingsDialog ratingsDialog = new RatingsDialog();
+                        ratingsDialog.setCallbackDelegate(HomeFragment.this);
                         mainActivity.initFragment(ratingsDialog, bundle);
                         break;
                     }
@@ -592,5 +608,17 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 }
             }
         }
+    }
+
+    @Override
+    public void onResultReceived(String type, boolean resultCode, Bundle extras) {
+        switch (type){
+            case "profile_nav":{
+                ProfileFragment fragment = new ProfileFragment();
+                ((MainActivity) context).initFragment(fragment, extras);
+                break;
+            }
+        }
+
     }
 }

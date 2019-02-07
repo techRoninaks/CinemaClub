@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.create.sidhu.movbox.R;
+import com.create.sidhu.movbox.fragments.RatingsDialog;
 import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
 import com.create.sidhu.movbox.models.ActorModel;
@@ -33,20 +34,20 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
     private ArrayList<ActorModel> actorModels;
     private ArrayList<RatingsModel> ratingsModels;
     private Context context;
-    private View rootview;
     private String type;
     private boolean isIdentity;
+    private RatingsDialog ratingsDialog;
 
 
-    public RatingsAdapter(Context context, ArrayList<?> models, View rootview, String type, boolean isIdentity) {
+    public RatingsAdapter(Context context, ArrayList<?> models, View rootview, String type, boolean isIdentity, RatingsDialog ratingsDialog) {
         this.context = context;
         this.isIdentity = isIdentity;
         if(type.equals("cast"))
             this.actorModels = (ArrayList<ActorModel>) models;
         else if(type.equals("list"))
             this.ratingsModels = (ArrayList<RatingsModel>) models;
-        this.rootview = rootview;
         this.type = type;
+        this.ratingsDialog = ratingsDialog;
         requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.ic_placeholder);
         requestOptions.error(R.drawable.ic_placeholder);
@@ -133,6 +134,18 @@ public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHold
                 holder.rbRating.setVisibility(View.GONE);
                 holder.tvRating.setText(ratingsModels.get(position).getUserRating() + "/10");
                 holder.llContainerUserRating.setVisibility(View.VISIBLE);
+                holder.imgCast.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ratingsDialog.fetchUserinfo(ratingsModels, position, context);
+                    }
+                });
+                holder.tvTitle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ratingsDialog.fetchUserinfo(ratingsModels, position, context);
+                    }
+                });
             }
         }catch (Exception e){
             EmailHelper emailHelper = new EmailHelper(context, EmailHelper.TECH_SUPPORT, "Error: RatingsAdapter", e.getMessage() + "\n" + StringHelper.convertStackTrace(e));
