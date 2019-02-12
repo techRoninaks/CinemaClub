@@ -21,11 +21,13 @@ import com.create.sidhu.movbox.helpers.EmailHelper;
 import com.create.sidhu.movbox.helpers.PermissionsHelper;
 import com.create.sidhu.movbox.helpers.SqlHelper;
 import com.create.sidhu.movbox.helpers.StringHelper;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -172,6 +174,10 @@ public class RegisterActivity extends AppCompatActivity implements SqlDelegate{
             Intent signInIntent = googleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent, PermissionsHelper.REQUEST_GOOGLE_AUTHENTICATION);
         }else if(type.equals(getString(R.string.fb_signin))){
+            AccessToken accessToken = AccessToken.getCurrentAccessToken();
+            boolean isLoggedIn = accessToken != null && !accessToken.isExpired();
+            if (isLoggedIn)
+                LoginManager.getInstance().logOut();
             loginButton.performClick();
         }
     }
