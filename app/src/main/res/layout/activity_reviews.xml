@@ -19,82 +19,89 @@
             android:id="@+id/containerMasterContent"
             android:padding="@dimen/standard_gap"
             android:layout_weight="1">
-            <!-- Title -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:id="@+id/containerTitle"
-                android:layout_marginBottom="@dimen/standard_gap">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView_Title"
-                    android:text="Title"
-                    android:textSize="@dimen/text_large"
-                    android:textColor="@color/colorTextPrimary"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/textView_Subtitle"
-                    android:textSize="@dimen/text_small"
-                    android:text="Subtitle"
-                    android:textColor="@color/colorTextSecondary"
-                    android:layout_marginTop="@dimen/standard_touch_space"/>
-            </LinearLayout>
-            <!-- Write Review -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/containerWriteReview">
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/img_User"
-                    android:layout_width="@dimen/list_image"
-                    android:layout_height="@dimen/list_image"
-                    android:src="@drawable/ic_user" />
+                android:id="@+id/reviewcontainer">
+                <!-- Title -->
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/custom_review"
-                    android:layout_marginStart="@dimen/standard_gap"
-                    android:padding="@dimen/standard_gap">
-                        <EditText
+                    android:id="@+id/containerTitle"
+                    android:layout_marginBottom="@dimen/standard_gap">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView_Title"
+                        android:text="Title"
+                        android:textSize="@dimen/text_large"
+                        android:textColor="@color/colorTextPrimary"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView_Subtitle"
+                        android:textSize="@dimen/text_small"
+                        android:text="Subtitle"
+                        android:textColor="@color/colorTextSecondary"
+                        android:layout_marginTop="@dimen/standard_touch_space"/>
+                </LinearLayout>
+                <!-- Write Review -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:id="@+id/containerWriteReview">
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_User"
+                        android:layout_width="@dimen/list_image"
+                        android:layout_height="@dimen/list_image"
+                        android:src="@drawable/ic_user" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="top"
-                            android:inputType="textMultiLine"
-                            android:textSize="@dimen/review_text_size"
-                            android:lines="4"
-                            android:background="@android:color/transparent"
-                            android:hint="@string/review_hint"
-                            android:textColor="@color/colorTextPrimary"
-                            android:id="@+id/editText_ReviewText"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="3"
-                        android:layout_marginStart="@dimen/standard_gap"
-                        android:gravity="end">
-                        <Button
-                            android:layout_width="0dp"
+                            android:orientation="vertical"
+                            android:background="@drawable/custom_review"
+                            android:layout_marginStart="@dimen/standard_gap"
+                            android:padding="@dimen/standard_gap">
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="top"
+                                android:inputType="textMultiLine"
+                                android:textSize="@dimen/review_text_size"
+                                android:lines="4"
+                                android:background="@android:color/transparent"
+                                android:hint="@string/review_hint"
+                                android:textColor="@color/colorTextPrimary"
+                                android:id="@+id/editText_ReviewText"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/review_submit"
-                            android:textSize="@dimen/text_medium"
-                            android:id="@+id/btn_ReviewSubmit"
-                            android:textAllCaps="false"/>
+                            android:orientation="horizontal"
+                            android:weightSum="3"
+                            android:layout_marginStart="@dimen/standard_gap"
+                            android:gravity="end">
+                            <Button
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/review_submit"
+                                android:textSize="@dimen/text_medium"
+                                android:id="@+id/btn_ReviewSubmit"
+                                android:textAllCaps="false"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
+
             <!-- Tab Headings -->
             <LinearLayout
                 android:layout_width="match_parent"

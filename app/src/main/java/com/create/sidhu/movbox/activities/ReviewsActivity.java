@@ -49,7 +49,7 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
     EditText etReviewText;
     RecyclerView recyclerView;
     Button btnReviewSubmit;
-    LinearLayout llPlaceholder, llContainerTitle, llContainerWriteReview, llContainerTab;
+    LinearLayout llPlaceholder, llContainerTitle, llContainerWriteReview, llContainerTab, llreviewContainer;
     Typeface tfSemibold;
     Typeface tfRegular;
     Bundle bundle;
@@ -128,6 +128,7 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
             llContainerTitle = (LinearLayout) findViewById(R.id.containerTitle);
             llContainerWriteReview = (LinearLayout) findViewById(R.id.containerWriteReview);
             llContainerTab = (LinearLayout) findViewById(R.id.containerTabs);
+            llreviewContainer = findViewById(R.id.reviewcontainer);
             tfSemibold = Typeface.createFromAsset(this.getAssets(), "fonts/MyriadPro-Semibold.otf");
             tfRegular = Typeface.createFromAsset(this.getAssets(), "fonts/myriadpro.otf");
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -168,6 +169,7 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
         if(currentFragment != null) {
             HashMap<String, String> extras = new HashMap<>();
             extras.put("counter", "" + counter);
+            extras.put("m_id", bundle.getString("movie_id"));
             currentFragment.onResultReceived("review", counter > 0, extras);
         }
     }
@@ -278,6 +280,7 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
         tvTabTop.setTypeface(id == R.id.textView_TabTop ? tfSemibold : tfRegular);
         tvTabAll.setTypeface(id == R.id.textView_TabAll ? tfSemibold : tfRegular);
         tvTabFollowing.setTypeface(id == R.id.textView_TabFollowing ? tfSemibold : tfRegular);
+        llreviewContainer.setVisibility(View.VISIBLE);
     }
 
     private void fetchReview(){
@@ -363,6 +366,14 @@ public class ReviewsActivity extends AppCompatActivity implements SqlDelegate {
         sqlHelper.setMethod(getString(R.string.method_get));
         sqlHelper.setParams(params);
         sqlHelper.executeUrl(true);
+    }
+    public void toggleReviewContainer(){
+        if(llreviewContainer.getVisibility() == View.VISIBLE){
+            llreviewContainer.setVisibility(View.GONE);
+        }
+         else if(llreviewContainer.getVisibility() == View.GONE){
+            llreviewContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     public void getMovieDetails(String movieId){

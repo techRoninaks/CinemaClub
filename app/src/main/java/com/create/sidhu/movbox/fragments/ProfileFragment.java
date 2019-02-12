@@ -499,23 +499,11 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                     bundle.putString("rating", rating);
                     bundle.putString("total_ratings", totalRatings);
                     bundle.putBoolean("is_rated", isRated);
+                    bundle.putString("is_watched", isWatched.toString());
                     RatingsDialog ratingsDialog = new RatingsDialog();
                     ratingsDialog.setRated(isRated);
                     ratingsDialog.setCallbackDelegate(ProfileFragment.this);
                     ((MainActivity) context).initFragment(ratingsDialog, bundle);
-                    if(!isWatched){
-                        SqlHelper sqlHelper = new SqlHelper(context, ProfileFragment.this);
-                        sqlHelper.setExecutePath("update-watching.php");
-                        sqlHelper.setActionString("watching");
-                        sqlHelper.setMethod("GET");
-                        ContentValues params = new ContentValues();
-                        params.put("m_id", id);
-                        params.put("u_id", MainActivity.currentUserModel.getUserId());
-                        params.put("is_watched", isWatched.toString());
-                        sqlHelper.setParams(params);
-                        sqlHelper.executeUrl(false);
-                        imgWatched.setImageDrawable(isWatched ? context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
-                    }
 
                 }
             });
@@ -935,7 +923,11 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                         tvMovieTotalRated.setText(spannableStringBuilder);
                         imgRating.setImageDrawable(context.getDrawable(R.drawable.ic_star_filled));
                         tvMovieRating.setText(rating + "/10");
+                        isWatched = true;
+                        imgWatched.setImageDrawable(isWatched ? context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
                         isRated = true;
+                        totalWatched = totalWatched + 1;
+                        tvMovieTotalWatched.setText(StringHelper.formatTextCount(totalWatched));
                         break;
                     }
                 }
