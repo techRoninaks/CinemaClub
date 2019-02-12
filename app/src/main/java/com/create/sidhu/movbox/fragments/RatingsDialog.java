@@ -471,6 +471,8 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         params.put("c_id", MainActivity.currentUserModel.getUserId());
         params.put("m_id", bundle.getString("id"));
         params.put("m_rating", "" + rbUserRating.getRating());
+        params.put("u_id",MainActivity.currentUserModel.getUserId());
+        params.put("is_watched", bundle.getString("is_watched"));
         params.put("cast_rating", castRating);
         params.put("type", type);
         sqlHelper.setParams(params);

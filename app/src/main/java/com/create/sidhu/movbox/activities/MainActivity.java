@@ -637,7 +637,7 @@ public class MainActivity extends AppCompatActivity implements SqlDelegate{
             pBundle.putString("userid", currentUserModel.getUserId());
             pBundle.putString("home_feed_mask", "false");
             pBundle.putString("favourites_feed_mask", "false");
-            pBundle.putString("updates_mask", "false");
+            pBundle.putString("updates_mask", "true");
             pBundle.putString("initial_run", "false");
             ComponentName componentName = new ComponentName(MainActivity.this, UserFeedJobService.class);
             JobInfo info = new JobInfo.Builder(JOB_ID, componentName)

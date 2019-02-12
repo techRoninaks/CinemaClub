@@ -322,6 +322,7 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                             homeModels.get(i).getFavourites().getMovie().setTotalRatings(totalRatings);
                             homeModels.get(i).getFavourites().getMovie().setRating("" + StringHelper.roundFloat(avgRatings, 1));
                             homeModels.get(i).getFavourites().getMovie().setRated(true);
+                            homeModels.get(i).getFavourites().getMovie().setWatched(true);
                         }
                     }
                     recyclerView.getAdapter().notifyDataSetChanged();
@@ -470,25 +471,11 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                     case R.id.img_Rating: {
                         bundle = new ModelHelper(context).buildMovieModelBundle(homeModel.getFavourites().getMovie(), "ProfileFragment");
                         bundle.putString("r_type", "cast");
+                        bundle.putString("is_watched", "" + homeModel.getFavourites().getMovie().getIsWatched());
                         RatingsDialog ratingsDialog = new RatingsDialog();
                         ratingsDialog.setCallbackDelegate(HomeFragment.this);
                         ratingsDialog.setRated(homeModel.getFavourites().getMovie().getIsRated());
                         mainActivity.initFragment(ratingsDialog, bundle);
-                        if(!homeModel.getFavourites().getMovie().getIsWatched()){
-                            SqlHelper sqlHelper = new SqlHelper(context, HomeFragment.this);
-                            sqlHelper.setExecutePath("update-watching.php");
-                            sqlHelper.setActionString("watching:" + position);
-                            HashMap<String, String> extras = new HashMap<>();
-                            extras.put("view_id", "" + R.id.img_Watched);
-                            sqlHelper.setMethod("GET");
-                            ContentValues params = new ContentValues();
-                            params.put("m_id", homeModel.getFavourites().getMovie().getId());
-                            params.put("u_id", MainActivity.currentUserModel.getUserId());
-                            params.put("is_watched", "" + homeModel.getFavourites().getMovie().getIsWatched());
-                            sqlHelper.setParams(params);
-                            sqlHelper.setExtras(extras);
-                            sqlHelper.executeUrl(false);
-                        }
                         break;
                     }
                     case R.id.img_Review: {
