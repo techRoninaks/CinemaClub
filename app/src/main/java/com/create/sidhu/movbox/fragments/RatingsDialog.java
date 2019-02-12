@@ -277,6 +277,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                 }
             }else if(sqlHelper.getActionString().equals("update_rating")){
                 String response = sqlHelper.getJSONResponse().getJSONObject("data").getString("response");
+                String watchedres = sqlHelper.getJSONResponse().getJSONObject("data").getString("iswatched");
                 if(response.equals(context.getString(R.string.response_success))) {
                     Toast.makeText(context, "Your ratings have been saved", Toast.LENGTH_SHORT).show();
                     new ModelHelper(context).addToUpdatesModel(bundle.getString("id"), "", "rating");
@@ -471,6 +472,8 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
         params.put("c_id", MainActivity.currentUserModel.getUserId());
         params.put("m_id", bundle.getString("id"));
         params.put("m_rating", "" + rbUserRating.getRating());
+        params.put("u_id",MainActivity.currentUserModel.getUserId());
+        params.put("is_watched", bundle.getString("is_watched"));
         params.put("cast_rating", castRating);
         params.put("type", type);
         sqlHelper.setParams(params);

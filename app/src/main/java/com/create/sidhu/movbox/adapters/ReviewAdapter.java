@@ -88,10 +88,12 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                             break;
                         }
                         case R.id.textView_Reply:{
-                            if(holder.llWriteReplies.getVisibility() == View.VISIBLE)
-                                holder.llWriteReplies.setVisibility(View.GONE);
-                            else
-                                holder.llWriteReplies.setVisibility(View.VISIBLE);
+                            if(holder.llWriteReplies.getVisibility() == View.VISIBLE){
+                                reviewsActivity.toggleReviewContainer();
+                                holder.llWriteReplies.setVisibility(View.GONE);}
+                            else{
+                                reviewsActivity.toggleReviewContainer();
+                                holder.llWriteReplies.setVisibility(View.VISIBLE);}
                             break;
                         }
                         case R.id.textView_ReviewRemove:{
@@ -109,6 +111,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                             if(reviewText.startsWith("*~"))
                                 reviewText = reviewText.substring(reviewText.indexOf("~*") + 2);
                             holder.etReplyText.setText(reviewText);
+                            reviewsActivity.toggleReviewContainer();
                             break;
                         }
                         case R.id.btn_ReviewCancel:{
@@ -119,6 +122,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                             holder.llWriteReplies.setVisibility(View.GONE);
                             holder.btnReviewEdit.setVisibility(View.GONE);
                             holder.btnReviewCancel.setVisibility(View.GONE);
+                            reviewsActivity.toggleReviewContainer();
                             break;
                         }
                         case R.id.btn_ReviewEdit:{
@@ -144,6 +148,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                             holder.llWriteReplies.setVisibility(View.GONE);
                             holder.btnReviewEdit.setVisibility(View.GONE);
                             holder.btnReviewCancel.setVisibility(View.GONE);
+                            reviewsActivity.toggleReviewContainer();
                             break;
                         }
                         case R.id.img_LikeButton:{
@@ -169,6 +174,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
                                     reviewText = "*~" + reviewModels.get(position).getUserName() + "~*" + holder.etReplyText.getText().toString();
                                 }
                                 reviewsActivity.submitReview("reply", parentId, reviewText);
+//                                reviewsActivity.toggleReviewContainer();
                             }
                             break;
                         }
