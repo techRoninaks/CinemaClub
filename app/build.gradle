@@ -22,8 +22,8 @@ android {
         applicationId 'com.roninaks.cinemaclub'
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 15
-        versionName "1.0.14"
+        versionCode 16
+        versionName "1.0.15"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
