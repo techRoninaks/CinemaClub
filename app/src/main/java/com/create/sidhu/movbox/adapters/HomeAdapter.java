@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -40,8 +36,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import es.dmoral.toasty.Toasty;
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 
 /**
  * Adapter for Home Cards
@@ -471,11 +465,21 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
             switch (type){
                 case "review":{
                     int counter = Integer.parseInt(extras.get("counter"));
+                    String id = extras.get("m_id");
                     ((MainActivity) context).scheduleInstantJob("111");
-                    homeModels.get(currentPosition).getFavourites().getMovie().setTotalReviews(homeModels.get(currentPosition).getFavourites().getMovie().getTotalReviews() + counter);
-                    homeModels.get(currentPosition).getFavourites().getMovie().setReviewed(true);
-                    updateModels(homeModels.get(currentPosition).getFavourites().getMovie().getId(), homeModels.get(currentPosition).getFavourites().getMovie().getTotalReviews());
-                    notifyItemChanged(currentPosition);
+//                    homeModels.get(currentPosition).getFavourites().getMovie().setTotalReviews(homeModels.get(currentPosition).getFavourites().getMovie().getTotalReviews() + counter);
+//                    homeModels.get(currentPosition).getFavourites().getMovie().setReviewed(true);
+//                    updateModels(homeModels.get(currentPosition).getFavourites().getMovie().getId(), homeModels.get(currentPosition).getFavourites().getMovie().getTotalReviews());
+//                    notifyItemChanged(currentPosition);
+                    int length = homeModels.size();
+                    for (int i = 0; i < length; i++) {
+                        if (homeModels.get(i).getFavourites().getMovie().getId().equals(id)) {
+                            homeModels.get(i).getFavourites().getMovie().setTotalReviews(homeModels.get(i).getFavourites().getMovie().getTotalReviews() + counter);
+                            homeModels.get(i).getFavourites().getMovie().setReviewed(true);
+//                            updateModels(homeModels.get(i).getFavourites().getMovie().getId(), homeModels.get(i).getFavourites().getMovie().getTotalReviews());
+                        }
+                    }
+                    notifyDataSetChanged();
                     break;
                 }
             }

@@ -323,10 +323,31 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                             homeModels.get(i).getFavourites().getMovie().setRating("" + StringHelper.roundFloat(avgRatings, 1));
                             homeModels.get(i).getFavourites().getMovie().setRated(true);
                             homeModels.get(i).getFavourites().getMovie().setWatched(true);
+                            homeModels.get(i).getFavourites().getMovie().setTotalWatched(homeModels.get(i).getFavourites().getMovie().getTotalWatched() + 1);
                         }
                     }
                     recyclerView.getAdapter().notifyDataSetChanged();
                     break;
+                }
+                case "watching": {
+                    String  id = extras.get("movie_id");
+                    String is_watched = extras.get("is_watched");
+                    int length = homeModels.size();
+                    for (int i = 0; i < length; i++) {
+                        if (homeModels.get(i).getFavourites().getMovie().getId().equals(id)) {
+                            if (Boolean.parseBoolean(is_watched)) {
+                                homeModels.get(i).getFavourites().getMovie().setWatched(false);
+                                homeModels.get(i).getFavourites().getMovie().setTotalWatched(homeModels.get(i).getFavourites().getMovie().getTotalWatched() - 1);
+                            } else {
+                                homeModels.get(i).getFavourites().getMovie().setWatched(true);
+                                homeModels.get(i).getFavourites().getMovie().setTotalWatched(homeModels.get(i).getFavourites().getMovie().getTotalWatched() + 1);
+                            }
+
+                        }
+                    }
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                    break;
+
                 }
             }
         }catch (Exception e){
@@ -537,23 +558,29 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                 int position = Integer.parseInt(sqlHelper.getActionString().split(":")[1]);
                 if(response.equals(context.getString(R.string.response_success))){
                     ProfileFragment.currentUserWatchlist = null;
+                    HashMap<String, String > extras = new HashMap<>();
+                    extras.put("movie_id", homeModels.get(position).getFavourites().getMovie().getId());
+                    extras.put("is_watched","" +homeModels.get(position).getFavourites().getMovie().getIsWatched());
+                    updateDataset("watching", extras);
                     if(homeModels.get(position).getFavourites().getMovie().getIsWatched()){
-                        homeModels.get(position).getFavourites().getMovie().setWatched(false);
-                        homeModels.get(position).getFavourites().getMovie().setTotalWatched(homeModels.get(position).getFavourites().getMovie().getTotalWatched() - 1);
+//                        homeModels.get(position).getFavourites().getMovie().setWatched(false);
+//                        homeModels.get(position).getFavourites().getMovie().setTotalWatched(homeModels.get(position).getFavourites().getMovie().getTotalWatched() - 1);
 //                        ImageView imageView = (ImageView) recyclerView.findViewById(Integer.parseInt(sqlHelper.getExtras().get("view_id")));
 //                        imageView.setImageDrawable(context.getDrawable(R.drawable.ic_eye));
                         int watching = MainActivity.currentUserModel.getTotalWatched();
                         MainActivity.currentUserModel.setTotalWatched(watching - 1);
                         Toast.makeText(context, "Movie has been marked as unwatched.", Toast.LENGTH_SHORT).show();
+
                     }else{
-                        homeModels.get(position).getFavourites().getMovie().setWatched(true);
-                        homeModels.get(position).getFavourites().getMovie().setTotalWatched(homeModels.get(position).getFavourites().getMovie().getTotalWatched() + 1);
+//                        homeModels.get(position).getFavourites().getMovie().setWatched(true);
+//                        homeModels.get(position).getFavourites().getMovie().setTotalWatched(homeModels.get(position).getFavourites().getMovie().getTotalWatched() + 1);
 //                        ImageView imageView = (ImageView) recyclerView.findViewById(Integer.parseInt(sqlHelper.getExtras().get("view_id")));
 //                        imageView.setImageDrawable(context.getDrawable(R.drawable.ic_eye_filled));
                         new ModelHelper(context).addToUpdatesModel(homeModels.get(position).getFavourites().getMovie().getId(), "", "watching");
                         int watching = MainActivity.currentUserModel.getTotalWatched();
                         MainActivity.currentUserModel.setTotalWatched(watching + 1);
                         Toast.makeText(context, "Movie has been marked as watched.", Toast.LENGTH_SHORT).show();
+
                     }
                     recyclerView.getAdapter().notifyItemChanged(position);
                 }else if(response.equals(context.getString(R.string.response_unsuccessful))){

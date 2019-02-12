@@ -277,6 +277,7 @@ public class RatingsDialog extends DialogFragment implements SqlDelegate {
                 }
             }else if(sqlHelper.getActionString().equals("update_rating")){
                 String response = sqlHelper.getJSONResponse().getJSONObject("data").getString("response");
+                String watchedres = sqlHelper.getJSONResponse().getJSONObject("data").getString("iswatched");
                 if(response.equals(context.getString(R.string.response_success))) {
                     Toast.makeText(context, "Your ratings have been saved", Toast.LENGTH_SHORT).show();
                     new ModelHelper(context).addToUpdatesModel(bundle.getString("id"), "", "rating");
