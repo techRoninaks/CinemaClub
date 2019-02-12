@@ -11,7 +11,7 @@
     <string name="fb_login_protocol_scheme">fb2567368729944839</string>
     <string name="hello_blank_fragment">Hello Home fragment</string>
     <string name="app_store_uri">https://play.google.com/store/apps/details?id=com.roninaks.cinemaclub</string>
-    <string name="version_name">v1.0.14</string>
+    <string name="version_name">v1.0.15</string>
 
     <!-- User Resource Strings -->
     <string name="settings">Settings</string>
