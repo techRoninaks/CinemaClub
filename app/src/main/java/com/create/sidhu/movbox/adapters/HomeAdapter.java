@@ -467,16 +467,13 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> im
                     int counter = Integer.parseInt(extras.get("counter"));
                     String id = extras.get("m_id");
                     ((MainActivity) context).scheduleInstantJob("111");
-//                    homeModels.get(currentPosition).getFavourites().getMovie().setTotalReviews(homeModels.get(currentPosition).getFavourites().getMovie().getTotalReviews() + counter);
-//                    homeModels.get(currentPosition).getFavourites().getMovie().setReviewed(true);
-//                    updateModels(homeModels.get(currentPosition).getFavourites().getMovie().getId(), homeModels.get(currentPosition).getFavourites().getMovie().getTotalReviews());
-//                    notifyItemChanged(currentPosition);
+                    updateModels(homeModels.get(currentPosition).getFavourites().getMovie().getId(), homeModels.get(currentPosition).getFavourites().getMovie().getTotalReviews());
+
                     int length = homeModels.size();
                     for (int i = 0; i < length; i++) {
                         if (homeModels.get(i).getFavourites().getMovie().getId().equals(id)) {
                             homeModels.get(i).getFavourites().getMovie().setTotalReviews(homeModels.get(i).getFavourites().getMovie().getTotalReviews() + counter);
                             homeModels.get(i).getFavourites().getMovie().setReviewed(true);
-//                            updateModels(homeModels.get(i).getFavourites().getMovie().getId(), homeModels.get(i).getFavourites().getMovie().getTotalReviews());
                         }
                     }
                     notifyDataSetChanged();
