@@ -322,8 +322,10 @@ public class HomeFragment extends Fragment implements SqlDelegate, CallbackDeleg
                             homeModels.get(i).getFavourites().getMovie().setTotalRatings(totalRatings);
                             homeModels.get(i).getFavourites().getMovie().setRating("" + StringHelper.roundFloat(avgRatings, 1));
                             homeModels.get(i).getFavourites().getMovie().setRated(true);
-                            homeModels.get(i).getFavourites().getMovie().setWatched(true);
-                            homeModels.get(i).getFavourites().getMovie().setTotalWatched(homeModels.get(i).getFavourites().getMovie().getTotalWatched() + 1);
+                            if(!homeModels.get(i).getFavourites().getMovie().getIsWatched()){
+                                homeModels.get(i).getFavourites().getMovie().setWatched(true);
+                                homeModels.get(i).getFavourites().getMovie().setTotalWatched(homeModels.get(i).getFavourites().getMovie().getTotalWatched() + 1);
+                            }
                         }
                     }
                     recyclerView.getAdapter().notifyDataSetChanged();

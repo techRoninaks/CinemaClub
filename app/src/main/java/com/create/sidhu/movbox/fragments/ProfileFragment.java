@@ -923,10 +923,12 @@ public class ProfileFragment extends Fragment implements SqlDelegate, CallbackDe
                         tvMovieTotalRated.setText(spannableStringBuilder);
                         imgRating.setImageDrawable(context.getDrawable(R.drawable.ic_star_filled));
                         tvMovieRating.setText(rating + "/10");
-                        isWatched = true;
+                        if(!isWatched) {
+                            isWatched = true;
+                            totalWatched = totalWatched + 1;
+                        }
                         imgWatched.setImageDrawable(isWatched ? context.getDrawable(R.drawable.ic_eye_filled) : context.getDrawable(R.drawable.ic_eye));
                         isRated = true;
-                        totalWatched = totalWatched + 1;
                         tvMovieTotalWatched.setText(StringHelper.formatTextCount(totalWatched));
                         break;
                     }
